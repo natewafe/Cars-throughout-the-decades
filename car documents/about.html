@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Velocity & Vision</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    .about-hero-bg {
+      background:
+        radial-gradient(ellipse at 50% 60%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%);
+    }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 5rem;
+      margin-bottom: 4rem;
+    }
+    .about-sidebar {
+      position: sticky;
+      top: 8rem;
+      align-self: start;
+    }
+    .about-sidebar h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.5rem;
+    }
+    .about-sidebar p {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+    .about-main h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 1.5rem;
+      color: var(--white);
+    }
+    .about-main p {
+      font-size: 1.05rem;
+      line-height: 1.9;
+      font-weight: 300;
+      color: rgba(245,240,232,0.8);
+      margin-bottom: 1.4rem;
+    }
+    .about-main strong { font-weight: 600; color: var(--gold-light); }
+    .bib-section { margin-top: 4rem; }
+    .bib-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+      color: var(--white);
+    }
+    .bib-decade {
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding-bottom: 0.5rem;
+    }
+    .bib-entry {
+      margin: 1.5rem 0;
+      padding-left: 1.5rem;
+      border-left: 1px solid rgba(201,168,76,0.15);
+    }
+    .bib-type {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.4rem;
+    }
+    .bib-citation {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: rgba(245,240,232,0.85);
+      margin-bottom: 0.6rem;
+    }
+    .bib-annotation {
+      font-size: 0.88rem;
+      line-height: 1.75;
+      color: rgba(245,240,232,0.55);
+      font-style: italic;
+    }
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .about-sidebar { position: static; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">V&V Museum</a>
+    <ul class="nav-links">
+      <li><a href="index.html#exhibits">Exhibits</a></li>
+      <li><a href="countach.html">Countach</a></li>
+      <li><a href="959.html">Porsche 959</a></li>
+      <li><a href="f1.html">McLaren F1</a></li>
+      <li><a href="veyron.html">Veyron</a></li>
+      <li><a href="about.html" class="active">About</a></li>
+    </ul>
+  </nav>
+
+  <section class="gallery-hero" style="min-height: 40vh;">
+    <div class="gallery-hero-bg about-hero-bg"></div>
+    <a href="index.html" class="back-link">← Back to Museum</a>
+    <div class="gallery-eyebrow">Curatorial Notes</div>
+    <h1 class="gallery-title">About This<br>Exhibition</h1>
+  </section>
+
+  <main class="gallery-content">
+
+    <div class="about-grid">
+      <div class="about-sidebar">
+        <h3>Velocity &amp; Vision</h3>
+        <p>A Virtual Museum Exhibition<br>History [Course Number]<br>University of Tennessee, Knoxville<br>Spring 2026</p>
+      </div>
+
+      <div class="about-main">
+        <h2>Curatorial Statement</h2>
+        <p>
+          The first car with an electronically controlled all-wheel-drive system, automatic tire pressure monitoring, and a 0–60 time of under 3.5 seconds. You're probably thinking this was created in the 2000s, or that it's a Lamborghini you see on the streets today. But no. This was the early 1980s — and Porsche came out with the 959.
+        </p>
+        <p>
+          This is just one of four moments where supercars changed the world. This virtual museum examines the four cars I believe had the greatest impact on modern automobiles: starting with the <strong>Lamborghini Countach</strong>, followed by the <strong>Porsche 959</strong>, then the <strong>McLaren F1</strong>, and finally the <strong>Bugatti Veyron</strong>.
+        </p>
+        <p>
+          Each of these cars wasn't just fast for its time — they were exceptional. They defined the visual language and technology of today's supercars, influencing everything from production cars to motorsports. One of the challenges of a project like this is balance: making sure each decade is represented with the right analytical weight, and that the content remains precise.
+        </p>
+        <p>
+          Going through this exhibit, visitors will see not just a great visual representation of the beauty of these cars, but will understand the era's complexities and ambitions as expressed through them — cars that felt impossibly futuristic for their time, yet in hindsight seem inevitable.
+        </p>
+
+        <div class="gold-divider"></div>
+
+        <h2>Methodology</h2>
+        <p>
+          Each gallery pairs a <strong>primary source</strong> — a contemporary road test, press review, or first-hand account from the year of the car's release — with a <strong>secondary source</strong> that provides historical and technical context. This structure mirrors how historians work: the primary source as evidence, the secondary source as interpretation.
+        </p>
+        <p>
+          The primary sources here are particularly valuable because automotive journalism from these periods preserves something that retrospective analysis cannot: the experience of encountering these machines before they became canonical. Reading the Road &amp; Track Countach test from 1976 is not the same as reading a 2024 retrospective about it. The earlier text captures genuine shock, not curated nostalgia.
+        </p>
+      </div>
+    </div>
+
+    <!-- ANNOTATED BIBLIOGRAPHY -->
+    <div class="bib-section">
+      <h2>Annotated Bibliography</h2>
+
+      <div class="bib-decade">1970s — Lamborghini Countach LP400</div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Secondary Source</div>
+        <p class="bib-citation">Perkins, Chris. "5 Things You Didn't Know About the Lamborghini Countach." <em>The Drive</em>, September 19, 2016. <a href="https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a></p>
+        <p class="bib-annotation">The author argues that the Countach was well ahead of its time, even by decades, almost by accident. He shows this through some of the prototypes and aerodynamic tests, and makes clear that the car was really made to be a spectacle rather than a comfortable sports car. There is a lot of evidence about how great the car was and how ahead of its time it was, with different schematics and specifics tied to it. I will use this to give some context that can go alongside the car itself — it really shows the results of how fast and ahead of its time this car was, along with the behind-the-scenes details of how it got there.</p>
+      </div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Primary Source</div>
+        <p class="bib-citation">Road &amp; Track. "Lamborghini Countach: Road Test." <em>Road &amp; Track</em>, February 1976. <a href="https://www.curbsideclassic.com/vintage-reviews/road-track-vintage-road-test-1976-lamborghini-countach-fastest-car-weve-ever-tested/" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a> <em>(Seek original print issue via UTK periodical archives for final submission.)</em></p>
+        <p class="bib-annotation">This was created by Road &amp; Track magazine in February 1976, when the Countach LP400 was in production. Their editorial team gave a first-hand, performance-oriented review of the car. I found this on a website with prints of the original magazine pages, but I plan to track down a better and more direct source for the final submission.</p>
+      </div>
+
+      <div class="bib-decade">1980s — Porsche 959</div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Secondary Source</div>
+        <p class="bib-citation">Kimble, David. "Cutaway Classic: Explore the Amazing Porsche 959." <em>Motorsport.com</em>, June 8, 2016. <a href="https://www.motorsport.com/automotive/news/cutaway-classic-explore-the-amazing-porsche-959-745046/745046/" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a></p>
+        <p class="bib-annotation">This source really argues that the Porsche 959 was not just a fast car for its time, but represented extremely new technology for the era. It had electronically managed all-wheel drive, advanced aerodynamics, and a gearbox prototype that became the standard for the next generation of Porsches. It was also the first production car to have tire pressure sensors. This article has a lot of those specifics in it, which shows how the car was so ahead of its time. I plan on using this to show off those features and argue that the 959 was one of the best cars of the 1980s not just for its style, but for its performance and technology.</p>
+      </div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Primary Source</div>
+        <p class="bib-citation">Csere, Csaba. "1987 Porsche 959 — Archived Test." <em>Car and Driver</em>, 1987. <a href="https://www.caranddriver.com/reviews/a15143088/1987-porsche-959-archived-test-review/" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a></p>
+        <p class="bib-annotation">This is a road test from Car and Driver in 1987, conducted at Porsche's Weissach facility. It was a performance evaluation written for American readers covering how technologically advanced the car was firsthand, with all the 0–60 data and details about the car. It has some of the original print photos and magazine spreads with the performance specifics.</p>
+      </div>
+
+      <div class="bib-decade">1990s — McLaren F1</div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Secondary Source</div>
+        <p class="bib-citation">Car Magazine. "McLaren F1 Review: Our Original 1994 Road Test." <em>Car Magazine</em>, June 1994. <a href="https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a></p>
+        <p class="bib-annotation">Car Magazine references the McLaren F1 as a new vision of what a supercar could be. Gordon Murray helped design it, and the piece really sets a tone for the car and gives some of the rhetorical evidence I need to examine how remarkable of a car this was. I plan on using this to capture the reactions of people and how it impressed them, along with some of the data from Car Magazine, to capture the full picture of the car and show that to visitors of my museum.</p>
+      </div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Primary Source</div>
+        <p class="bib-citation">Cropley, Steve. "McLaren F1: Full Test of World's Greatest Supercar." <em>Autocar</em>, May 11, 1994. <a href="https://www.autocar.co.uk/car-review/mclaren/f1" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a></p>
+        <p class="bib-annotation">This is a road test written by Steve Cropley, published May 11, 1994. It was created to give British car enthusiasts a thorough evaluation of the car across all of its prototypes and performance capabilities. You can see the original pictures from the test, which I can include in the museum.</p>
+      </div>
+
+      <div class="bib-decade">2000s — Bugatti Veyron EB 16.4</div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Secondary Source</div>
+        <p class="bib-citation">Autocar. "Bugatti Veyron 2005–2015 Review." <em>Autocar</em>. <a href="https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a></p>
+        <p class="bib-annotation">A retrospective review covering the full lifespan of the Veyron production run. Useful for understanding how the car's reputation evolved over its decade on sale — from shocking novelty to recognized benchmark. Provides long-term context for the car's place in automotive history.</p>
+      </div>
+
+      <div class="bib-entry">
+        <div class="bib-type">Primary Source</div>
+        <p class="bib-citation">Cropley, Steve. "Bugatti Veyron 2005 First Drive." <em>Autocar</em>, 2005. <a href="https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive" target="_blank" style="color:var(--gold); font-size:0.8rem;">↗</a></p>
+        <p class="bib-annotation">One of the first published evaluations of the Veyron in production form. Captures the initial encounter with the car's performance envelope from the perspective of a journalist accustomed to the world's fastest production cars — and still finding the Veyron in a different category entirely.</p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Velocity &amp; Vision — A Virtual Museum Exhibition</p>
+    <p>History 4XX · UTK · 2026</p>
+  </footer>
+
+</body>
+</html>

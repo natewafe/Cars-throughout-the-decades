@@ -1,0 +1,382 @@
+/* shared.css — used by all exhibit/gallery pages */
+
+:root {
+  --black: #0a0a0a;
+  --white: #f5f0e8;
+  --gold: #c9a84c;
+  --gold-light: #e8c97a;
+  --red: #c0392b;
+  --grey: #2a2a2a;
+  --text-secondary: #888;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Cormorant Garamond', serif;
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  background: linear-gradient(to bottom, rgba(10,10,10,0.97), transparent);
+}
+
+.nav-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.3s, color 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active { opacity: 1; color: var(--gold); }
+
+/* GALLERY HERO */
+.gallery-hero {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 3rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-hero-bg {
+  position: absolute;
+  inset: 0;
+}
+
+.back-link {
+  position: absolute;
+  top: 6.5rem;
+  left: 3rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.back-link:hover { color: var(--gold); }
+
+.gallery-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
+
+.gallery-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 9vw, 8rem);
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+}
+
+.gallery-subtitle {
+  font-size: 1.1rem;
+  font-style: italic;
+  font-weight: 300;
+  color: rgba(245,240,232,0.6);
+  margin-top: 1rem;
+  max-width: 480px;
+}
+
+/* MAIN CONTENT */
+.gallery-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5rem 3rem 8rem;
+}
+
+/* OBJECT LABEL — the museum caption style */
+.object-label {
+  border-left: 2px solid var(--gold);
+  padding: 1rem 1.5rem;
+  margin-bottom: 3rem;
+  background: rgba(201,168,76,0.04);
+}
+
+.object-label .label-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.object-label .label-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.object-label .label-desc {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(245,240,232,0.7);
+  font-style: italic;
+}
+
+/* SOURCE PANEL */
+.source-panel {
+  margin: 2rem 0 3rem;
+  border: 1px solid rgba(201,168,76,0.15);
+  padding: 2rem;
+}
+
+.source-panel h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+
+.source-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.source-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.source-type {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.source-citation {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: rgba(245,240,232,0.85);
+  margin-bottom: 0.5rem;
+}
+
+.source-citation em { font-style: italic; }
+
+.source-annotation {
+  font-size: 0.88rem;
+  line-height: 1.75;
+  color: rgba(245,240,232,0.6);
+  font-style: italic;
+}
+
+.source-link {
+  display: inline-block;
+  margin-top: 0.4rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.source-link:hover { opacity: 1; }
+
+/* BODY TEXT */
+.gallery-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  margin-bottom: 4rem;
+}
+
+.gallery-body-full {
+  margin-bottom: 4rem;
+}
+
+.body-col h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.04em;
+  color: var(--white);
+  margin-bottom: 1.5rem;
+}
+
+.body-col p, .gallery-body-full p {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  font-weight: 300;
+  color: rgba(245,240,232,0.8);
+  margin-bottom: 1.2rem;
+}
+
+.body-col strong, .gallery-body-full strong {
+  font-weight: 600;
+  color: var(--gold-light);
+}
+
+/* SPECS TABLE */
+.specs-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  margin: 3rem 0;
+  background: rgba(201,168,76,0.15);
+}
+
+.spec-item {
+  background: var(--black);
+  padding: 1.5rem;
+}
+
+.spec-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  color: var(--gold);
+  letter-spacing: 0.03em;
+  display: block;
+}
+
+.spec-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* DIVIDER */
+.gold-divider {
+  width: 60px;
+  height: 1px;
+  background: var(--gold);
+  margin: 3rem 0;
+  opacity: 0.5;
+}
+
+/* IMAGE PLACEHOLDER */
+.img-placeholder {
+  aspect-ratio: 16/9;
+  background: var(--grey);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  border: 1px dashed rgba(201,168,76,0.2);
+  margin: 2rem 0;
+}
+
+.img-placeholder span {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+/* NEXT/PREV NAV */
+.gallery-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(201,168,76,0.15);
+}
+
+.gallery-nav a {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.gallery-nav .nav-hint {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.gallery-nav .nav-car-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.5rem;
+  color: var(--white);
+  transition: color 0.3s;
+}
+
+.gallery-nav a:hover .nav-car-name { color: var(--gold); }
+
+/* FOOTER */
+footer {
+  border-top: 1px solid rgba(201,168,76,0.1);
+  padding: 2.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+footer p {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.2em;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .gallery-hero { padding: 0 1.5rem 3rem; }
+  .back-link { left: 1.5rem; }
+  .gallery-content { padding: 3rem 1.5rem 5rem; }
+  .gallery-body { grid-template-columns: 1fr; gap: 2rem; }
+  .specs-grid { grid-template-columns: repeat(2, 1fr); }
+  footer { flex-direction: column; gap: 1rem; }
+}

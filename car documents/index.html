@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velocity & Vision — A Supercar Museum</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f0e8;
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --red: #c0392b;
+      --grey: #2a2a2a;
+      --text-secondary: #888;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Cormorant Garamond', serif;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s, color 0.3s;
+    }
+
+    .nav-links a:hover { opacity: 1; color: var(--gold); }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 70% 50%, rgba(201,168,76,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, rgba(192,57,43,0.08) 0%, transparent 50%),
+        linear-gradient(135deg, #0a0a0a 0%, #141414 50%, #0a0a0a 100%);
+    }
+
+    .hero-lines {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 59px,
+          rgba(201,168,76,0.04) 60px
+        );
+    }
+
+    .hero-year-strip {
+      position: absolute;
+      right: 3rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      align-items: flex-end;
+    }
+
+    .hero-year-strip span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--gold);
+      opacity: 0.4;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0.8;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(5rem, 12vw, 11rem);
+      line-height: 0.9;
+      letter-spacing: 0.02em;
+      position: relative;
+    }
+
+    .hero-title .line1 { display: block; }
+    .hero-title .line2 {
+      display: block;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(245,240,232,0.3);
+    }
+
+    .hero-subtitle {
+      max-width: 480px;
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.8;
+      font-weight: 300;
+      color: rgba(245,240,232,0.65);
+      font-style: italic;
+      position: relative;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      padding: 0.9rem 2.2rem;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    .hero-cta:hover {
+      background: var(--gold);
+      color: var(--black);
+    }
+
+    .hero-cta::after {
+      content: '→';
+      font-family: serif;
+      font-size: 1rem;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .scroll-hint span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollAnim 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollAnim {
+      0%, 100% { opacity: 0.3; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.2); }
+    }
+
+    /* INTRO SECTION */
+    .intro {
+      padding: 8rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .intro-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--gold);
+      padding-top: 0.4rem;
+    }
+
+    .intro-text {
+      font-size: 1.25rem;
+      line-height: 1.9;
+      font-weight: 300;
+    }
+
+    .intro-text p { margin-bottom: 1.5rem; }
+
+    .intro-text strong {
+      font-weight: 600;
+      color: var(--gold-light);
+    }
+
+    /* CARS GRID */
+    .exhibits {
+      padding: 4rem 3rem 8rem;
+    }
+
+    .exhibits-header {
+      max-width: 1200px;
+      margin: 0 auto 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding-bottom: 1.5rem;
+    }
+
+    .exhibits-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
+    }
+
+    .exhibits-header span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    .car-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+    }
+
+    .car-card {
+      position: relative;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+
+    .car-card:nth-child(1) { background: #111; }
+    .car-card:nth-child(2) { background: #0f0f0f; }
+    .car-card:nth-child(3) { background: #0d0d0d; }
+    .car-card:nth-child(4) { background: #121212; }
+
+    .car-card-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .car-card:hover .car-card-bg { transform: scale(1.05); }
+
+    /* Individual car backgrounds using CSS gradients as placeholders */
+    .card-countach .car-card-bg {
+      background:
+        radial-gradient(ellipse at 60% 60%, rgba(192,57,43,0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at 30% 40%, rgba(201,168,76,0.1) 0%, transparent 40%),
+        linear-gradient(135deg, #1a0a05 0%, #0a0a0a 100%);
+    }
+
+    .card-959 .car-card-bg {
+      background:
+        radial-gradient(ellipse at 50% 50%, rgba(70,130,180,0.2) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(201,168,76,0.1) 0%, transparent 40%),
+        linear-gradient(135deg, #050a1a 0%, #0a0a0a 100%);
+    }
+
+    .card-f1 .car-card-bg {
+      background:
+        radial-gradient(ellipse at 40% 60%, rgba(211,84,0,0.2) 0%, transparent 55%),
+        radial-gradient(ellipse at 70% 30%, rgba(201,168,76,0.08) 0%, transparent 40%),
+        linear-gradient(135deg, #0f0800 0%, #0a0a0a 100%);
+    }
+
+    .card-veyron .car-card-bg {
+      background:
+        radial-gradient(ellipse at 60% 40%, rgba(39,174,96,0.15) 0%, transparent 55%),
+        radial-gradient(ellipse at 25% 70%, rgba(201,168,76,0.1) 0%, transparent 40%),
+        linear-gradient(135deg, #050f05 0%, #0a0a0a 100%);
+    }
+
+    .car-silhouette {
+      position: absolute;
+      bottom: 30%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 5rem;
+      opacity: 0.08;
+      transition: opacity 0.4s;
+    }
+
+    .car-card:hover .car-silhouette { opacity: 0.14; }
+
+    .car-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
+    }
+
+    .car-card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem;
+      transform: translateY(0);
+      transition: transform 0.4s;
+    }
+
+    .car-era {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .car-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--white);
+      display: block;
+    }
+
+    .car-tagline {
+      font-size: 0.85rem;
+      font-style: italic;
+      color: rgba(245,240,232,0.55);
+      margin-top: 0.5rem;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s, opacity 0.4s;
+      opacity: 0;
+    }
+
+    .car-card:hover .car-tagline {
+      max-height: 3rem;
+      opacity: 1;
+    }
+
+    .car-enter-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: opacity 0.4s, transform 0.4s;
+    }
+
+    .car-card:hover .car-enter-link {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* TIMELINE BAR */
+    .timeline {
+      padding: 6rem 3rem;
+      background: linear-gradient(to bottom, transparent, rgba(201,168,76,0.03), transparent);
+    }
+
+    .timeline-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .timeline-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .timeline-track {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      position: relative;
+    }
+
+    .timeline-track::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 12.5%;
+      right: 12.5%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), var(--gold), transparent);
+      opacity: 0.3;
+    }
+
+    .timeline-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+    }
+
+    .timeline-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+      background: var(--black);
+      position: relative;
+      z-index: 1;
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .timeline-item:hover .timeline-dot {
+      background: var(--gold);
+      transform: scale(1.4);
+    }
+
+    .timeline-decade {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      color: var(--white);
+      letter-spacing: 0.04em;
+    }
+
+    .timeline-car {
+      font-size: 0.8rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      text-align: center;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid rgba(201,168,76,0.15);
+      padding: 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+
+    /* ANIMATIONS */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in:nth-child(1) { animation-delay: 0.1s; }
+    .fade-in:nth-child(2) { animation-delay: 0.2s; }
+    .fade-in:nth-child(3) { animation-delay: 0.3s; }
+    .fade-in:nth-child(4) { animation-delay: 0.4s; }
+
+    .hero-title .line1 {
+      animation: slideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    .hero-title .line2 {
+      animation: slideIn 0.9s 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero { padding: 0 1.5rem 4rem; }
+      .intro { grid-template-columns: 1fr; padding: 4rem 1.5rem; gap: 2rem; }
+      .car-grid { grid-template-columns: 1fr; }
+      .exhibits { padding: 2rem 1.5rem 5rem; }
+      .timeline-track { grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+      .timeline { padding: 4rem 1.5rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">V&V Museum</a>
+    <ul class="nav-links">
+      <li><a href="index.html#exhibits">Exhibits</a></li>
+      <li><a href="countach.html">Countach</a></li>
+      <li><a href="959.html">Porsche 959</a></li>
+      <li><a href="f1.html">McLaren F1</a></li>
+      <li><a href="veyron.html">Veyron</a></li>
+      <li><a href="about.html">About</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-lines"></div>
+
+    <div class="hero-year-strip" aria-hidden="true">
+      <span>1974</span>
+      <span>1986</span>
+      <span>1992</span>
+      <span>2005</span>
+    </div>
+
+    <div class="hero-eyebrow fade-in">A Virtual Museum Exhibition</div>
+
+    <h1 class="hero-title">
+      <span class="line1">Velocity</span>
+      <span class="line2">&amp; Vision</span>
+    </h1>
+
+    <p class="hero-subtitle fade-in">
+      Four supercars. Four decades. Four moments that rewrote what was possible — and shaped every fast car that followed.
+    </p>
+
+    <a href="#exhibits" class="hero-cta fade-in">Enter the Exhibition</a>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- INTRODUCTION -->
+  <section style="padding: 8rem 3rem; border-top: 1px solid rgba(201,168,76,0.1);">
+    <div class="intro" style="padding: 0; margin: 0 auto;">
+      <div class="intro-label">Curatorial Statement</div>
+      <div class="intro-text">
+        <p>
+          The first car with an electronically controlled all-wheel-drive system, automatic tire pressure monitoring, and a 0–60 time of under 3.5 seconds. You're probably thinking this was created in the 2000s, or that it's a Lamborghini you see on the streets today. But no. This was the early 1980s — and <strong>Porsche came out with the 959</strong>.
+        </p>
+        <p>
+          This is just one of four moments where supercars changed the world. This virtual museum examines the four cars I believe had the greatest impact on modern automobiles: beginning with the <strong>Lamborghini Countach</strong> in the 1970s, followed by the <strong>Porsche 959</strong> in the 1980s, then the <strong>McLaren F1</strong> in the 1990s, and finally the <strong>Bugatti Veyron</strong> in the 2000s.
+        </p>
+        <p>
+          Each of these cars wasn't just fast for its time — they were exceptional. They defined the visual language and technology of today's supercars, influencing everything from production cars to motorsports. One of the challenges of a project like this is balance: making sure each decade is represented with the right analytical weight, and that the content remains precise.
+        </p>
+        <p>
+          Going through this exhibit, visitors will see not just a great visual representation of the beauty of these cars, but will understand the era's complexities and ambitions as expressed through them — cars that felt impossibly futuristic for their time, yet in hindsight seem inevitable.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="timeline">
+    <div class="timeline-inner">
+      <p class="timeline-label">Four Decades of Innovation</p>
+      <div class="timeline-track">
+        <a href="countach.html" class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-decade">1970s</div>
+          <div class="timeline-car">Lamborghini Countach</div>
+        </a>
+        <a href="959.html" class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-decade">1980s</div>
+          <div class="timeline-car">Porsche 959</div>
+        </a>
+        <a href="f1.html" class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-decade">1990s</div>
+          <div class="timeline-car">McLaren F1</div>
+        </a>
+        <a href="veyron.html" class="timeline-item">
+          <div class="timeline-dot"></div>
+          <div class="timeline-decade">2000s</div>
+          <div class="timeline-car">Bugatti Veyron</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXHIBITS -->
+  <section class="exhibits" id="exhibits">
+    <div class="exhibits-header">
+      <h2>The Exhibition</h2>
+      <span>Select a vehicle to enter</span>
+    </div>
+
+    <div class="car-grid">
+
+      <!-- Countach -->
+      <a href="countach.html" class="car-card card-countach">
+        <div class="car-card-bg"></div>
+        <div class="car-silhouette">🏎</div>
+        <div class="car-card-overlay"></div>
+        <div class="car-card-content">
+          <span class="car-era">Gallery I — 1970s</span>
+          <span class="car-name">Lamborghini<br>Countach</span>
+          <p class="car-tagline">The wedge that made the future feel like today.</p>
+          <span class="car-enter-link">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <!-- 959 -->
+      <a href="959.html" class="car-card card-959">
+        <div class="car-card-bg"></div>
+        <div class="car-silhouette">🏎</div>
+        <div class="car-card-overlay"></div>
+        <div class="car-card-content">
+          <span class="car-era">Gallery II — 1980s</span>
+          <span class="car-name">Porsche 959</span>
+          <p class="car-tagline">Engineering perfection disguised as a road car.</p>
+          <span class="car-enter-link">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <!-- McLaren F1 -->
+      <a href="f1.html" class="car-card card-f1">
+        <div class="car-card-bg"></div>
+        <div class="car-silhouette">🏎</div>
+        <div class="car-card-overlay"></div>
+        <div class="car-card-content">
+          <span class="car-era">Gallery III — 1990s</span>
+          <span class="car-name">McLaren F1</span>
+          <p class="car-tagline">The pursuit of perfection, uncompromised.</p>
+          <span class="car-enter-link">Enter Gallery →</span>
+        </div>
+      </a>
+
+      <!-- Veyron -->
+      <a href="veyron.html" class="car-card card-veyron">
+        <div class="car-card-bg"></div>
+        <div class="car-silhouette">🏎</div>
+        <div class="car-card-overlay"></div>
+        <div class="car-card-content">
+          <span class="car-era">Gallery IV — 2000s</span>
+          <span class="car-name">Bugatti Veyron</span>
+          <p class="car-tagline">One thousand horsepower. Street legal.</p>
+          <span class="car-enter-link">Enter Gallery →</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <footer>
+    <p>Velocity &amp; Vision — A Virtual Museum Exhibition</p>
+    <p>History 4XX · University of Tennessee, Knoxville · 2026</p>
+  </footer>
+
+</body>
+</html>
