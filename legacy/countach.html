@@ -7,7 +7,42 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="scroll-scene.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <style>
+
+    .model-stage {
+      width: 100%;
+      height: 70vh;
+      min-height: 480px;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% 55%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        linear-gradient(180deg, #070707 0%, #111 60%, #080808 100%);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .model-stage model-viewer {
+      width: 100%;
+      height: 100%;
+      --poster-color: transparent;
+      background: transparent;
+    }
+    .model-caption {
+      position: absolute;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.7);
+      pointer-events: none;
+    }
+
     .gallery-hero-bg {
       background:
         radial-gradient(ellipse at 65% 55%, rgba(192,57,43,0.3) 0%, transparent 55%),
@@ -39,6 +74,45 @@
     <h1 class="gallery-title">Lamborghini<br>Countach</h1>
     <p class="gallery-subtitle">The car that made the future look like a wedge of steel.</p>
   </section>
+  <section class="scroll-scene" data-keyframes='[[0.0, "25deg 78deg 140%"], [0.22, "90deg 88deg 100%"], [0.45, "180deg 80deg 115%"], [0.68, "275deg 76deg 95%"], [0.88, "330deg 70deg 55%"], [1.0, "340deg 72deg 30%"]]'>
+    <div class="scene-sticky">
+      <model-viewer
+        src="models/countach.glb"
+        alt="Interactive 3D model"
+        camera-controls
+        touch-action="pan-y"
+        disable-zoom
+        interaction-prompt="none"
+        shadow-intensity="0.9"
+        exposure="0.95"
+        environment-image="neutral"
+        camera-orbit="25deg 78deg 140%">
+      </model-viewer>
+      <div class="scene-caption " data-from="0.03" data-to="0.22">
+        <span class="caption-eyebrow">Gallery I, 1970s</span>
+        <span class="caption-line">Marcello Gandini drew a wedge and the genre rewrote itself.</span>
+      </div>
+      <div class="scene-caption right" data-from="0.22" data-to="0.45">
+        <span class="caption-eyebrow">Side profile</span>
+        <span class="caption-line">No curve without intention. No surface without a reason.</span>
+      </div>
+      <div class="scene-caption bottom" data-from="0.45" data-to="0.68">
+        <span class="caption-eyebrow">Road and Track, Feb 1976</span>
+        <span class="caption-line">&ldquo;The fastest car we have ever tested.&rdquo;</span>
+      </div>
+      <div class="scene-caption right" data-from="0.68" data-to="0.86">
+        <span class="caption-eyebrow">Scissor door</span>
+        <span class="caption-line">An idea so strange that every supercar since has tried to inherit it.</span>
+      </div>
+      <div class="scene-finale" data-from="0.9">
+        <span class="finale-eyebrow">Next Exhibit</span>
+        <span class="finale-title">The scissor door opens onto the 1980s.</span>
+        <a class="finale-cta" href="959.html">Enter Porsche 959 &rarr;</a>
+      </div>
+      <span class="scene-hint">Scroll to explore</span>
+    </div>
+  </section>
+
 
   <main class="gallery-content">
 
@@ -149,5 +223,6 @@
     <p>History 4XX · UTK · 2026</p>
   </footer>
 
+  <script src="scroll-scene.js" defer></script>
 </body>
 </html>

@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="scroll-scene.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <style>
     .gallery-hero-bg {
       background:
@@ -39,6 +41,45 @@
     <h1 class="gallery-title">Bugatti<br>Veyron</h1>
     <p class="gallery-subtitle">One thousand horsepower. Four wheel drive. Street legal.</p>
   </section>
+  <section class="scroll-scene" data-keyframes='[[0.0, "15deg 82deg 145%"], [0.22, "90deg 90deg 95%"], [0.45, "180deg 82deg 115%"], [0.68, "215deg 72deg 85%"], [0.88, "325deg 78deg 55%"], [1.0, "335deg 74deg 30%"]]'>
+    <div class="scene-sticky">
+      <model-viewer
+        src="models/veyron.glb"
+        alt="Interactive 3D model"
+        camera-controls
+        touch-action="pan-y"
+        disable-zoom
+        interaction-prompt="none"
+        shadow-intensity="0.9"
+        exposure="0.95"
+        environment-image="neutral"
+        camera-orbit="15deg 82deg 145%">
+      </model-viewer>
+      <div class="scene-caption " data-from="0.03" data-to="0.22">
+        <span class="caption-eyebrow">Gallery IV, 2000s</span>
+        <span class="caption-line">Volkswagen Group handed Bugatti a specification that physics had to catch up to.</span>
+      </div>
+      <div class="scene-caption right" data-from="0.22" data-to="0.45">
+        <span class="caption-eyebrow">Eight liters, sixteen cylinders</span>
+        <span class="caption-line">Quad-turbo. Ten radiators. A drivetrain designed to survive itself.</span>
+      </div>
+      <div class="scene-caption bottom" data-from="0.45" data-to="0.68">
+        <span class="caption-eyebrow">Michelin and Brembo</span>
+        <span class="caption-line">Tires rated for fifteen minutes at full speed. Then replace.</span>
+      </div>
+      <div class="scene-caption " data-from="0.68" data-to="0.86">
+        <span class="caption-eyebrow">Autocar, 2005</span>
+        <span class="caption-line">&ldquo;A car that, in motion, felt almost calm despite its statistics.&rdquo;</span>
+      </div>
+      <div class="scene-finale" data-from="0.9">
+        <span class="finale-eyebrow">Next Exhibit</span>
+        <span class="finale-title">1,001 horsepower. The decade closes at 253 mph.</span>
+        <a class="finale-cta" href="about.html">Enter About This Exhibition &rarr;</a>
+      </div>
+      <span class="scene-hint">Scroll to explore</span>
+    </div>
+  </section>
+
 
   <main class="gallery-content">
 
@@ -151,5 +192,6 @@
     <p>History 4XX · UTK · 2026</p>
   </footer>
 
+  <script src="scroll-scene.js" defer></script>
 </body>
 </html>

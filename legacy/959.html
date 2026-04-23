@@ -7,7 +7,42 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Bebas+Neue&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="scroll-scene.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
   <style>
+
+    .model-stage {
+      width: 100%;
+      height: 70vh;
+      min-height: 480px;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% 55%, rgba(201,168,76,0.08) 0%, transparent 60%),
+        linear-gradient(180deg, #070707 0%, #111 60%, #080808 100%);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .model-stage model-viewer {
+      width: 100%;
+      height: 100%;
+      --poster-color: transparent;
+      background: transparent;
+    }
+    .model-caption {
+      position: absolute;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(201,168,76,0.7);
+      pointer-events: none;
+    }
+
     .gallery-hero-bg {
       background:
         radial-gradient(ellipse at 55% 50%, rgba(70,130,180,0.25) 0%, transparent 55%),
@@ -39,6 +74,45 @@
     <h1 class="gallery-title">Porsche 959</h1>
     <p class="gallery-subtitle">Before the future arrived, Porsche built it.</p>
   </section>
+  <section class="scroll-scene" data-keyframes='[[0.0, "20deg 82deg 140%"], [0.22, "80deg 92deg 90%"], [0.45, "160deg 80deg 110%"], [0.68, "225deg 75deg 95%"], [0.88, "320deg 80deg 58%"], [1.0, "335deg 78deg 32%"]]'>
+    <div class="scene-sticky">
+      <model-viewer
+        src="models/959.glb"
+        alt="Interactive 3D model"
+        camera-controls
+        touch-action="pan-y"
+        disable-zoom
+        interaction-prompt="none"
+        shadow-intensity="0.9"
+        exposure="0.95"
+        environment-image="neutral"
+        camera-orbit="20deg 82deg 140%">
+      </model-viewer>
+      <div class="scene-caption " data-from="0.03" data-to="0.22">
+        <span class="caption-eyebrow">Gallery II, 1980s</span>
+        <span class="caption-line">Porsche built the 959 for a rally championship that was cancelled before it raced.</span>
+      </div>
+      <div class="scene-caption bottom" data-from="0.22" data-to="0.45">
+        <span class="caption-eyebrow">Magnesium wheel</span>
+        <span class="caption-line">Every spoke hollowed. Every gram accounted for.</span>
+      </div>
+      <div class="scene-caption right" data-from="0.45" data-to="0.68">
+        <span class="caption-eyebrow">Twin-turbo flat-six</span>
+        <span class="caption-line">All-wheel drive before the world was ready to ask for it.</span>
+      </div>
+      <div class="scene-caption " data-from="0.68" data-to="0.86">
+        <span class="caption-eyebrow">Car and Driver, 1987</span>
+        <span class="caption-line">&ldquo;The word perfect was difficult to avoid.&rdquo;</span>
+      </div>
+      <div class="scene-finale" data-from="0.9">
+        <span class="finale-eyebrow">Next Exhibit</span>
+        <span class="finale-title">From Weissach to Woking. The 1990s are waiting.</span>
+        <a class="finale-cta" href="f1.html">Enter McLaren F1 &rarr;</a>
+      </div>
+      <span class="scene-hint">Scroll to explore</span>
+    </div>
+  </section>
+
 
   <main class="gallery-content">
 
@@ -151,5 +225,6 @@
     <p>History 4XX · UTK · 2026</p>
   </footer>
 
+  <script src="scroll-scene.js" defer></script>
 </body>
 </html>
