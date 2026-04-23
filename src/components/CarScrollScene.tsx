@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import type { SceneConfig } from "@/lib/scenes";
+import type { SceneConfig, MaterialOverride } from "@/lib/scenes";
 
 type Props = {
   modelUrl: string;
@@ -44,8 +44,14 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
       orbit: parseOrbit(k[1]),
     }));
 
+    // Target progress is what scroll reports. Smoothed progress is what drives
+    // the camera, lerped towards target — this absorbs trackpad rubber-band.
+    let targetProgress = 0;
+    let smoothProgress = 0;
+
+    // Current orbit is another lerp pass, so even if smoothProgress changes
+    // direction briefly the orbit glides.
     let current: Orbit = { ...keyframes[0].orbit };
-    let target: Orbit = { ...keyframes[0].orbit };
     let raf = 0;
     let mounted = true;
 
@@ -67,21 +73,23 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
         : { ...keyframes[keyframes.length - 1].orbit };
     };
 
-    const onScroll = () => {
-      const rect = el.getBoundingClientRect();
-      const scrollable = rect.height - window.innerHeight;
-      const scrolled = -rect.top;
-      const progress = clamp01(scrolled / (scrollable || 1));
+    const readProgress = () => {
+      // Use scrollY against absolute offsetTop to avoid jitter from
+      // getBoundingClientRect during Lenis smoothing.
+      const rectTop =
+        el.getBoundingClientRect().top + window.scrollY;
+      const scrollable = el.offsetHeight - window.innerHeight;
+      const scrolled = window.scrollY - rectTop;
+      return clamp01(scrolled / (scrollable || 1));
+    };
 
-      target = sample(progress);
-
+    const updateOverlays = (progress: number) => {
       scene.captions.forEach((cap, i) => {
         const node = captionRefs.current[i];
         if (!node) return;
         if (progress >= cap.from && progress <= cap.to) node.classList.add("is-live");
         else node.classList.remove("is-live");
       });
-
       if (finaleRef.current) {
         if (progress >= 0.9) finaleRef.current.classList.add("is-live");
         else finaleRef.current.classList.remove("is-live");
@@ -89,21 +97,77 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
       if (hintRef.current) hintRef.current.style.opacity = progress > 0.02 ? "0" : "1";
     };
 
+    const onScroll = () => {
+      targetProgress = readProgress();
+    };
+
     const tick = () => {
       if (!mounted) return;
-      const k = 0.18;
-      current.theta += (target.theta - current.theta) * k;
-      current.phi += (target.phi - current.phi) * k;
-      current.radius += (target.radius - current.radius) * k;
-      // setAttribute accepted directly on the custom element
-      (mv as unknown as Element).setAttribute("camera-orbit", formatOrbit(current));
+      // Stage 1: smooth the progress value itself
+      smoothProgress += (targetProgress - smoothProgress) * 0.12;
+      // Stage 2: sample keyframes at the smoothed progress
+      const goal = sample(smoothProgress);
+      // Stage 3: smooth the orbit towards the sampled goal
+      const k = 0.2;
+      current.theta += (goal.theta - current.theta) * k;
+      current.phi += (goal.phi - current.phi) * k;
+      current.radius += (goal.radius - current.radius) * k;
+      (mv as Element).setAttribute("camera-orbit", formatOrbit(current));
+      updateOverlays(smoothProgress);
       raf = requestAnimationFrame(tick);
+    };
+
+    const applyMaterialOverrides = () => {
+      if (!scene.materialOverrides?.length) return;
+      // model-viewer exposes a `model` property after load with `materials` array.
+      type MV = HTMLElement & {
+        model?: {
+          materials: Array<{
+            name: string;
+            pbrMetallicRoughness: {
+              setBaseColorFactor: (c: [number, number, number, number]) => void;
+              setMetallicFactor?: (v: number) => void;
+              setRoughnessFactor?: (v: number) => void;
+            };
+          }>;
+        };
+      };
+      const mats = (mv as MV).model?.materials ?? [];
+      if (mats.length === 0) return;
+
+      const names = mats.map((m) => m.name);
+      let hits = 0;
+
+      scene.materialOverrides.forEach((ov: MaterialOverride) => {
+        const re = new RegExp(ov.match, "i");
+        mats.forEach((m) => {
+          if (re.test(m.name)) {
+            m.pbrMetallicRoughness.setBaseColorFactor(ov.color);
+            if (typeof ov.metallic === "number") {
+              m.pbrMetallicRoughness.setMetallicFactor?.(ov.metallic);
+            }
+            if (typeof ov.roughness === "number") {
+              m.pbrMetallicRoughness.setRoughnessFactor?.(ov.roughness);
+            }
+            hits++;
+          }
+        });
+      });
+
+      // Dev aid: when patterns miss, log the material list so we can refine.
+      if (hits === 0 && scene.materialOverrides.length > 0) {
+        console.info(
+          `[CarScrollScene] no material override matched for ${modelUrl}. Materials:`,
+          names
+        );
+      }
     };
 
     const onLoad = () => {
       if (loadRef.current) loadRef.current.classList.add("is-done");
-      (mv as unknown as Element).setAttribute("camera-orbit", formatOrbit(current));
+      applyMaterialOverrides();
       onScroll();
+      (mv as Element).setAttribute("camera-orbit", formatOrbit(current));
       cancelAnimationFrame(raf);
       tick();
     };
@@ -111,8 +175,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
     const onError = () => {
       if (loadRef.current) {
         loadRef.current.classList.add("is-error");
-        loadRef.current.textContent =
-          "Model failed to load. Check browser console for details.";
+        loadRef.current.textContent = "Model failed to load.";
       }
     };
 
@@ -131,28 +194,21 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
       mv.removeEventListener("load", onLoad as EventListener);
       mv.removeEventListener("error", onError as EventListener);
     };
-  }, [scene]);
+  }, [scene, modelUrl]);
 
-  // Reset captionRefs length on render
   captionRefs.current = [];
 
   return (
-    <section
-      ref={hostRef}
-      className="scroll-scene"
-    >
+    <section ref={hostRef} className="scroll-scene">
       <div className="scene-sticky">
-        {/* model-viewer is registered by the CDN script in layout.tsx. */}
         <model-viewer
           ref={mvRef as never}
           src={modelUrl}
           alt="Interactive 3D model"
-          camera-controls=""
-          touch-action="pan-y"
-          disable-zoom=""
           interaction-prompt="none"
-          shadow-intensity="0.9"
-          exposure="0.95"
+          shadow-intensity="1.1"
+          shadow-softness="0.85"
+          exposure="1.05"
           environment-image="neutral"
           reveal="auto"
           camera-orbit={scene.keyframes[0][1]}
