@@ -5,31 +5,67 @@ import { Reveal } from "@/components/Reveal";
 import { WordReveal } from "@/components/home/WordReveal";
 import { Marquee } from "@/components/home/Marquee";
 import { ExhibitsDirectory } from "@/components/home/ExhibitsDirectory";
+import { ArtifactStack } from "@/components/home/ArtifactStack";
+import { FourRoomsShowcase, RoomCard } from "@/components/home/FourRoomsShowcase";
+import { HomeParallax } from "@/components/home/HomeParallax";
 import HomeHero3DClient from "@/components/home/HomeHero3DClient";
 
+function pickArtifacts(slug: string, count: number): string[] {
+  const art = artifactsBySlug[slug];
+  if (!art) return [];
+  const figs = art.artifacts
+    .filter((i) => i.kind === "figure")
+    .slice(0, count * 2); // leave some variety room
+  return figs.slice(0, count).map(
+    (f) => `/artifacts/${art.imgDir}/${(f as { filename: string }).filename}`
+  );
+}
+
 export default function HomePage() {
-  // Pick a lead artifact image per car for the cursor-follow preview on the exhibits list
+  // Lead artifact per car for the exhibits-list cursor preview
   const carsWithPreview = cars.map((car) => {
-    const slugForArtifacts =
-      car.slug === "959" ? "959"
-      : car.slug === "f1" ? "f1"
-      : car.slug;
-    const art = artifactsBySlug[slugForArtifacts];
-    // Take the first figure as the preview
+    const art = artifactsBySlug[car.slug];
     let previewImage = car.images[0] || "/images/countach-01.webp";
     if (art) {
-      const firstFig = art.artifacts.find((i) => i.kind === "figure");
-      if (firstFig && firstFig.kind === "figure") {
-        previewImage = `/artifacts/${art.imgDir}/${firstFig.filename}`;
+      const first = art.artifacts.find((i) => i.kind === "figure");
+      if (first && first.kind === "figure") {
+        previewImage = `/artifacts/${art.imgDir}/${first.filename}`;
       }
     }
     return { ...car, previewImage };
   });
 
+  // Three featured artifacts per room for the showcase stacks
+  const rooms: RoomCard[] = cars.map((car, i) => {
+    const three = pickArtifacts(car.slug, 3);
+    return {
+      slug: car.slug,
+      decade: car.decade,
+      maker: car.maker,
+      name: car.name,
+      tagline: car.tagline,
+      artifacts: [
+        three[0] || "/images/countach-01.webp",
+        three[1] || three[0] || "/images/countach-01.webp",
+        three[2] || three[0] || "/images/countach-01.webp",
+      ] as [string, string, string],
+      roomNumber: `Room ${toRoman(i + 1)}`,
+    };
+  });
+
+  // Three hero stack images — the most "iconic" per car (first from press/launch sections)
+  const featuredStack = [
+    pickArtifacts("countach", 1)[0],
+    pickArtifacts("f1", 1)[0],
+    pickArtifacts("veyron", 1)[0],
+  ];
+
   return (
     <>
+      <HomeParallax />
+
       {/* ============ HERO ============ */}
-      <section className="home-hero">
+      <section className="home-hero" data-parallax-container>
         <div className="home-hero-grid">
           <div className="home-hero-copy">
             <div className="eyebrow home-hero-kicker">
@@ -85,7 +121,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="home-hero-stage">
+          <div className="home-hero-stage" data-parallax="0.25">
             <HomeHero3DClient />
             <div className="home-hero-stage-label">
               <span className="eyebrow">Now Showing · Room I</span>
@@ -97,16 +133,48 @@ export default function HomePage() {
       </section>
 
       {/* ============ MARQUEE SIGNATURE ============ */}
-      <Marquee
-        items={[
-          "1974  Lamborghini Countach",
-          "1986  Porsche 959",
-          "1992  McLaren F1",
-          "2005  Bugatti Veyron",
-          "Velocity",
-          "Vision",
-        ]}
-      />
+      <div data-marquee-drift>
+        <Marquee
+          items={[
+            "1974  Lamborghini Countach",
+            "1986  Porsche 959",
+            "1992  McLaren F1",
+            "2005  Bugatti Veyron",
+            "Velocity",
+            "Vision",
+          ]}
+        />
+      </div>
+
+      {/* ============ FEATURED ARTIFACT STACK — retro polaroids ============ */}
+      <section className="home-featured-stack" data-parallax-container>
+        <div className="featured-stack-copy">
+          <Reveal>
+            <div className="eyebrow">Primary Evidence</div>
+            <h2
+              className="serif-display mt-4"
+              style={{ fontSize: "var(--text-h1)" }}
+            >
+              Not nostalgia. <br />
+              <em className="text-[color:var(--color-brass-dark)]">The shock of first encounter.</em>
+            </h2>
+            <p className="featured-stack-lede">
+              Sixty-nine artifacts, pulled from the original magazine scans,
+              press photographs, and auction catalogues that introduced these
+              cars to the world. Period voices. Period paper. Period dust.
+            </p>
+          </Reveal>
+        </div>
+
+        <div className="featured-stack-visual" data-parallax="0.12">
+          <ArtifactStack
+            leftImage={featuredStack[0] || "/images/countach-01.webp"}
+            middleImage={featuredStack[1] || "/images/countach-01.webp"}
+            rightImage={featuredStack[2] || "/images/countach-01.webp"}
+            size="lg"
+          />
+        </div>
+      </section>
 
       {/* ============ CURATOR'S NOTE ============ */}
       <section className="curator-section">
@@ -144,13 +212,16 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ EXHIBITS DIRECTORY ============ */}
+      {/* ============ FOUR ROOMS SHOWCASE ============ */}
+      <FourRoomsShowcase rooms={rooms} />
+
+      {/* ============ EXHIBITS DIRECTORY (textual) ============ */}
       <section className="exhibits-section">
         <div className="exhibits-section-inner">
           <Reveal>
             <header className="exhibits-header">
               <div>
-                <p className="eyebrow">The Exhibits</p>
+                <p className="eyebrow">The Exhibits, in order</p>
                 <h2 className="serif-display" style={{ fontSize: "var(--text-h1)" }}>
                   Four rooms.
                 </h2>
@@ -166,9 +237,9 @@ export default function HomePage() {
       </section>
 
       {/* ============ CLOSING WORDMARK ============ */}
-      <section className="home-wordmark">
+      <section className="home-wordmark" data-parallax-container>
         <Reveal>
-          <h2 className="serif-display home-wordmark-text">
+          <h2 className="serif-display home-wordmark-text" data-parallax="0.08">
             <em>Velocity</em> &amp; <em>Vision</em>
           </h2>
           <p className="home-wordmark-sub">
@@ -178,4 +249,8 @@ export default function HomePage() {
       </section>
     </>
   );
+}
+
+function toRoman(n: number): string {
+  return ["I", "II", "III", "IV"][n - 1] || String(n);
 }
