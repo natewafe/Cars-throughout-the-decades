@@ -4,7 +4,7 @@ Copy everything inside the code-fence below and paste into Claude Code from the 
 
 - You are at the root of the `Cars-throughout-the-decades` repo.
 - The `primary-sources/` folder (this folder) is committed at the repo root.
-- The legacy Next.js / legacy HTML gallery pages are in `legacy/` (`countach.html`, `959.html`, `f1.html`, `veyron.html`, `about.html`, `shared.css`).
+- The legacy gallery pages are in `legacy/` (`countach.html`, `959.html`, `f1.html`, `veyron.html`, `about.html`, `shared.css`).
 
 ---
 
@@ -13,77 +13,80 @@ You are working on the Velocity & Vision Virtual Museum, a UTK history class exh
 
 Your job: wire the primary-source images into the gallery pages and extend the bibliography, without touching student-authored paragraph text.
 
-## Inputs you already have
-- /primary-sources/MANIFEST.md — human-readable index of all images
-- /primary-sources/<car>/sources.json — per-car manifest with image metadata, chicago_caption, chicago_bibliography, chicago_footnote_short, primary_written_source
-- /primary-sources/<car>/<category>/<filename>.jpg — the actual image files, organized by {magazine, celebrity-owner, schematics, press-launch}
-- /legacy/countach.html, /legacy/959.html, /legacy/f1.html, /legacy/veyron.html — gallery pages to update
-- /legacy/about.html — bibliography page to extend
-- /legacy/shared.css — site styles (black bg, gold accents --gold: #c9a84c, Cormorant Garamond body, Bebas Neue headings)
+## TIERED INPUT — use in this order
+
+### Tier 1 (PRIORITY — must be used first)
+/primary-sources/from-main-sources/sources.json — master manifest
+/primary-sources/from-main-sources/<decade>-<car>/<primary|secondary>-<source-slug>/*.jpg — 29 artifacts pulled directly from the 8 sources in the student's annotated bibliography. These are the artifacts the essay's footnotes will cite. Lead every gallery page with these.
+
+### Tier 2 (supplementary)
+/primary-sources/<car>/sources.json — per-car manifest
+/primary-sources/<car>/{magazine,celebrity-owner,schematics,press-launch}/*.{jpg,webp} — additional period artifacts (Walter Wolf Countach, Elon Musk F1 delivery 1999, Bugatti chassis 5.0 press, etc.) and specimen photos. Use to fill categories Tier 1 does not cover.
+
+### Tier 3 (de-prioritized — ignore unless filling a specific hole)
+/primary-sources/<car>/_archive-weak-specimens/ — cut specimens; only use if a gallery page needs an additional angle not present in Tiers 1 or 2.
+
+## Other inputs
+/legacy/countach.html, /legacy/959.html, /legacy/f1.html, /legacy/veyron.html — gallery pages
+/legacy/about.html — bibliography page
+/legacy/shared.css — site styles (black bg, gold accents --gold: #c9a84c, Cormorant Garamond body, Bebas Neue headings)
 
 ## What to do
 
 ### 1. For each gallery page (countach.html, 959.html, f1.html, veyron.html)
 
-Load the corresponding /primary-sources/<car>/sources.json. For each image in image_primary_sources:
+a) Copy images into /legacy/images/<car>/ (create the folder if needed). Keep the original filenames — they're already kebab-cased and descriptive. Preserve image quality, no resizing.
 
-a) Copy the image file into a web-accessible location. Use /legacy/images/<car>/<filename> (create the folder if needed). Keep the original filename — it's already kebab-cased and descriptive.
+b) Lead the page with a "Primary Source" section containing a large figure for each Tier 1 primary-source image (from primary-<source-slug>/). Then a "Secondary Source" section with the secondary-<source-slug>/ images. Then, if the page needs more breadth, pull from Tier 2 into sections titled "Magazine & Press Coverage", "Designers, Builders, and Owners", "Design & Engineering", "Launch & Motor Shows".
 
-b) Render each image in a <figure class="artifact"> block with this structure:
+c) Render each image as:
 
     <figure class="artifact" id="fig-<id>">
       <img src="images/<car>/<filename>" alt="<description>" loading="lazy">
       <figcaption>
         <span class="caption">Figure <id>. <chicago_caption with URL linked></span>
         <div class="object-label" data-author="student">
-          <!-- STUDENT LABEL TEXT — DO NOT WRITE. Leave a placeholder comment:
-               "Voice transcript pending for: <filename>" -->
+          <!-- STUDENT LABEL TEXT — DO NOT WRITE. Placeholder: "Voice transcript pending for: <filename>" -->
         </div>
       </figcaption>
     </figure>
 
-c) Group the <figure> blocks into four <section> elements per page, one per category: magazine, celebrity-owner, schematics, press-launch. Use the section headings "Magazine & Press Coverage", "Designers, Builders, and Owners", "Design & Engineering", "Launch & Motor Shows" in that order.
-
-d) At the bottom of each page, before </main>, add a <section class="footnotes"> with an <ol> of numbered footnotes. Number them chronologically as images appear on the page. Use the chicago_footnote_short field from sources.json for each. The PRIMARY written source (primary_written_source block) must be footnote #1 on every page; the images that follow are numbered 2, 3, 4… in the order they appear.
+d) At the bottom of each page, before </main>, add a <section class="footnotes"> with a numbered <ol> of footnotes. Number them chronologically as figures appear on the page. The primary written source (from primary_written_source in sources.json) is footnote #1 on every page; figures that follow are 2, 3, 4… Use chicago_footnote_short from each figure's metadata.
 
 ### 2. For about.html (bibliography)
 
-Extend the existing bibliography list with every chicago_bibliography entry from all four sources.json files, deduplicated if any overlap. Sort alphabetically by author's last name (treat "Uncredited" and "Unknown photographer" under U). Preserve the existing entries for the four PRIMARY written sources (Road & Track 1976, Car and Driver 1987, Autocar 1994, Autocar 2005) and the already-listed secondary sources.
+Extend the existing bibliography with every chicago_bibliography entry from all four of from-main-sources' subfolders AND from each per-car sources.json. Deduplicate any overlaps. Sort alphabetically by author's last name. Preserve any entries already there.
 
 ### 3. Do NOT touch
-- Any existing paragraph text inside <div class="object-label"> or elsewhere on the gallery pages — those are student-authored and may only be edited by the student.
-- The curatorial statement / introduction block on index.html.
-- The tagline text on home-page cards (student approved keeping short UI text).
-- Any tracked-changes comments or TODOs referencing footer course number.
+- Any existing paragraph text inside <div class="object-label"> or elsewhere on the gallery pages. Student-authored.
+- The curatorial statement on index.html.
+- Home-page card taglines.
+- Footer course-number placeholder.
 
 ### 4. Constraints
-
-- No em dashes in any text you write (captions, headings, alt text). Replace with commas or reword.
+- No em dashes anywhere in text you write. Replace with commas or reword.
 - Do not invent facts not present in sources.json or primary_written_source.
-- If you render captions as HTML, link the URL in the caption to the Wikimedia Commons file page (not the direct image), so viewers land on the license/attribution page.
+- Link captions' URLs to the source_page (article page), not source_url (raw image).
 - Every CC BY-SA image requires author + license in the visible caption. CC BY requires author. Public domain requires author if known.
-- Preserve image quality: copy files as-is, no resizing. If lazy-loading is already in the site, keep it on.
+- Magazine-scan and fair-use items: include the short credit line "(Fair use, educational — <Publisher> archive)" in the caption.
 
 ### 5. Final pass
-
 - Build the site and verify all <img> srcs resolve.
-- Run an HTML validator pass on all five pages.
-- Write a SOURCES_CHANGELOG.md at repo root listing every image added, the gallery page it lives on, and its figure number.
-- Do not commit until I've reviewed.
+- HTML-validate every page.
+- Write SOURCES_CHANGELOG.md at repo root listing every image added, which gallery page it lives on, which tier it came from, and its figure number.
+- Do not commit until I review.
 ```
 
 ---
 
 ## Notes for you (Nathan)
 
-**Before running the prompt**, replace the `<div class="object-label">` placeholder comment with your voice transcript once you've recorded it — Claude Code will not write the label prose.
+Replace the `<div class="object-label">` placeholder comment with your voice transcript once recorded. Claude Code will not write label prose.
 
-**If you want AI help on any one label**, invoke Claude Code separately with:
+For one AI sentence per label (the allowed factual sentence), invoke Code separately:
 
-> For the image `primary-sources/<car>/<category>/<filename>.jpg`, write exactly one factual sentence drawn from the primary written source in `sources.json`. Do not paraphrase any other section of the page. No em dashes.
+> For the image `primary-sources/from-main-sources/<decade-car>/<sub>/<filename>`, write exactly one factual sentence drawn from the primary written source in `sources.json`. Do not paraphrase any other section. No em dashes.
 
-That enforces the one-sentence-from-primary-source rule from the project brief.
+If a caption's source URL ever 404s, the image file in `/primary-sources/` is pinned and the `source_page` URL in sources.json provides the provenance.
 
-**If a caption's Wikimedia link ever 404s**, check the `wikimedia_title` field in sources.json — the file might have been renamed on Commons. The image itself in `/primary-sources/` is pinned.
-
-**Course number placeholder**: still TODO per the project brief. Update in the footer of `shared.css` or wherever the placeholder lives, not via this prompt.
+Course number placeholder in the footer: still TODO — update manually in `shared.css` or the footer partial.

@@ -2,106 +2,95 @@
 
 Curated library of first-party image sources for the four gallery pages of the Velocity & Vision Virtual Museum (UTK history class).
 
-Every image falls into one of two classes, tagged in `sources.json`:
+## PRIORITY STRUCTURE
 
-- **period-artifact** — an actual contemporaneous artifact from the exhibit period: magazine page scans, factory press photographs, period advertising, celebrity-delivery news stills, auction-catalog provenance photos. These are the artifacts the thesis argues about — the era's own documentation of the car.
-- **specimen-photograph** — a modern Wikimedia Commons photograph of the original vehicle at a motor show, museum, or private display. These supplement the period artifacts by showing the physical car as it survives today.
+There are three tiers of material. **Always reach for Tier 1 first**; it comes straight from the student's annotated bibliography and is the citation backbone of the exhibit.
 
-## Folder layout
+### Tier 1 — `from-main-sources/` (PRIORITY, use these first)
+
+Images pulled directly from the 8 sources cited in the student's annotated bibliography. Sorted by decade, then car, then primary/secondary.
 
 ```
-primary-sources/
-├── MANIFEST.md                       (this file)
-├── CLAUDE_CODE_PROMPT.md             (ready-to-paste prompt for Claude Code)
-├── countach/
-│   ├── sources.json                  (machine-readable citations + image metadata)
-│   ├── magazine/                     (period magazine scans, ads, posters)
-│   ├── celebrity-owner/              (designer, builder, famous-owner photography)
-│   ├── schematics/                   (design, engineering, cutaway imagery)
-│   └── press-launch/                 (factory press photos, motor-show reveals)
-├── porsche-959/                      (same 4 subfolders)
-├── mclaren-f1/                       (same 4 subfolders)
-└── veyron/                           (same 4 subfolders)
+from-main-sources/
+├── sources.json                                   (master manifest for this tier)
+├── 1970s-countach/
+│   ├── primary-road-and-track-feb-1976/           (2 page scans)
+│   └── secondary-perkins-the-drive/               (7 article images)
+├── 1980s-porsche-959/
+│   ├── primary-csere-car-and-driver-1987/         (2 test photos)
+│   └── secondary-kimble-motorsport-cutaway/       (1 cutaway — the David Kimble illustration)
+├── 1990s-mclaren-f1/
+│   ├── primary-cropley-autocar-may-1994/          (6 editorial photos)
+│   └── secondary-car-magazine-june-1994/          (1 cover + 3 spread scans)
+└── 2000s-veyron/
+    ├── primary-cropley-autocar-2005/              (6 editorial photos)
+    └── secondary-autocar-veyron-2005-2015-review/ (2 retrospective photos)
 ```
 
-## Per-car summary
+29 artifacts, each with a full Chicago citation pre-written in `from-main-sources/sources.json` under `folders` keyed by decade-car and then by subfolder name. Every entry carries `chicago_caption`, `chicago_bibliography`, `chicago_footnote_short`, creator, year, license note, and the source page URL.
 
-### 1970s — Lamborghini Countach LP400 (12 items: 4 period artifacts + 8 specimen)
+### Tier 2 — per-car folders (`countach/`, `porsche-959/`, `mclaren-f1/`, `veyron/`)
 
+Supplementary period artifacts and specimen photographs organized by the four museum categories (magazine, celebrity-owner, schematics, press-launch). Use when a Tier 1 artifact does not cover a particular category.
+
+Each car folder has its own `sources.json` with full Chicago citations.
+
+- `countach/` — 9 active items (R&T scans, Pirelli 1986 poster, Walter Wolf, Wolf of Wall Street RM Sotheby's, Gandini, Bertone, LP500 prototype)
+- `porsche-959/` — 10 active items (1983 Gruppe B factory press, Ralph Lauren's 959, factory mechanical sketch, engine, Rothmans Paris-Dakar, Porsche 961)
+- `mclaren-f1/` — 15 active items (Car Magazine June 1994 scans, Elon Musk delivery 1999, Gordon Murray, F1 GTR 1995 Le Mans winner, V12 engine bay)
+- `veyron/` — 12 active items (Bugatti chassis 5.0 validation prototype, EB 18.3 Chiron concept, EB 18.4 Veyron concept, W16 engine, top-speed key)
+
+### Tier 3 — `_archive-weak-specimens/` (de-prioritized)
+
+Inside each car folder is an `_archive-weak-specimens/` subfolder holding the modern car-show / museum specimen photos that were cut from active use because Tier 1 or Tier 2 already covers the same historical moment with a stronger artifact. They are not deleted; pull one out if a gallery page needs an additional angle.
+
+- `countach/_archive-weak-specimens/` — 3 modern LP400 Periscopo specimen photos
+- `porsche-959/_archive-weak-specimens/` — 2 museum prototype specimen photos
+- `mclaren-f1/_archive-weak-specimens/` — 3 modern XP4 / production F1 specimen photos
+- `veyron/_archive-weak-specimens/` — 3 modern Goodwood / Gumball / driving specimen photos
+
+## Tier 1 full list — artifacts from the 8 annotated-bibliography sources
+
+### 1970s — Lamborghini Countach LP400
 Primary written source: Road & Track, "Lamborghini Countach Road Test," February 1976.
+- `1970s-countach/primary-road-and-track-feb-1976/rt-feb-1976-page-01.jpg` — first page of the original road-test
+- `1970s-countach/primary-road-and-track-feb-1976/rt-feb-1976-page-02.jpg` — second page (specs, instrumented-test data)
 
-**Period artifacts:**
-- `magazine/road-track-feb-1976-countach-scan-01.jpg` — actual page scan of the R&T Feb 1976 road test (via Curbside Classic)
-- `magazine/road-track-feb-1976-countach-scan-02.jpg` — second page of the R&T Feb 1976 road test (via Curbside Classic)
-- `magazine/pirelli-countach-poster-1986.jpg` — Pirelli factory advertising poster, April 1986 (PD)
-- `celebrity-owner/walter-wolf-red-countach.jpg` — Walter Wolf with his first LP400 Speciale, c. 1976, the car that pioneered the flared-arch, rear-wing aesthetic
-- `celebrity-owner/wolf-of-wall-street-countach-rm-sothebys.webp` — the 1989 Countach 25th Anniversary from *The Wolf of Wall Street*, RM Sotheby's 2023 catalog
+Secondary written source: Chris Perkins, "5 Things You Didn't Know About the Lamborghini Countach," *The Drive*, September 19, 2016.
+- `secondary-perkins-the-drive/perkins-countach-hero.jpg`
+- `secondary-perkins-the-drive/perkins-countach-inline-1.jpg` through `-4.jpg`
+- `secondary-perkins-the-drive/perkins-countach-periscopica-1976.jpg` (period 1976 Periscopica — same spec Road & Track tested)
 
-**Specimen photographs:**
-- `celebrity-owner/gandini-designer-1976.jpg` — Marcello Gandini, the Bertone designer, 1976 (PD)
-- `celebrity-owner/bertone-countach-stratos-1970s.jpg` — Nuccio Bertone with the Countach and Stratos, Jesse Alexander (PD)
-- `celebrity-owner/bertone-countach-miura-1980s.jpg` — Nuccio Bertone with the Countach and Miura (PD)
-- `press-launch/countach-lp400-1974-grand-basel.jpg` — 1974 LP400 specimen (CC BY-SA 4.0)
-- `press-launch/countach-lp400-periscopio-1975.jpg` — 1975 LP400 Periscopo specimen (CC BY-SA 4.0)
-- `press-launch/countach-lp400-periscopio-1976.jpg` — 1976 Periscopo specimen (CC BY-SA 4.0)
-- `schematics/countach-lp500-prototype-2008-recreation.jpg` — LP500 prototype form (CC BY 2.0)
+### 1980s — Porsche 959
+Primary written source: Csaba Csere, "1987 Porsche 959 — Archived Test," *Car and Driver*, November 1987.
+- `primary-csere-car-and-driver-1987/csere-959-main-photo.jpg` — period photograph from the road test
+- `primary-csere-car-and-driver-1987/csere-959-102.jpg` — studio photograph, Car and Driver archive
 
-### 1980s — Porsche 959 (12 items: 2 period artifacts + 10 specimen)
+Secondary written source: David Kimble, "Cutaway Classic: Explore the Amazing Porsche 959," *Motorsport.com*, June 8, 2016.
+- `secondary-kimble-motorsport-cutaway/kimble-959-cutaway-s1200.webp` — the David Kimble cutaway illustration, highest resolution available
 
-Primary written source: Csaba Csere, "1987 Porsche 959 Archived Test," Car and Driver, November 1987.
+### 1990s — McLaren F1
+Primary written source: Steve Cropley, "McLaren F1: Full Test of World's Greatest Supercar," *Autocar*, May 11, 1994.
+- `primary-cropley-autocar-may-1994/autocar-mclaren-f1-02.jpg`
+- `primary-cropley-autocar-may-1994/autocar-mclaren-f1-03.jpg`
+- `primary-cropley-autocar-may-1994/autocar-mclaren-f1-05.jpg`
+- `primary-cropley-autocar-may-1994/autocar-mclaren-f1-08.jpg` (interior / central driving position)
+- `primary-cropley-autocar-may-1994/autocar-mclaren-f1-012.jpg`
+- `primary-cropley-autocar-may-1994/autocar-mclaren-f1-020.jpg`
 
-**Period artifacts:**
-- `press-launch/959-gruppe-b-1983-frankfurt-iaa-factory.jpeg` — Porsche's own 1983 Frankfurt IAA press photo of the 'Gruppe B' concept
-- `press-launch/959-gruppe-b-1983-factory-3.jpeg` — factory press photo in Rothmans livery showing the Paris-Dakar development thread
+Secondary written source: "McLaren F1 Review: Our Original 1994 Road Test," *Car Magazine*, June 1994.
+- `secondary-car-magazine-june-1994/car-magazine-june-1994-cover.jpg` — actual June 1994 Car Magazine cover
+- `secondary-car-magazine-june-1994/car-magazine-june-1994-spread-01.jpg` through `-03.jpg` — full magazine spread scans
 
-**Specimen photographs:**
-- `press-launch/959-gruppe-b-concept-1983.jpg` / `959-gruppe-b-concept-rear-1983.jpg` — 1983 Gruppe B concept at museum display (CC BY 2.0)
-- `press-launch/959-prototype-hamburg-prototyp.jpg` — Hamburg Prototyp Museum (CC BY-SA 4.0)
-- `press-launch/959-prototype-sp24-1985.jpg` — 1985 pre-production (CC BY-SA 4.0)
-- `press-launch/961-le-mans-1986.jpg` — 1987 Le Mans 961 race variant in Porsche Museum (CC BY-SA 4.0)
-- `schematics/959-mechanical-sketch-stuttgart.jpg` — factory mechanical sketch in Porsche Museum (CC BY 4.0)
-- `schematics/959-engine-bay.jpg` — twin-sequential-turbo flat-six detail (CC BY-SA 3.0)
-- `celebrity-owner/959-ralph-lauren-collection.jpg` + `959-ralph-lauren-interior.jpg` — Ralph Lauren's 1988 959 Komfort (CC BY-SA 3.0)
-- `magazine/959-rothmans-paris-dakar-1986.jpg` — Rothmans-liveried Paris-Dakar winner (CC BY 2.0)
+### 2000s — Bugatti Veyron EB 16.4
+Primary written source: Steve Cropley, "Bugatti Veyron 2005 First Drive," *Autocar*, 2005.
+- `primary-cropley-autocar-2005/autocar-veyron-hero.jpg`
+- `primary-cropley-autocar-2005/autocar-veyron-01.jpg` through `-04.jpg` (four editorial photos)
+- `primary-cropley-autocar-2005/autocar-veyron-06.jpg`
 
-### 1990s — McLaren F1 (18 items: 10 period artifacts + 8 specimen)
-
-Primary written source: Steve Cropley, "McLaren F1: Full Test," Autocar, May 11, 1994.
-
-**Period artifacts (Car Magazine June 1994 + Musk delivery 1999):**
-- `magazine/car-magazine-june-1994-cover.jpg` — actual Car Magazine June 1994 cover
-- `magazine/car-magazine-june-1994-spread-01.jpg` through `-06.jpg` — six full magazine spread scans of the original 1994 F1 road test (Bauer Media archive)
-- `celebrity-owner/elon-musk-mclaren-f1-delivery-1999-01.jpg` — 28-year-old Musk watching his F1 being unloaded, 1999 CNN footage
-- `celebrity-owner/elon-musk-mclaren-f1-delivery-1999-02.jpg` — Musk during unloading
-- `celebrity-owner/elon-musk-mclaren-f1-delivery-1999-03.jpg` — Musk beside the delivered F1
-
-**Specimen photographs:**
-- `press-launch/f1-xp4-prototype-1993.jpg` + `-alt.jpg` — XP4 prototype (CC BY-SA 4.0)
-- `press-launch/f1-1994-production.jpg` — 1994 production F1 (CC BY-SA 4.0)
-- `schematics/f1-lm-engine-bay.jpg` — BMW V12 with gold-foil heat shield (CC BY-SA 4.0)
-- `schematics/f1-1996-front-end-detail.jpg` — chassis 063 detail (CC BY-SA 4.0)
-- `celebrity-owner/gordon-murray-1996-le-mans.jpg` — Murray at 1996 Le Mans paddock (CC BY-SA 2.0)
-- `magazine/f1-gtr-1995-le-mans-winner.jpg` — 1995 Le Mans-winning GTR at Goodwood (CC BY-SA 4.0)
-- `magazine/f1-gtr-nielsen-bscher-donington-1995.jpg` — 1995 BPR Donington race (CC BY-SA 2.0)
-
-### 2000s — Bugatti Veyron EB 16.4 (15 items: 4 period artifacts + 11 specimen)
-
-Primary written source: Steve Cropley, "Bugatti Veyron 2005 First Drive," Autocar, 2005.
-
-**Period artifacts (Bugatti chassis 5.0 validation prototype press photography):**
-- `press-launch/veyron-chassis-5-0-validation-prototype-01.jpg` through `-04.jpg` — four Bugatti factory press photos of chassis 5.0, the validation prototype Piech personally signed off on and that ran the 407 km/h Ehra-Lessien certification with Uwe Novacki on 19 April 2005
-
-**Specimen photographs:**
-- `press-launch/eb-18-3-chiron-concept-1999.jpg` + `-rear-1999.jpg` — 1999 Frankfurt Chiron 18.3 concept (PD)
-- `press-launch/eb-18-4-veyron-concept.jpg` — 1999 Tokyo Veyron 18.4 concept (CC BY 4.0)
-- `press-launch/veyron-16-4-early-2004.jpg` — 2004 pre-production Veyron (CC BY-SA 3.0)
-- `press-launch/veyron-key-schlussel-2005.jpg` — the top-speed key (PD)
-- `schematics/veyron-w16-engine.jpg` — 8.0-litre W16 (CC BY 2.0)
-- `schematics/veyron-w16-on-chassis.jpg` — W16 on chassis (CC BY-SA 3.0)
-- `schematics/veyron-interior-2007.jpg` — cabin (CC BY-SA 4.0)
-- `celebrity-owner/veyron-goodwood-fos-2007.jpg` — 2007 Goodwood FoS (CC BY-SA 2.0)
-- `celebrity-owner/veyron-gumball-3000-2007.jpg` — 2007 Gumball 3000 (CC BY-SA 2.0)
-- `magazine/veyron-driving-2008.jpg` — Veyron at speed, 2008 (CC BY 2.0)
+Secondary written source: "Bugatti Veyron 2005-2015 Review," *Autocar*.
+- `secondary-autocar-veyron-2005-2015-review/autocar-veyron-review-05.jpg`
+- `secondary-autocar-veyron-2005-2015-review/autocar-veyron-review-223.jpg`
 
 ## Chicago citation style — quick reference
 
@@ -121,4 +110,4 @@ Every gallery page renders four things per artifact.
 
 ## Fair-use note
 
-The period-artifact class includes magazine page scans, factory press photos, and news footage stills used under the educational fair-use doctrine (17 U.S.C. § 107) for a university-course virtual museum exhibit. Each such artifact cites the specific publisher or source archive plus the source page URL where it appears. For works reused outside the UTK course context, the student should seek permission from the rights holder (Hearst for Road & Track, Bauer Media for Car Magazine, CNN for the Musk delivery footage, Porsche AG / Bugatti AG for factory press photos, RM Sotheby's for auction catalog photography).
+Every Tier 1 artifact is used under the educational fair-use doctrine (17 U.S.C. § 107) for a university-course virtual museum exhibit and cites the specific publisher plus source page URL. For works reused outside the UTK course context, the student should seek permission from the rights holder (Hearst for Road & Track and Car and Driver, Haymarket for Autocar, Bauer Media for Car Magazine, Motorsport.com / David Kimble for the 959 cutaway, The Drive / Recurrent Ventures for Perkins' article).
