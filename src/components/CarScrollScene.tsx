@@ -1,10 +1,21 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, useGLTF } from "@react-three/drei";
+import {
+  ContactShadows,
+  Environment,
+  MeshReflectorMaterial,
+  useGLTF,
+} from "@react-three/drei";
 import * as THREE from "three";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DoorRig, MaterialOverride, SceneConfig } from "@/lib/scenes";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 type Props = {
   modelUrl: string;
@@ -14,6 +25,7 @@ type Props = {
 };
 
 type Orbit = { theta: number; phi: number; radius: number };
+type ProgressRef = { current: number };
 
 const ORBIT_RE = /(-?\d+(?:\.\d+)?)deg\s+(-?\d+(?:\.\d+)?)deg\s+(-?\d+(?:\.\d+)?)%/;
 
@@ -24,78 +36,76 @@ function parseOrbit(str: string): Orbit {
 }
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
-const easeInOut = (t: number) =>
-  t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+// Cubic inOut — gentler than quad, avoids the "pause" feeling at keyframes.
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
 
-type ProgressRef = { current: number };
-
-/** Outer DOM wrapper: sticky container, captions, finale, scroll listener. */
+/** Top-level DOM wrapper: pinned section, captions, finale, GSAP scroll. */
 export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) {
-  const hostRef = useRef<HTMLElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const pinRef = useRef<HTMLDivElement | null>(null);
   const captionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const finaleRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLSpanElement | null>(null);
+
+  // Shared scroll progress — written by ScrollTrigger, read by R3F useFrame.
   const progressRef = useRef(0);
-  const smoothProgressRef = useRef(0);
 
-  useEffect(() => {
-    const el = hostRef.current;
-    if (!el) return;
-    let raf = 0;
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const pin = pinRef.current;
+    if (!section || !pin) return;
 
-    const readProgress = () => {
-      const scrollable = el.offsetHeight - window.innerHeight;
-      const rectTop = el.getBoundingClientRect().top + window.scrollY;
-      const scrolled = window.scrollY - rectTop;
-      return clamp01(scrolled / (scrollable || 1));
-    };
+    // Ensure any prior ScrollTriggers on this section are disposed (route swap).
+    const ctx = gsap.context(() => {
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "+=280%",
+        pin: pin,
+        // scrub 0.6 makes the timeline lag scroll by ~0.6s — gives physical weight
+        // without feeling sluggish. The ref-driven R3F reads progressRef each frame.
+        scrub: 0.6,
+        onUpdate: (self) => {
+          const p = self.progress;
+          progressRef.current = p;
 
-    const onScroll = () => {
-      progressRef.current = readProgress();
-    };
-
-    const tick = () => {
-      // Smooth the progress value so Lenis rubber-band doesn't flicker overlays.
-      smoothProgressRef.current +=
-        (progressRef.current - smoothProgressRef.current) * 0.12;
-      const p = smoothProgressRef.current;
-
-      scene.captions.forEach((cap, i) => {
-        const node = captionRefs.current[i];
-        if (!node) return;
-        if (p >= cap.from && p <= cap.to) node.classList.add("is-live");
-        else node.classList.remove("is-live");
+          // DOM overlays — written directly, no React state
+          scene.captions.forEach((cap, i) => {
+            const node = captionRefs.current[i];
+            if (!node) return;
+            const active = p >= cap.from && p <= cap.to;
+            node.classList.toggle("is-live", active);
+          });
+          if (finaleRef.current) {
+            finaleRef.current.classList.toggle("is-live", p >= 0.92);
+          }
+          if (hintRef.current) {
+            hintRef.current.style.opacity = p > 0.02 ? "0" : "1";
+          }
+        },
       });
-      if (finaleRef.current) {
-        if (p >= 0.92) finaleRef.current.classList.add("is-live");
-        else finaleRef.current.classList.remove("is-live");
-      }
-      if (hintRef.current) hintRef.current.style.opacity = p > 0.02 ? "0" : "1";
+    }, section);
 
-      raf = requestAnimationFrame(tick);
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    raf = requestAnimationFrame(tick);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    return () => ctx.revert();
   }, [scene]);
 
   captionRefs.current = [];
 
   return (
-    <section ref={hostRef} className="scroll-scene">
-      <div className="scene-sticky">
+    <section ref={sectionRef} className="scroll-scene">
+      <div ref={pinRef} className="scene-sticky">
         <div className="scene-canvas">
           <Canvas
-            dpr={[1, 2]}
-            gl={{ antialias: true, alpha: true }}
-            camera={{ fov: 32, near: 0.1, far: 500 }}
+            dpr={[1.5, 2.5]}
+            shadows
+            gl={{
+              antialias: true,
+              alpha: true,
+              powerPreference: "high-performance",
+              toneMapping: THREE.ACESFilmicToneMapping,
+              toneMappingExposure: 1.05,
+            }}
+            camera={{ fov: 30, near: 0.1, far: 500 }}
           >
             <Suspense fallback={null}>
               <SceneContents
@@ -103,7 +113,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
                 keyframes={scene.keyframes}
                 materialOverrides={scene.materialOverrides}
                 doorRig={scene.doorRig}
-                progressRef={smoothProgressRef}
+                progressRef={progressRef}
               />
             </Suspense>
           </Canvas>
@@ -140,7 +150,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
   );
 }
 
-/** Everything inside the R3F canvas: model + camera + shadows + env. */
+/** Everything inside the R3F canvas: model + camera + lighting + floor. */
 function SceneContents({
   modelUrl,
   keyframes,
@@ -158,24 +168,50 @@ function SceneContents({
     scene: THREE.Group;
   };
 
-  // Clone on mount so multiple visits don't stack mutations.
+  // Clone + upgrade materials once per mount.
   const model = useMemo(() => {
     const cloned = gltfScene.clone(true);
-    // Clone materials to avoid cross-route mutation
     cloned.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
-      if (mesh.isMesh && mesh.material) {
-        mesh.material = Array.isArray(mesh.material)
-          ? mesh.material.map((m) => m.clone())
-          : mesh.material.clone();
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
-      }
+      if (!mesh.isMesh || !mesh.material) return;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      const upgrade = (mat: THREE.Material): THREE.Material => {
+        const std = (mat as THREE.MeshStandardMaterial).clone();
+        std.envMapIntensity = 1.6;
+        // Heuristic: paint/body/lack → upgrade to MeshPhysical with clearcoat
+        const name = (std.name || mesh.name || "").toLowerCase();
+        if (/paint|body|lack|carrosserie|karosserie|exterior|shell/.test(name)) {
+          const phys = new THREE.MeshPhysicalMaterial();
+          phys.copy(std as unknown as THREE.MeshPhysicalMaterial);
+          phys.clearcoat = 1.0;
+          phys.clearcoatRoughness = 0.08;
+          phys.metalness = Math.max(std.metalness ?? 0.6, 0.75);
+          phys.roughness = Math.min(std.roughness ?? 0.35, 0.32);
+          phys.envMapIntensity = 1.8;
+          return phys;
+        }
+        // Glass-ish: make it slightly reflective
+        if (/glass|window|windshield|vetro/.test(name)) {
+          std.transparent = true;
+          std.opacity = Math.min(std.opacity, 0.65);
+          std.roughness = 0.05;
+          std.metalness = 0.0;
+        }
+        // Chrome / metal trim
+        if (/chrome|metal.*trim|trim.*metal/.test(name)) {
+          std.metalness = 1.0;
+          std.roughness = 0.12;
+        }
+        return std;
+      };
+      mesh.material = Array.isArray(mesh.material)
+        ? mesh.material.map(upgrade)
+        : upgrade(mesh.material);
     });
     return cloned;
   }, [gltfScene]);
 
-  // Compute bbox, normalize: center at origin and set a predictable scale.
   const { modelScale, centerOffset, baseRadius } = useMemo(() => {
     const box = new THREE.Box3().setFromObject(model);
     const size = new THREE.Vector3();
@@ -183,21 +219,19 @@ function SceneContents({
     box.getSize(size);
     box.getCenter(center);
     const longest = Math.max(size.x, size.y, size.z);
-    const targetSize = 4; // world units
+    const targetSize = 4;
     const s = targetSize / longest;
     return {
       modelScale: s,
       centerOffset: center.clone().multiplyScalar(-s),
-      // Radius used for camera distance: encompasses sphere of the bounded model.
       baseRadius: (targetSize * Math.sqrt(3)) / 2,
     };
   }, [model]);
 
-  // Apply material overrides (by material name OR mesh node name for robustness).
+  // Material overrides
   useMemo(() => {
     if (!materialOverrides?.length) return;
     let hits = 0;
-    const sampled: string[] = [];
     model.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -207,11 +241,10 @@ function SceneContents({
         const std = mat as THREE.MeshStandardMaterial;
         const matName = (std.name || "").toLowerCase();
         const nodeName = (mesh.name || "").toLowerCase();
-        sampled.push(std.name || mesh.name);
         materialOverrides.forEach((ov) => {
           const re = new RegExp(ov.match, "i");
           if (re.test(matName) || re.test(nodeName)) {
-            if (std.color) std.color.setRGB(ov.color[0], ov.color[1], ov.color[2]);
+            std.color?.setRGB(ov.color[0], ov.color[1], ov.color[2]);
             if (typeof ov.metallic === "number") std.metalness = ov.metallic;
             if (typeof ov.roughness === "number") std.roughness = ov.roughness;
             std.needsUpdate = true;
@@ -220,16 +253,10 @@ function SceneContents({
         });
       });
     });
-    if (hits === 0) {
-      console.info(
-        `[CarScrollScene] no material override matched for ${modelUrl}. Samples:`,
-        Array.from(new Set(sampled)).slice(0, 25)
-      );
-    }
-  }, [model, materialOverrides, modelUrl]);
+    void hits;
+  }, [model, materialOverrides]);
 
-  // Rig door pivot (Countach / Veyron). Wrap matching nodes under a Group at
-  // the hinge edge of their collective bbox, so we can rotate the group.
+  // Door rigging
   const doorPivotRef = useRef<THREE.Group | null>(null);
 
   const doorPivot = useMemo(() => {
@@ -239,95 +266,108 @@ function SceneContents({
     model.traverse((obj) => {
       if (re.test(obj.name) && (obj as THREE.Mesh).isMesh) matches.push(obj);
     });
-    if (matches.length === 0) {
-      console.info(
-        `[CarScrollScene] no door nodes matched /${doorRig.match}/ in ${modelUrl}`
-      );
-      return null;
-    }
-    // Bounding box of all matches in model-local space
+    if (matches.length === 0) return null;
+
     const bbox = new THREE.Box3();
     matches.forEach((m) => bbox.expandByObject(m));
-    const hingeVec = new THREE.Vector3();
+    const h = new THREE.Vector3();
     switch (doorRig.hingeOn) {
-      case "xmin": hingeVec.set(bbox.min.x, (bbox.min.y + bbox.max.y) / 2, (bbox.min.z + bbox.max.z) / 2); break;
-      case "xmax": hingeVec.set(bbox.max.x, (bbox.min.y + bbox.max.y) / 2, (bbox.min.z + bbox.max.z) / 2); break;
-      case "ymin": hingeVec.set((bbox.min.x + bbox.max.x) / 2, bbox.min.y, (bbox.min.z + bbox.max.z) / 2); break;
-      case "ymax": hingeVec.set((bbox.min.x + bbox.max.x) / 2, bbox.max.y, (bbox.min.z + bbox.max.z) / 2); break;
-      case "zmin": hingeVec.set((bbox.min.x + bbox.max.x) / 2, (bbox.min.y + bbox.max.y) / 2, bbox.min.z); break;
-      case "zmax": hingeVec.set((bbox.min.x + bbox.max.x) / 2, (bbox.min.y + bbox.max.y) / 2, bbox.max.z); break;
+      case "xmin": h.set(bbox.min.x, (bbox.min.y + bbox.max.y) / 2, (bbox.min.z + bbox.max.z) / 2); break;
+      case "xmax": h.set(bbox.max.x, (bbox.min.y + bbox.max.y) / 2, (bbox.min.z + bbox.max.z) / 2); break;
+      case "ymin": h.set((bbox.min.x + bbox.max.x) / 2, bbox.min.y, (bbox.min.z + bbox.max.z) / 2); break;
+      case "ymax": h.set((bbox.min.x + bbox.max.x) / 2, bbox.max.y, (bbox.min.z + bbox.max.z) / 2); break;
+      case "zmin": h.set((bbox.min.x + bbox.max.x) / 2, (bbox.min.y + bbox.max.y) / 2, bbox.min.z); break;
+      case "zmax": h.set((bbox.min.x + bbox.max.x) / 2, (bbox.min.y + bbox.max.y) / 2, bbox.max.z); break;
     }
-    // Create the pivot at hinge position, and an inner group that offsets
-    // the door meshes so their geometry sits at the correct relative position.
     const pivot = new THREE.Group();
     pivot.name = "__door_pivot__";
-    pivot.position.copy(hingeVec);
+    pivot.position.copy(h);
     const inner = new THREE.Group();
-    inner.position.copy(hingeVec.clone().negate());
+    inner.position.copy(h.clone().negate());
     pivot.add(inner);
-
-    // Re-parent each match into `inner` while preserving its world transform.
-    matches.forEach((m) => {
-      const worldMat = new THREE.Matrix4();
-      m.updateWorldMatrix(true, false);
-      worldMat.copy(m.matrixWorld);
-      // Remove from current parent and attach to inner; Object3D.attach
-      // preserves world transform automatically.
-      inner.attach(m);
-      // but attach is relative to inner's world, which is pivot's world,
-      // which is model-local (pivot is a child of model below).
-      void worldMat;
-    });
-
-    // pivot's parent will be the model root, so pivot.position is in
-    // model-local coordinates. Good.
+    matches.forEach((m) => inner.attach(m));
     model.add(pivot);
     return pivot;
-  }, [model, doorRig, modelUrl]);
+  }, [model, doorRig]);
 
   useEffect(() => {
     doorPivotRef.current = doorPivot;
   }, [doorPivot]);
 
-  // Per-frame: animate door and camera
   useFrame(() => {
     if (doorRig && doorPivotRef.current) {
       const p = progressRef.current;
-      const t = clamp01(
-        (p - doorRig.startProgress) / (1 - doorRig.startProgress)
-      );
-      const angle = t * doorRig.maxRadians;
-      if (doorRig.axis === "x") doorPivotRef.current.rotation.x = -angle;
-      else if (doorRig.axis === "y") doorPivotRef.current.rotation.y = -angle;
-      else doorPivotRef.current.rotation.z = -angle;
+      const t = clamp01((p - doorRig.startProgress) / (1 - doorRig.startProgress));
+      const eased = smoothstep(t);
+      const angle = eased * doorRig.maxRadians;
+      const pivot = doorPivotRef.current;
+      pivot.rotation.x = doorRig.axis === "x" ? -angle : 0;
+      pivot.rotation.y = doorRig.axis === "y" ? -angle : 0;
+      pivot.rotation.z = doorRig.axis === "z" ? -angle : 0;
     }
   });
 
   return (
     <>
-      <ambientLight intensity={0.55} />
+      {/* Key / fill / rim lighting for a showroom feel */}
+      <ambientLight intensity={0.35} />
       <directionalLight
         castShadow
-        position={[4, 8, 4]}
-        intensity={1.1}
-        shadow-mapSize={[1024, 1024]}
-        shadow-camera-far={20}
-        shadow-camera-left={-6}
-        shadow-camera-right={6}
-        shadow-camera-top={6}
-        shadow-camera-bottom={-6}
+        position={[6, 10, 6]}
+        intensity={2.4}
+        color={"#ffffff"}
+        shadow-mapSize={[2048, 2048]}
+        shadow-camera-far={25}
+        shadow-camera-left={-8}
+        shadow-camera-right={8}
+        shadow-camera-top={8}
+        shadow-camera-bottom={-8}
+        shadow-bias={-0.0001}
       />
-      <Environment preset="city" />
+      <directionalLight
+        position={[-6, 4, -4]}
+        intensity={0.8}
+        color={"#dde6ff"}
+      />
+      <directionalLight
+        position={[0, 6, -8]}
+        intensity={1.2}
+        color={"#ffe8cc"}
+      />
+
+      {/* Studio HDRI supplies real reflections on paint + glass */}
+      <Environment preset="warehouse" environmentIntensity={0.9} background={false} />
+
+      {/* Reflective showroom floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.001, 0]} receiveShadow>
+        <planeGeometry args={[40, 40]} />
+        <MeshReflectorMaterial
+          blur={[280, 100]}
+          resolution={1024}
+          mixBlur={0.9}
+          mixStrength={18}
+          roughness={0.82}
+          depthScale={1.1}
+          minDepthThreshold={0.4}
+          maxDepthThreshold={1.4}
+          color="#d9d2c2"
+          metalness={0.4}
+          mirror={0.0}
+        />
+      </mesh>
       <ContactShadows
-        position={[0, -2, 0]}
+        position={[0, -1.995, 0]}
         opacity={0.55}
         scale={14}
-        blur={2.4}
+        blur={2.6}
         far={4}
+        resolution={1024}
       />
+
       <group scale={modelScale} position={centerOffset.toArray()}>
         <primitive object={model} />
       </group>
+
       <CameraController
         keyframes={keyframes}
         progressRef={progressRef}
@@ -352,14 +392,13 @@ function CameraController({
     [keyframes]
   );
   const current = useRef<Orbit>({ ...kfs[0].orbit });
-  const target = useRef<Orbit>({ ...kfs[0].orbit });
 
   const sample = (p: number): Orbit => {
     for (let i = 0; i < kfs.length - 1; i++) {
       const a = kfs[i];
       const b = kfs[i + 1];
       if (p >= a.p && p <= b.p) {
-        const t = easeInOut((p - a.p) / (b.p - a.p || 1));
+        const t = smoothstep((p - a.p) / (b.p - a.p || 1));
         return {
           theta: lerp(a.orbit.theta, b.orbit.theta, t),
           phi: lerp(a.orbit.phi, b.orbit.phi, t),
@@ -372,13 +411,15 @@ function CameraController({
       : { ...kfs[kfs.length - 1].orbit };
   };
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const p = progressRef.current;
-    target.current = sample(p);
-    const k = 0.15;
-    current.current.theta += (target.current.theta - current.current.theta) * k;
-    current.current.phi += (target.current.phi - current.current.phi) * k;
-    current.current.radius += (target.current.radius - current.current.radius) * k;
+    const target = sample(p);
+    // Frame-rate independent critically-damped approach.
+    // With scrub: 0.6 already doing most smoothing, this just polishes sub-frame noise.
+    const k = 1 - Math.pow(0.0015, delta); // ~99% per second
+    current.current.theta = lerp(current.current.theta, target.theta, k);
+    current.current.phi = lerp(current.current.phi, target.phi, k);
+    current.current.radius = lerp(current.current.radius, target.radius, k);
 
     const theta = (current.current.theta * Math.PI) / 180;
     const phi = (current.current.phi * Math.PI) / 180;
@@ -396,7 +437,6 @@ function CameraController({
   return null;
 }
 
-// Preload all four models so navigating between exhibits doesn't re-suspend.
 useGLTF.preload("/models/countach.glb");
 useGLTF.preload("/models/959.glb");
 useGLTF.preload("/models/f1.glb");

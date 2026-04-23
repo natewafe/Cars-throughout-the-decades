@@ -40,18 +40,18 @@ export type SceneConfig = {
 export const scenesBySlug: Record<string, SceneConfig> = {
   "countach": {
     keyframes: [
-      [0.0, "25deg 78deg 140%"],
-      [0.22, "90deg 88deg 100%"],
-      [0.45, "180deg 80deg 115%"],
-      [0.68, "275deg 76deg 95%"],
-      [0.88, "330deg 70deg 55%"],
-      [1.0, "340deg 72deg 30%"],
+      [0.0, "25deg 78deg 135%"],
+      [0.18, "80deg 84deg 105%"],
+      [0.38, "170deg 82deg 110%"],
+      [0.58, "265deg 78deg 95%"],
+      [0.8, "325deg 72deg 70%"],
+      [1.0, "340deg 74deg 40%"],
     ],
     captions: [
       { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery I, 1970s", line: "Marcello Gandini drew a wedge and the genre rewrote itself." },
       { from: 0.22, to: 0.45, pos: "right", eyebrow: "Side profile", line: "No curve without intention. No surface without a reason." },
       { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "Road and Track, Feb 1976", line: "“The fastest car we have ever tested.”" },
-      { from: 0.68, to: 0.86, pos: "right", eyebrow: "Scissor door", line: "An idea so strange that every supercar since has tried to inherit it." },
+      { from: 0.68, to: 0.78, pos: "right", eyebrow: "Scissor door", line: "An idea so strange that every supercar since has tried to inherit it." },
     ],
     finaleTitle: "The scissor door opens onto the 1980s.",
     doorRig: {
@@ -75,7 +75,7 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery II, 1980s", line: "Porsche built the 959 for a rally championship that was cancelled before it raced." },
       { from: 0.22, to: 0.45, pos: "bottom", eyebrow: "Magnesium wheel", line: "Every spoke hollowed. Every gram accounted for." },
       { from: 0.45, to: 0.68, pos: "right", eyebrow: "Twin-turbo flat-six", line: "All-wheel drive before the world was ready to ask for it." },
-      { from: 0.68, to: 0.86, pos: "left", eyebrow: "Car and Driver, 1987", line: "“The word perfect was difficult to avoid.”" },
+      { from: 0.68, to: 0.78, pos: "left", eyebrow: "Car and Driver, 1987", line: "“The word perfect was difficult to avoid.”" },
     ],
     finaleTitle: "From Weissach to Woking. The 1990s are waiting.",
     materialOverrides: [
@@ -95,7 +95,7 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery III, 1990s", line: "Gordon Murray asked what a perfect driver’s car would be. Then refused to compromise." },
       { from: 0.22, to: 0.45, pos: "right", eyebrow: "Carbon monocoque", line: "The first road car built like a Formula 1 chassis." },
       { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "Autocar, 1994", line: "“You slide in. The driver sits dead center. Everything else is geometry.”" },
-      { from: 0.68, to: 0.86, pos: "left", eyebrow: "240.1 mph", line: "A production car record that stood for over a decade." },
+      { from: 0.68, to: 0.78, pos: "left", eyebrow: "240.1 mph", line: "A production car record that stood for over a decade." },
     ],
     finaleTitle: "Analog perfection hands off to the digital thousand.",
     materialOverrides: [
@@ -115,7 +115,7 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery IV, 2000s", line: "Volkswagen Group handed Bugatti a specification that physics had to catch up to." },
       { from: 0.22, to: 0.45, pos: "right", eyebrow: "Eight liters, sixteen cylinders", line: "Quad-turbo. Ten radiators. A drivetrain designed to survive itself." },
       { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "Michelin and Brembo", line: "Tires rated for fifteen minutes at full speed. Then replace." },
-      { from: 0.68, to: 0.86, pos: "left", eyebrow: "Autocar, 2005", line: "“A car that, in motion, felt almost calm despite its statistics.”" },
+      { from: 0.68, to: 0.78, pos: "left", eyebrow: "Autocar, 2005", line: "“A car that, in motion, felt almost calm despite its statistics.”" },
     ],
     finaleTitle: "1,001 horsepower. The decade closes at 253 mph.",
     doorRig: {

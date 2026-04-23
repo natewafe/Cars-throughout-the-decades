@@ -109,22 +109,26 @@ body::before {
   .reveal { opacity: 1; transform: none; }
 }
 
-/* ========= Scroll-driven 3D scene: gallery showroom ========= */
+/* ========= Scroll-driven 3D scene: gallery showroom =========
+   GSAP ScrollTrigger pins `.scene-sticky` itself (no CSS sticky needed). */
 .scroll-scene {
   position: relative;
   width: 100%;
-  height: 320vh;
+  height: 100vh;
   color: var(--color-ink);
   background:
     radial-gradient(ellipse 70% 50% at 50% 55%, #ffffff 0%, rgba(255,255,255,0) 70%),
     linear-gradient(180deg, #f6f3ee 0%, #ece7dd 50%, #dcd3c2 100%);
+  overflow: hidden;
 }
 .scene-sticky {
-  position: sticky;
-  top: 4rem;
+  position: relative;
   width: 100%;
-  height: calc(100vh - 4rem);
+  height: 100vh;
   overflow: hidden;
+  /* isolate paint to keep scroll smooth */
+  contain: strict;
+  will-change: transform;
 }
 .scene-sticky::before {
   content: "";
@@ -211,18 +215,32 @@ body::before {
 .scene-caption {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  max-width: 480px;
+  transform: translateY(calc(-50% + 8px));
+  max-width: 460px;
   opacity: 0;
-  transition: opacity 0.8s ease;
+  transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: none;
-  z-index: 2;
-  padding: 0 2rem;
+  z-index: 3;
+  padding: 1.1rem 1.35rem;
+  /* Glass panel so captions stay readable over any part of the car */
+  background: rgba(255, 253, 249, 0.62);
+  border: 1px solid rgba(40, 26, 10, 0.08);
+  border-radius: 2px;
+  backdrop-filter: blur(14px) saturate(1.1);
+  -webkit-backdrop-filter: blur(14px) saturate(1.1);
+  box-shadow: 0 20px 50px -20px rgba(40, 26, 10, 0.18);
 }
-.scene-caption.left   { left: 6vw; }
-.scene-caption.right  { right: 6vw; text-align: right; }
-.scene-caption.bottom { top: auto; bottom: 14%; transform: none; left: 50%; margin-left: -240px; text-align: center; }
-.scene-caption.is-live { opacity: 1; }
+.scene-caption.left   { left: 4vw; }
+.scene-caption.right  { right: 4vw; text-align: right; }
+.scene-caption.bottom {
+  top: auto; bottom: 6%;
+  left: 50%; right: auto;
+  transform: translateX(-50%) translateY(8px);
+  text-align: center;
+  max-width: 600px;
+}
+.scene-caption.is-live { opacity: 1; transform: translateY(-50%); }
+.scene-caption.bottom.is-live { transform: translateX(-50%) translateY(0); }
 
 .scene-caption {
   z-index: 3;
@@ -316,13 +334,25 @@ body::before {
   margin-bottom: 6rem;
 }
 .artifact-section-header {
+  --hdr-line: 0;
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 2rem;
   margin-bottom: 2.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid var(--color-rule);
+  position: relative;
+  border-bottom: 1px solid rgba(40, 26, 10, 0.06);
+}
+.artifact-section-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  height: 1px;
+  width: calc(100% * var(--hdr-line));
+  background: var(--color-brass-dark);
+  transition: none;
 }
 .tier-kicker {
   font-family: var(--font-inter), sans-serif;
@@ -348,25 +378,24 @@ body::before {
   white-space: nowrap;
 }
 
-.artifact-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 2rem;
+/* True masonry via CSS columns — every image shows at its native aspect ratio */
+.artifact-masonry {
+  column-count: 3;
+  column-gap: 2rem;
 }
-.artifact { grid-column: span 3; }
-.artifact.artifact-span-wide  { grid-column: 1 / -1; }
-.artifact.artifact-span-tall  { grid-column: span 3; }
-@media (max-width: 900px) {
-  .artifact-grid { grid-template-columns: repeat(2, 1fr); }
-  .artifact { grid-column: span 2; }
-  .artifact.artifact-span-wide,
-  .artifact.artifact-span-tall { grid-column: span 2; }
+@media (max-width: 1100px) {
+  .artifact-masonry { column-count: 2; }
+}
+@media (max-width: 640px) {
+  .artifact-masonry { column-count: 1; }
 }
 
 figure.artifact {
-  margin: 0;
+  margin: 0 0 2.5rem;
+  break-inside: avoid;
   cursor: zoom-in;
   outline: none;
+  display: block;
 }
 figure.artifact .artifact-frame {
   position: relative;
@@ -379,18 +408,13 @@ figure.artifact .artifact-frame {
 figure.artifact .artifact-frame img {
   display: block;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  aspect-ratio: 4 / 3;
+  height: auto;
+  /* Natural aspect ratio — no cropping */
+  object-fit: contain;
   transition: transform 1.2s cubic-bezier(0.2, 0.8, 0.2, 1),
               filter 0.6s ease;
   filter: saturate(0.95);
-}
-figure.artifact.artifact-span-wide .artifact-frame img {
-  aspect-ratio: 21 / 9;
-}
-figure.artifact.artifact-span-tall .artifact-frame img {
-  aspect-ratio: 3 / 4;
+  will-change: transform;
 }
 figure.artifact:hover .artifact-frame {
   transform: translateY(-4px);
@@ -403,6 +427,13 @@ figure.artifact:hover .artifact-frame img {
 figure.artifact:focus-visible .artifact-frame {
   outline: 2px solid var(--color-brass-dark);
   outline-offset: 4px;
+}
+.artifact-blurb {
+  margin: 0.4rem 0 0.75rem;
+  font-family: var(--font-fraunces), serif;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--color-ink);
 }
 .artifact-zoom {
   position: absolute;
@@ -532,9 +563,19 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   font-family: var(--font-fraunces), serif;
   font-size: 0.92rem;
   line-height: 1.6;
-  font-style: italic;
   max-width: 72ch;
   text-align: center;
+}
+.lightbox-blurb {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: #f6f0e1;
+  margin: 0.75rem 0;
+  font-style: normal;
+}
+.lightbox-cite {
+  font-style: italic;
+  color: rgba(233, 227, 214, 0.75);
 }
 .lightbox-caption .caption-license { color: rgba(233,227,214,0.55); }
 .lightbox-caption a {

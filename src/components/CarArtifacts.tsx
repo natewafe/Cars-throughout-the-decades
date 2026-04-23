@@ -1,30 +1,42 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { ArtifactFigure, CarArtifacts } from "@/lib/artifacts";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 type LightboxItem = {
   src: string;
   alt: string;
   figId: number;
   caption: string;
+  blurb: string;
   license: string;
   sourceLink: string;
 };
 
 export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
   const [lightbox, setLightbox] = useState<LightboxItem | null>(null);
+  const rootRef = useRef<HTMLDivElement | null>(null);
 
-  const openFigure = useCallback((item: ArtifactFigure) => {
-    setLightbox({
-      src: `/artifacts/${data.imgDir}/${item.filename}`,
-      alt: item.alt,
-      figId: item.figId,
-      caption: item.caption,
-      license: item.license,
-      sourceLink: item.sourceLink,
-    });
-  }, [data.imgDir]);
+  const openFigure = useCallback(
+    (item: ArtifactFigure) => {
+      setLightbox({
+        src: `/artifacts/${data.imgDir}/${item.filename}`,
+        alt: item.alt,
+        figId: item.figId,
+        caption: item.caption,
+        blurb: item.blurb,
+        license: item.license,
+        sourceLink: item.sourceLink,
+      });
+    },
+    [data.imgDir]
+  );
 
   const close = useCallback(() => setLightbox(null), []);
 
@@ -41,7 +53,66 @@ export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
     };
   }, [lightbox, close]);
 
-  // Walk the mixed list and chunk figures between section headers.
+  // Scroll-reveal: fade + rise as each figure enters viewport.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+    const ctx = gsap.context(() => {
+      const figs = root.querySelectorAll<HTMLElement>("figure.artifact");
+      figs.forEach((fig) => {
+        gsap.fromTo(
+          fig,
+          { autoAlpha: 0, y: 40 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            duration: 1.1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: fig,
+              start: "top 88%",
+              end: "top 55%",
+              toggleActions: "play none none reverse",
+            },
+          }
+        );
+        // subtle parallax drift inside the frame as figure moves through viewport
+        const img = fig.querySelector<HTMLElement>(".artifact-frame img");
+        if (img) {
+          gsap.fromTo(
+            img,
+            { yPercent: -4 },
+            {
+              yPercent: 4,
+              ease: "none",
+              scrollTrigger: {
+                trigger: fig,
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.8,
+              },
+            }
+          );
+        }
+      });
+      // Section header underline fill on enter
+      root.querySelectorAll<HTMLElement>(".artifact-section-header").forEach((hdr) => {
+        gsap.fromTo(
+          hdr,
+          { "--hdr-line": 0 } as gsap.TweenVars,
+          {
+            "--hdr-line": 1,
+            duration: 1.2,
+            ease: "power2.out",
+            scrollTrigger: { trigger: hdr, start: "top 85%" },
+          } as gsap.TweenVars
+        );
+      });
+    }, root);
+    return () => ctx.revert();
+  }, [data]);
+
+  // Group figures by section header
   type Section = { title: string; tierLabel: string; figs: ArtifactFigure[] };
   const sections: Section[] = [];
   let current: Section | null = null;
@@ -55,7 +126,10 @@ export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
   }
 
   return (
-    <section className="artifacts-block mx-auto max-w-[1400px] px-6 lg:px-12 pb-32">
+    <section
+      ref={rootRef}
+      className="artifacts-block mx-auto max-w-[1400px] px-6 lg:px-12 pb-32"
+    >
       <div className="artifacts-intro">
         <p>
           The written primary source for this gallery is <em>{data.primarySource.citation}</em>.
@@ -78,21 +152,16 @@ export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
             </div>
           </header>
 
-          <div className="artifact-grid">
-            {sec.figs.map((fig, j) => {
-              // Editorial varied sizing: every 5th item spans full width; others alternate.
-              const span =
-                j % 5 === 0 ? "artifact-span-wide" : j % 3 === 1 ? "artifact-span-tall" : "";
-              return (
-                <ArtifactCard
-                  key={fig.figId}
-                  fig={fig}
-                  imgDir={data.imgDir}
-                  onOpen={openFigure}
-                  className={span}
-                />
-              );
-            })}
+          {/* CSS columns give a masonry that preserves every image's natural aspect ratio */}
+          <div className="artifact-masonry">
+            {sec.figs.map((fig) => (
+              <ArtifactCard
+                key={fig.figId}
+                fig={fig}
+                imgDir={data.imgDir}
+                onOpen={openFigure}
+              />
+            ))}
           </div>
         </div>
       ))}
@@ -101,7 +170,11 @@ export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
         <h3 className="footnotes-heading">Footnotes</h3>
         <ol className="footnotes-list">
           {data.footnotes.map((fn, idx) => (
-            <li key={idx} id={`fn-${idx + 1}`} dangerouslySetInnerHTML={{ __html: fnHtml(fn) }} />
+            <li
+              key={idx}
+              id={`fn-${idx + 1}`}
+              dangerouslySetInnerHTML={{ __html: fnHtml(fn) }}
+            />
           ))}
         </ol>
       </section>
@@ -120,7 +193,8 @@ export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
             <img src={lightbox.src} alt={lightbox.alt} />
             <div className="lightbox-caption">
               <span className="lightbox-figlabel">Figure {lightbox.figId}</span>
-              <p>
+              {lightbox.blurb && <p className="lightbox-blurb">{lightbox.blurb}</p>}
+              <p className="lightbox-cite">
                 {lightbox.caption}{" "}
                 {lightbox.license && (
                   <span className="caption-license">({lightbox.license})</span>
@@ -146,16 +220,16 @@ function ArtifactCard({
   fig,
   imgDir,
   onOpen,
-  className = "",
 }: {
   fig: ArtifactFigure;
   imgDir: string;
   onOpen: (f: ArtifactFigure) => void;
-  className?: string;
 }) {
+  // Placeholder blurb (editable later per figure)
+  const blurb = fig.blurb || "[Your note goes here.]";
   return (
     <figure
-      className={`artifact ${className}`}
+      className="artifact"
       id={`fig-${fig.figId}`}
       onClick={() => onOpen(fig)}
       role="button"
@@ -174,8 +248,10 @@ function ArtifactCard({
         </span>
       </div>
       <figcaption>
-        <span className="caption">
-          <span className="caption-fig">Figure {fig.figId}.</span> {fig.caption}{" "}
+        <span className="caption-fig">Figure {fig.figId}</span>
+        <p className="artifact-blurb">{blurb}</p>
+        <p className="caption">
+          {fig.caption}{" "}
           {fig.license && <span className="caption-license">({fig.license})</span>}{" "}
           <a
             className="caption-source-link"
@@ -191,7 +267,7 @@ function ArtifactCard({
               {fig.footnoteN}
             </a>
           </sup>
-        </span>
+        </p>
         <div className="object-label" data-author="student">
           {/* STUDENT LABEL TEXT, DO NOT WRITE. Placeholder for voice transcript. */}
         </div>
