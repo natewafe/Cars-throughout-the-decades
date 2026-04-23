@@ -1,0 +1,913 @@
+{
+  "exhibit": "Velocity & Vision Virtual Museum",
+  "generated": "2026-04-23",
+  "total_images": 140,
+  "tiers": {
+    "Tier 1 (from-main-sources)": [
+      {
+        "filename": "rt-feb-1976-page-01.jpg",
+        "car": "countach",
+        "subfolder": "primary-road-and-track-feb-1976",
+        "relative_path": "from-main-sources/1970s-countach/primary-road-and-track-feb-1976/rt-feb-1976-page-01.jpg",
+        "source_url": "https://i0.wp.com/www.curbsideclassic.com/wp-content/uploads/2018/06/scans0001.jpg",
+        "source_page": "https://www.curbsideclassic.com/vintage-reviews/road-track-vintage-road-test-1976-lamborghini-countach-fastest-car-weve-ever-tested/"
+      },
+      {
+        "filename": "rt-feb-1976-page-02.jpg",
+        "car": "countach",
+        "subfolder": "primary-road-and-track-feb-1976",
+        "relative_path": "from-main-sources/1970s-countach/primary-road-and-track-feb-1976/rt-feb-1976-page-02.jpg",
+        "source_url": "https://i0.wp.com/www.curbsideclassic.com/wp-content/uploads/2018/06/scans0002.jpg",
+        "source_page": "https://www.curbsideclassic.com/vintage-reviews/road-track-vintage-road-test-1976-lamborghini-countach-fastest-car-weve-ever-tested/"
+      },
+      {
+        "filename": "perkins-countach-hero.jpg",
+        "car": "countach",
+        "subfolder": "secondary-perkins-the-drive",
+        "relative_path": "from-main-sources/1970s-countach/secondary-perkins-the-drive/perkins-countach-hero.jpg",
+        "source_url": "https://www.thedrive.com/wp-content/uploads/images-by-url-td/content/2017/05/lamborghini-countach-hero-image.jpg",
+        "source_page": "https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach"
+      },
+      {
+        "filename": "perkins-countach-inline-1.jpg",
+        "car": "countach",
+        "subfolder": "secondary-perkins-the-drive",
+        "relative_path": "from-main-sources/1970s-countach/secondary-perkins-the-drive/perkins-countach-inline-1.jpg",
+        "source_url": "https://www.thedrive.com/wp-content/uploads/content/archive-images/countach_inline1.jpg",
+        "source_page": "https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach"
+      },
+      {
+        "filename": "perkins-countach-inline-2.jpg",
+        "car": "countach",
+        "subfolder": "secondary-perkins-the-drive",
+        "relative_path": "from-main-sources/1970s-countach/secondary-perkins-the-drive/perkins-countach-inline-2.jpg",
+        "source_url": "https://www.thedrive.com/wp-content/uploads/content/archive-images/countach_inline2.jpg",
+        "source_page": "https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach"
+      },
+      {
+        "filename": "perkins-countach-inline-3.jpg",
+        "car": "countach",
+        "subfolder": "secondary-perkins-the-drive",
+        "relative_path": "from-main-sources/1970s-countach/secondary-perkins-the-drive/perkins-countach-inline-3.jpg",
+        "source_url": "https://www.thedrive.com/wp-content/uploads/content/archive-images/countach_inline3.jpg",
+        "source_page": "https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach"
+      },
+      {
+        "filename": "perkins-countach-inline-4.jpg",
+        "car": "countach",
+        "subfolder": "secondary-perkins-the-drive",
+        "relative_path": "from-main-sources/1970s-countach/secondary-perkins-the-drive/perkins-countach-inline-4.jpg",
+        "source_url": "https://www.thedrive.com/wp-content/uploads/content/archive-images/countach_inline4.jpg",
+        "source_page": "https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach"
+      },
+      {
+        "filename": "perkins-countach-periscopica-1976.jpg",
+        "car": "countach",
+        "subfolder": "secondary-perkins-the-drive",
+        "relative_path": "from-main-sources/1970s-countach/secondary-perkins-the-drive/perkins-countach-periscopica-1976.jpg",
+        "source_url": "https://www.thedrive.com/wp-content/uploads/images-by-url-td/content/2017/11/1976-lamborghini-countach-lp400-periscopica.jpg",
+        "source_page": "https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach"
+      },
+      {
+        "filename": "csere-959-main-photo.jpg",
+        "car": "porsche-959",
+        "subfolder": "primary-csere-car-and-driver-1987",
+        "relative_path": "from-main-sources/1980s-porsche-959/primary-csere-car-and-driver-1987/csere-959-main-photo.jpg",
+        "source_url": "https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/images/media/616238/porsche-959-photo-616240-s-986x603.jpg",
+        "source_page": "https://www.caranddriver.com/reviews/a15143088/1987-porsche-959-archived-test-review/"
+      },
+      {
+        "filename": "csere-959-102.jpg",
+        "car": "porsche-959",
+        "subfolder": "primary-csere-car-and-driver-1987",
+        "relative_path": "from-main-sources/1980s-porsche-959/primary-csere-car-and-driver-1987/csere-959-102.jpg",
+        "source_url": "https://hips.hearstapps.com/hmg-prod/images/porsche-959-102-1584394867.jpg",
+        "source_page": "https://www.caranddriver.com/reviews/a15143088/1987-porsche-959-archived-test-review/"
+      },
+      {
+        "filename": "kimble-959-cutaway-s1200.webp",
+        "car": "porsche-959",
+        "subfolder": "secondary-kimble-motorsport-cutaway",
+        "relative_path": "from-main-sources/1980s-porsche-959/secondary-kimble-motorsport-cutaway/kimble-959-cutaway-s1200.webp",
+        "source_url": "https://cdn-1.motorsport.com/images/amp/0aMA7yk0/s1200/automotive-porsche-959-appreciation-2016-porsche-959-cutaway.webp",
+        "source_page": "https://www.motorsport.com/automotive/news/cutaway-classic-explore-the-amazing-porsche-959-745046/745046/"
+      },
+      {
+        "filename": "autocar-mclaren-f1-02.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "primary-cropley-autocar-may-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/primary-cropley-autocar-may-1994/autocar-mclaren-f1-02.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-02.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/mclaren/f1"
+      },
+      {
+        "filename": "autocar-mclaren-f1-03.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "primary-cropley-autocar-may-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/primary-cropley-autocar-may-1994/autocar-mclaren-f1-03.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-03.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/mclaren/f1"
+      },
+      {
+        "filename": "autocar-mclaren-f1-05.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "primary-cropley-autocar-may-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/primary-cropley-autocar-may-1994/autocar-mclaren-f1-05.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-05.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/mclaren/f1"
+      },
+      {
+        "filename": "autocar-mclaren-f1-08.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "primary-cropley-autocar-may-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/primary-cropley-autocar-may-1994/autocar-mclaren-f1-08.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-08.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/mclaren/f1"
+      },
+      {
+        "filename": "autocar-mclaren-f1-012.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "primary-cropley-autocar-may-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/primary-cropley-autocar-may-1994/autocar-mclaren-f1-012.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-012.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/mclaren/f1"
+      },
+      {
+        "filename": "autocar-mclaren-f1-020.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "primary-cropley-autocar-may-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/primary-cropley-autocar-may-1994/autocar-mclaren-f1-020.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-020.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/mclaren/f1"
+      },
+      {
+        "filename": "car-magazine-june-1994-cover.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "secondary-car-magazine-june-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/secondary-car-magazine-june-1994/car-magazine-june-1994-cover.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mmjune1994.jpg",
+        "source_page": "https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-01.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "secondary-car-magazine-june-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/secondary-car-magazine-june-1994/car-magazine-june-1994-spread-01.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive1.jpg",
+        "source_page": "https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-02.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "secondary-car-magazine-june-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/secondary-car-magazine-june-1994/car-magazine-june-1994-spread-02.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive2.jpg",
+        "source_page": "https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-03.jpg",
+        "car": "mclaren-f1",
+        "subfolder": "secondary-car-magazine-june-1994",
+        "relative_path": "from-main-sources/1990s-mclaren-f1/secondary-car-magazine-june-1994/car-magazine-june-1994-spread-03.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive3.jpg",
+        "source_page": "https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/"
+      },
+      {
+        "filename": "autocar-veyron-hero.jpg",
+        "car": "veyron",
+        "subfolder": "primary-cropley-autocar-2005",
+        "relative_path": "from-main-sources/2000s-veyron/primary-cropley-autocar-2005/autocar-veyron-hero.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive"
+      },
+      {
+        "filename": "autocar-veyron-01.jpg",
+        "car": "veyron",
+        "subfolder": "primary-cropley-autocar-2005",
+        "relative_path": "from-main-sources/2000s-veyron/primary-cropley-autocar-2005/autocar-veyron-01.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-1.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive"
+      },
+      {
+        "filename": "autocar-veyron-02.jpg",
+        "car": "veyron",
+        "subfolder": "primary-cropley-autocar-2005",
+        "relative_path": "from-main-sources/2000s-veyron/primary-cropley-autocar-2005/autocar-veyron-02.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-2.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive"
+      },
+      {
+        "filename": "autocar-veyron-03.jpg",
+        "car": "veyron",
+        "subfolder": "primary-cropley-autocar-2005",
+        "relative_path": "from-main-sources/2000s-veyron/primary-cropley-autocar-2005/autocar-veyron-03.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-3.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive"
+      },
+      {
+        "filename": "autocar-veyron-04.jpg",
+        "car": "veyron",
+        "subfolder": "primary-cropley-autocar-2005",
+        "relative_path": "from-main-sources/2000s-veyron/primary-cropley-autocar-2005/autocar-veyron-04.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-4.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive"
+      },
+      {
+        "filename": "autocar-veyron-06.jpg",
+        "car": "veyron",
+        "subfolder": "primary-cropley-autocar-2005",
+        "relative_path": "from-main-sources/2000s-veyron/primary-cropley-autocar-2005/autocar-veyron-06.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-6.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive"
+      },
+      {
+        "filename": "autocar-veyron-review-05.jpg",
+        "car": "veyron",
+        "subfolder": "secondary-autocar-veyron-2005-2015-review",
+        "relative_path": "from-main-sources/2000s-veyron/secondary-autocar-veyron-2005-2015-review/autocar-veyron-review-05.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-5.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015"
+      },
+      {
+        "filename": "autocar-veyron-review-223.jpg",
+        "car": "veyron",
+        "subfolder": "secondary-autocar-veyron-2005-2015-review",
+        "relative_path": "from-main-sources/2000s-veyron/secondary-autocar-veyron-2005-2015-review/autocar-veyron-review-223.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-223_1.jpg",
+        "source_page": "https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015"
+      }
+    ],
+    "Tier 2 (per-car active)": [
+      {
+        "filename": "road-track-feb-1976-countach-scan-01.jpg",
+        "car": "countach",
+        "relative_path": "countach/magazine/road-track-feb-1976-countach-scan-01.jpg",
+        "source_url": "https://i0.wp.com/www.curbsideclassic.com/wp-content/uploads/2018/06/scans0001.jpg"
+      },
+      {
+        "filename": "road-track-feb-1976-countach-scan-02.jpg",
+        "car": "countach",
+        "relative_path": "countach/magazine/road-track-feb-1976-countach-scan-02.jpg",
+        "source_url": "https://i0.wp.com/www.curbsideclassic.com/wp-content/uploads/2018/06/scans0002.jpg"
+      },
+      {
+        "filename": "walter-wolf-red-countach.jpg",
+        "car": "countach",
+        "relative_path": "countach/celebrity-owner/walter-wolf-red-countach.jpg",
+        "source_url": "https://www.lambocars.com/wp-content/uploads/2005/02/walter-wolf-red-countach-1557415874.jpg"
+      },
+      {
+        "filename": "wolf-of-wall-street-countach-rm-sothebys.webp",
+        "car": "countach",
+        "relative_path": "countach/celebrity-owner/wolf-of-wall-street-countach-rm-sothebys.webp",
+        "source_url": "https://cdn.rmsothebys.com/2/f/e/2/9/6/2fe2962536ba066101c76f1c25c5c0862f8a5548.webp"
+      },
+      {
+        "filename": "gandini-designer-1976.jpg",
+        "car": "countach",
+        "relative_path": "countach/celebrity-owner/gandini-designer-1976.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Marcello_Gandini_in_1976.jpg"
+      },
+      {
+        "filename": "bertone-countach-stratos-1970s.jpg",
+        "car": "countach",
+        "relative_path": "countach/celebrity-owner/bertone-countach-stratos-1970s.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/1970s_Nuccio_Bertone_Stratos_and_Countach.jpg"
+      },
+      {
+        "filename": "bertone-countach-miura-1980s.jpg",
+        "car": "countach",
+        "relative_path": "countach/celebrity-owner/bertone-countach-miura-1980s.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/f4/1980s_Nuccio_Bertone%2C_Countach_and_Miura.jpg"
+      },
+      {
+        "filename": "pirelli-countach-poster-1986.jpg",
+        "car": "countach",
+        "relative_path": "countach/magazine/pirelli-countach-poster-1986.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/1986_Pirelli_Countach_top_view_poster.jpg"
+      },
+      {
+        "filename": "countach-lp500-prototype-2008-recreation.jpg",
+        "car": "countach",
+        "relative_path": "countach/schematics/countach-lp500-prototype-2008-recreation.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/1982_Lamborghini_Countach_LP500.jpg"
+      },
+      {
+        "filename": "959-gruppe-b-1983-frankfurt-iaa-factory.jpeg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/press-launch/959-gruppe-b-1983-frankfurt-iaa-factory.jpeg",
+        "source_url": "https://www.stuttcars.com/wp-content/uploads/2016/04/1983-porsche-gruppe-b-concept.jpeg"
+      },
+      {
+        "filename": "959-gruppe-b-1983-factory-3.jpeg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/press-launch/959-gruppe-b-1983-factory-3.jpeg",
+        "source_url": "https://www.stuttcars.com/wp-content/uploads/2016/04/Porsche-959-Gruppe-B-3-2048x1154.jpeg"
+      },
+      {
+        "filename": "959-gruppe-b-concept-1983.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/press-launch/959-gruppe-b-concept-1983.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Porsche_959_Concept_Car_Gruppe_B_1983.jpg"
+      },
+      {
+        "filename": "959-gruppe-b-concept-rear-1983.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/press-launch/959-gruppe-b-concept-rear-1983.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/34/Porsche_959_Concept_Car_Gruppe_B_1983_%28rear%29.jpg"
+      },
+      {
+        "filename": "959-mechanical-sketch-stuttgart.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/schematics/959-mechanical-sketch-stuttgart.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/de/959_mecanical_sketch_in_Stuttgart_museum.jpg"
+      },
+      {
+        "filename": "959-engine-bay.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/schematics/959-engine-bay.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Porsche_959_engine.jpg"
+      },
+      {
+        "filename": "959-ralph-lauren-collection.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/celebrity-owner/959-ralph-lauren-collection.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Porsche_959_34_left.jpg"
+      },
+      {
+        "filename": "959-ralph-lauren-interior.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/celebrity-owner/959-ralph-lauren-interior.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/92/Porsche_959_interior.jpg"
+      },
+      {
+        "filename": "959-rothmans-paris-dakar-1986.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/magazine/959-rothmans-paris-dakar-1986.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Porsche_959_1986_Paris_Dakar_Racer_Rothmann_Racing_LFrontSide_PorscheM_9June2013_%2814989626056%29.jpg"
+      },
+      {
+        "filename": "961-le-mans-1986.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/press-launch/961-le-mans-1986.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Porsche_961_%281987_24_Hours_of_Le_Mans%2C_No.203%29_in_the_Porsche-Museum_%282009%29_IMG_2761.jpg"
+      },
+      {
+        "filename": "car-magazine-june-1994-cover.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/car-magazine-june-1994-cover.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mmjune1994.jpg"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-01.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/car-magazine-june-1994-spread-01.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive1.jpg"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-02.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/car-magazine-june-1994-spread-02.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive2.jpg"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-03.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/car-magazine-june-1994-spread-03.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive3.jpg"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-04.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/car-magazine-june-1994-spread-04.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive4.jpg"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-05.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/car-magazine-june-1994-spread-05.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive5.jpg"
+      },
+      {
+        "filename": "car-magazine-june-1994-spread-06.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/car-magazine-june-1994-spread-06.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive6.jpg"
+      },
+      {
+        "filename": "elon-musk-mclaren-f1-delivery-1999-01.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/celebrity-owner/elon-musk-mclaren-f1-delivery-1999-01.jpg",
+        "source_url": "https://cdn.motor1.com/images/mgl/10MwM/s1/check-out-elon-musk-getting-delivery-of-supercar-that-is-not-electric.jpg"
+      },
+      {
+        "filename": "elon-musk-mclaren-f1-delivery-1999-02.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/celebrity-owner/elon-musk-mclaren-f1-delivery-1999-02.jpg",
+        "source_url": "https://cdn.motor1.com/images/mgl/10MwM/s3/check-out-elon-musk-getting-delivery-of-supercar-that-is-not-electric.jpg"
+      },
+      {
+        "filename": "elon-musk-mclaren-f1-delivery-1999-03.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/celebrity-owner/elon-musk-mclaren-f1-delivery-1999-03.jpg",
+        "source_url": "https://cdn.motor1.com/images/mgl/10MwM/s5/check-out-elon-musk-getting-delivery-of-supercar-that-is-not-electric.jpg"
+      },
+      {
+        "filename": "f1-lm-engine-bay.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/schematics/f1-lm-engine-bay.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/78/1995_McLaren_F1_LM_6.1_Engine.jpg"
+      },
+      {
+        "filename": "f1-1996-front-end-detail.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/schematics/f1-1996-front-end-detail.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/55/1996_McLaren_F1_Chassis_No_63_6.1_Front_End.jpg"
+      },
+      {
+        "filename": "gordon-murray-1996-le-mans.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/celebrity-owner/gordon-murray-1996-le-mans.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Gordon_Murray_chats_in_the_paddock_behind_the_pits_at_the_1996_Le_Mans_%2851816281021%29.jpg"
+      },
+      {
+        "filename": "f1-gtr-1995-le-mans-winner.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/f1-gtr-1995-le-mans-winner.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/99/1995_Le_Mans_winning_McLaren_F1_GTR_display_at_Goodwood_Festival_of_Speed.jpg"
+      },
+      {
+        "filename": "f1-gtr-nielsen-bscher-donington-1995.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/magazine/f1-gtr-nielsen-bscher-donington-1995.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/9c/Mclaren_F1_GTR_-_John_Nielsen_%26_Thomas_Bscher_at_Donington_1995_%2849672809008%29.jpg"
+      },
+      {
+        "filename": "eb-18-3-chiron-concept-1999.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/eb-18-3-chiron-concept-1999.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Bugatti_Chiron_%288162%29.jpg"
+      },
+      {
+        "filename": "eb-18-3-chiron-rear-1999.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/eb-18-3-chiron-rear-1999.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Bugatti_Chiron_%288169%29.jpg"
+      },
+      {
+        "filename": "eb-18-4-veyron-concept.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/eb-18-4-veyron-concept.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Bugatti_Veyron_18_4_Concept_%2854737722934%29.jpg"
+      },
+      {
+        "filename": "veyron-16-4-early-2004.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/veyron-16-4-early-2004.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/54/Bugatti_Veyron_16.4_2.JPG"
+      },
+      {
+        "filename": "veyron-key-schlussel-2005.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/veyron-key-schlussel-2005.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/Schl%C3%BCssel.jpg"
+      },
+      {
+        "filename": "veyron-w16-engine.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/schematics/veyron-w16-engine.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Bugatti_Veyron_8.0-litre_W16-cylinder_engine_-_Flickr_-_exfordy.jpg"
+      },
+      {
+        "filename": "veyron-w16-on-chassis.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/schematics/veyron-w16-on-chassis.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/81/W-16_on_a_Bugatti_Veyron_-_panoramio.jpg"
+      },
+      {
+        "filename": "veyron-interior-2007.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/schematics/veyron-interior-2007.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Bugatti_Veyron_Innenraum_489.JPG"
+      },
+      {
+        "filename": "veyron-chassis-5-0-validation-prototype-01.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/veyron-chassis-5-0-validation-prototype-01.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-1.jpg"
+      },
+      {
+        "filename": "veyron-chassis-5-0-validation-prototype-02.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/veyron-chassis-5-0-validation-prototype-02.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-2.jpg"
+      },
+      {
+        "filename": "veyron-chassis-5-0-validation-prototype-03.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/veyron-chassis-5-0-validation-prototype-03.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-3.jpg"
+      },
+      {
+        "filename": "veyron-chassis-5-0-validation-prototype-04.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/press-launch/veyron-chassis-5-0-validation-prototype-04.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-4.jpg"
+      }
+    ],
+    "Tier 3 (_archive-weak-specimens)": [
+      {
+        "filename": "countach-lp400-periscopio-1975.jpg",
+        "car": "countach",
+        "relative_path": "countach/_archive-weak-specimens/countach-lp400-periscopio-1975.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/db/1975_Lamborghini_Countach_LP400_Periscopo_2.jpg"
+      },
+      {
+        "filename": "countach-lp400-periscopio-1976.jpg",
+        "car": "countach",
+        "relative_path": "countach/_archive-weak-specimens/countach-lp400-periscopio-1976.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/1976_Lamborghini_Countach_LP400_Periscopio.jpg"
+      },
+      {
+        "filename": "countach-lp400-1974-grand-basel.jpg",
+        "car": "countach",
+        "relative_path": "countach/_archive-weak-specimens/countach-lp400-1974-grand-basel.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/01/1974_Lamborghini_Countach_LP400_at_Grand_basel_2018_%28Ank_Kumar%29_01.jpg"
+      },
+      {
+        "filename": "959-prototype-hamburg-prototyp.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/_archive-weak-specimens/959-prototype-hamburg-prototyp.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Hamburg_Prototyp_Porsche_959_Prototype_Group_B.jpg"
+      },
+      {
+        "filename": "959-prototype-sp24-1985.jpg",
+        "car": "porsche-959",
+        "relative_path": "porsche-959/_archive-weak-specimens/959-prototype-sp24-1985.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7d/1985_Porsche_959_Prototype_SP24.jpg"
+      },
+      {
+        "filename": "f1-xp4-prototype-1993.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/_archive-weak-specimens/f1-xp4-prototype-1993.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/99/1993_McLaren_F1_XP4.jpg"
+      },
+      {
+        "filename": "f1-xp4-prototype-1993-alt.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/_archive-weak-specimens/f1-xp4-prototype-1993-alt.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/1993_McLaren_F1_XP4_%2815513%29.jpg"
+      },
+      {
+        "filename": "f1-1994-production.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "mclaren-f1/_archive-weak-specimens/f1-1994-production.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/fd/1994_McLaren_F1_R26.jpg"
+      },
+      {
+        "filename": "veyron-goodwood-fos-2007.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/_archive-weak-specimens/veyron-goodwood-fos-2007.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/84/Goodwood_Festival_of_Speed_2007_%28780174993%29.jpg"
+      },
+      {
+        "filename": "veyron-gumball-3000-2007.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/_archive-weak-specimens/veyron-gumball-3000-2007.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Gumball_3000_-_2007_%28483283730%29.jpg"
+      },
+      {
+        "filename": "veyron-driving-2008.jpg",
+        "car": "veyron",
+        "relative_path": "veyron/_archive-weak-specimens/veyron-driving-2008.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/a/a8/Bugatti_veyron_driving_%282991971967%29.jpg"
+      }
+    ],
+    "Tier 4 (sourcing-pass-apr-2026 — deliverable artifacts)": [
+      {
+        "filename": "01-first-page-of-road-tracks-february-1976-countach-lp400-road-.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/01-first-page-of-road-tracks-february-1976-countach-lp400-road-.jpg",
+        "source_url": "https://i0.wp.com/www.curbsideclassic.com/wp-content/uploads/2018/06/scans0001.jpg"
+      },
+      {
+        "filename": "02-second-page-of-the-rt-february-1976-countach-test-with-instr.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/02-second-page-of-the-rt-february-1976-countach-test-with-instr.jpg",
+        "source_url": "https://i0.wp.com/www.curbsideclassic.com/wp-content/uploads/2018/06/scans0002.jpg"
+      },
+      {
+        "filename": "03-pirelli-factory-advertising-poster-of-the-countach-in-top-do.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/03-pirelli-factory-advertising-poster-of-the-countach-in-top-do.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b2/1986_Pirelli_Countach_top_view_poster.jpg"
+      },
+      {
+        "filename": "04-walter-wolf-with-his-first-countach-lp400-speciale-chassis-1.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/04-walter-wolf-with-his-first-countach-lp400-speciale-chassis-1.jpg",
+        "source_url": "https://www.lambocars.com/wp-content/uploads/2005/02/walter-wolf-red-countach-1557415874.jpg"
+      },
+      {
+        "filename": "05-walter-wolf-specification-countach-wide-body-with-flared-arc.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/05-walter-wolf-specification-countach-wide-body-with-flared-arc.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/3e/Lamborghini_WOLF_Countach_%288014528335%29.jpg"
+      },
+      {
+        "filename": "06-wolf-countach-front-three-quarter-showing-the-wolf-livery-sc.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/06-wolf-countach-front-three-quarter-showing-the-wolf-livery-sc.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/3f/Lamborghini_WOLF_Countach_%288014530312%29.jpg"
+      },
+      {
+        "filename": "07-jody-scheckter-driving-the-walter-wolf-f1-team-car-at-brands.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/07-jody-scheckter-driving-the-walter-wolf-f1-team-car-at-brands.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/37/Jody_Scheckter_Wolf_Brands_Hatch_1977.jpg"
+      },
+      {
+        "filename": "08-the-1989-lamborghini-countach-25th-anniversary-chassis-kla12.webp",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/08-the-1989-lamborghini-countach-25th-anniversary-chassis-kla12.webp",
+        "source_url": "https://cdn.rmsothebys.com/2/f/e/2/9/6/2fe2962536ba066101c76f1c25c5c0862f8a5548.webp"
+      },
+      {
+        "filename": "09-portrait-of-marcello-gandini-bertones-designer-who-penned-th.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/09-portrait-of-marcello-gandini-bertones-designer-who-penned-th.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/dc/Marcello_Gandini_in_1976.jpg"
+      },
+      {
+        "filename": "10-bertone-founder-nuccio-bertone-with-the-lancia-stratos-and-l.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/10-bertone-founder-nuccio-bertone-with-the-lancia-stratos-and-l.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/1970s_Nuccio_Bertone_Stratos_and_Countach.jpg"
+      },
+      {
+        "filename": "11-the-countach-lp500-prototype-reconstructed-the-yellow-berton.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/11-the-countach-lp500-prototype-reconstructed-the-yellow-berton.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/c/cb/1982_Lamborghini_Countach_LP500.jpg"
+      },
+      {
+        "filename": "12-1988-lamborghini-countach-25th-anniversary-edition-in-silver.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/12-1988-lamborghini-countach-25th-anniversary-edition-in-silver.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/28/1988_Lamborghini_Countach_25th_Anniversary_Silver.jpg"
+      },
+      {
+        "filename": "13-1988-countach-25th-anniversary-edition-hong-kong.jpg",
+        "car": "countach",
+        "relative_path": "sourcing-pass-apr-2026/countach/13-1988-countach-25th-anniversary-edition-hong-kong.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/b9/1988_Lamborghini_Countach_25th_Anniversary_Edition_-_Hong_Kong_%2848902428828%29.jpg"
+      },
+      {
+        "filename": "01-car-and-driver-photograph-from-csaba-cseres-november-1987-ar.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/01-car-and-driver-photograph-from-csaba-cseres-november-1987-ar.jpg",
+        "source_url": "https://hips.hearstapps.com/hmg-prod/amv-prod-cad-assets/images/media/616238/porsche-959-photo-616240-s-986x603.jpg"
+      },
+      {
+        "filename": "02-studio-photograph-of-the-959-accompanying-cseres-archived-ca.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/02-studio-photograph-of-the-959-accompanying-cseres-archived-ca.jpg",
+        "source_url": "https://hips.hearstapps.com/hmg-prod/images/porsche-959-102-1584394867.jpg"
+      },
+      {
+        "filename": "03-david-kimbles-factory-style-cutaway-illustration-of-the-pors.webp",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/03-david-kimbles-factory-style-cutaway-illustration-of-the-pors.webp",
+        "source_url": "https://cdn-1.motorsport.com/images/amp/0aMA7yk0/s1200/automotive-porsche-959-appreciation-2016-porsche-959-cutaway.webp"
+      },
+      {
+        "filename": "04-porsches-factory-press-photograph-of-the-gruppe-b-concept-ca.jpeg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/04-porsches-factory-press-photograph-of-the-gruppe-b-concept-ca.jpeg",
+        "source_url": "https://www.stuttcars.com/wp-content/uploads/2016/04/1983-porsche-gruppe-b-concept.jpeg"
+      },
+      {
+        "filename": "05-factory-image-showing-the-1983-gruppe-b-concept-in-rothmans-.jpeg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/05-factory-image-showing-the-1983-gruppe-b-concept-in-rothmans-.jpeg",
+        "source_url": "https://www.stuttcars.com/wp-content/uploads/2016/04/Porsche-959-Gruppe-B-3-2048x1154.jpeg"
+      },
+      {
+        "filename": "06-the-group-b-959-prototype-now-in-the-prototyp-museum-hamburg.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/06-the-group-b-959-prototype-now-in-the-prototyp-museum-hamburg.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/59/Hamburg_Prototyp_Porsche_959_Prototype_Group_B.jpg"
+      },
+      {
+        "filename": "07-the-rothmans-liveried-959-that-won-the-1986-paris-dakar-rall.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/07-the-rothmans-liveried-959-that-won-the-1986-paris-dakar-rall.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Porsche_959_1986_Paris_Dakar_Racer_Rothmann_Racing_LFrontSide_PorscheM_9June2013_%2814989626056%29.jpg"
+      },
+      {
+        "filename": "08-1985-porsche-959-paris-dakar-prototype-the-ickxbrasseur-entr.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/08-1985-porsche-959-paris-dakar-prototype-the-ickxbrasseur-entr.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/b/ba/1985_Porsche_959_Paris-Dakar_-_Flickr_-_edvvc.jpg"
+      },
+      {
+        "filename": "09-the-porsche-961-a-959-based-le-mans-race-car-in-its-1987-le-.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/09-the-porsche-961-a-959-based-le-mans-race-car-in-its-1987-le-.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/0/00/Porsche_961_%281987_24_Hours_of_Le_Mans%2C_No.203%29_in_the_Porsche-Museum_%282009%29_IMG_2761.jpg"
+      },
+      {
+        "filename": "10-factory-mechanical-sketch-of-the-959-on-display-at-the-porsc.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/10-factory-mechanical-sketch-of-the-959-on-display-at-the-porsc.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/d/de/959_mecanical_sketch_in_Stuttgart_museum.jpg"
+      },
+      {
+        "filename": "11-ralph-laurens-1988-porsche-959-komfort-the-private-american-.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/11-ralph-laurens-1988-porsche-959-komfort-the-private-american-.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/3/38/Porsche_959_34_left.jpg"
+      },
+      {
+        "filename": "12-the-porsche-959s-twin-sequential-turbo-285l-flat-six-engine-.jpg",
+        "car": "porsche-959",
+        "relative_path": "sourcing-pass-apr-2026/porsche-959/12-the-porsche-959s-twin-sequential-turbo-285l-flat-six-engine-.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/c/c0/Porsche_959_engine.jpg"
+      },
+      {
+        "filename": "01-autocars-editorial-photograph-of-the-mclaren-f1-from-steve-c.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/01-autocars-editorial-photograph-of-the-mclaren-f1-from-steve-c.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-02.jpg"
+      },
+      {
+        "filename": "02-autocar-interior-central-driving-position-photograph-of-the-.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/02-autocar-interior-central-driving-position-photograph-of-the-.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/mclaren-f1-08.jpg"
+      },
+      {
+        "filename": "03-car-magazine-june-1994-cover-featuring-the-mclaren-f1-the-se.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/03-car-magazine-june-1994-cover-featuring-the-mclaren-f1-the-se.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mmjune1994.jpg"
+      },
+      {
+        "filename": "04-first-spread-of-car-magazines-june-1994-original-mclaren-f1-.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/04-first-spread-of-car-magazines-june-1994-original-mclaren-f1-.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive1.jpg"
+      },
+      {
+        "filename": "05-second-spread-of-car-magazines-june-1994-f1-test-interior-ar.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/05-second-spread-of-car-magazines-june-1994-f1-test-interior-ar.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive2.jpg"
+      },
+      {
+        "filename": "06-third-car-magazine-june-1994-spread-showing-the-bmw-s702-v12.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/06-third-car-magazine-june-1994-spread-showing-the-bmw-s702-v12.jpg",
+        "source_url": "https://car-images.bauersecure.com/wp-images/10818/1056x594/mclarenf1firstdrive3.jpg"
+      },
+      {
+        "filename": "07-28-year-old-elon-musk-taking-delivery-of-his-silver-mclaren-.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/07-28-year-old-elon-musk-taking-delivery-of-his-silver-mclaren-.jpg",
+        "source_url": "https://cdn.motor1.com/images/mgl/10MwM/s1/check-out-elon-musk-getting-delivery-of-supercar-that-is-not-electric.jpg"
+      },
+      {
+        "filename": "08-musk-beside-the-f1-during-the-1999-delivery.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/08-musk-beside-the-f1-during-the-1999-delivery.jpg",
+        "source_url": "https://cdn.motor1.com/images/mgl/10MwM/s3/check-out-elon-musk-getting-delivery-of-supercar-that-is-not-electric.jpg"
+      },
+      {
+        "filename": "09-the-winning-59-kokusai-kaihatsu-yamaichi-mclaren-f1-gtr-team.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/09-the-winning-59-kokusai-kaihatsu-yamaichi-mclaren-f1-gtr-team.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/16/The_wining_Mclaren_F1_GTR_-59_team_of_Yannick_Dalmas%2C_Masanori_Sekiya_%26_J.J.Lehto_on_the_podium_at_Le_Mans_1995_%2849627444137%29.jpg"
+      },
+      {
+        "filename": "10-the-winning-59-f1-gtr-at-the-ford-chicane-1995-le-mans.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/10-the-winning-59-f1-gtr-at-the-ford-chicane-1995-le-mans.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/1/1c/The_wining_Mclaren_F1_GTR_-59_of_Yannick_Dalmas%2C_Masanori_Sekiya_%26_J.J.Lehto_at_Ford_Chicane_at_Le_Mans_1995_%2849627167201%29.jpg"
+      },
+      {
+        "filename": "11-the-3rd-place-51-f1-gtr-team-wallace-derek-bell-justin-bell-.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/11-the-3rd-place-51-f1-gtr-team-wallace-derek-bell-justin-bell-.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/4a/The_3rd_place_Mclaren_F1_GTR_-51_team_of_Andy_Wallace%2C_Derek_Bell_%26_Justin_Bell_on_the_podium_at_Le_Mans_1995_%2849627171486%29.jpg"
+      },
+      {
+        "filename": "12-all-three-podium-finishers-at-the-1995-le-mans-24-hours-mcla.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/12-all-three-podium-finishers-at-the-1995-le-mans-24-hours-mcla.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/5f/The_1st%2C_2nd_%26_3rd_place_finishers_on_the_podium_at_Le_Mans_1995_%2849626653518%29.jpg"
+      },
+      {
+        "filename": "13-the-1995-le-mans-winning-mclaren-f1-gtr-01r-on-display-at-go.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/13-the-1995-le-mans-winning-mclaren-f1-gtr-01r-on-display-at-go.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/9/99/1995_Le_Mans_winning_McLaren_F1_GTR_display_at_Goodwood_Festival_of_Speed.jpg"
+      },
+      {
+        "filename": "14-gordon-murray-the-f1s-designer-in-the-paddock-at-the-1996-le.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/14-gordon-murray-the-f1s-designer-in-the-paddock-at-the-1996-le.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Gordon_Murray_chats_in_the_paddock_behind_the_pits_at_the_1996_Le_Mans_%2851816281021%29.jpg"
+      },
+      {
+        "filename": "15-open-engine-bay-of-the-mclaren-f1-lm-showing-the-bmw-s702-v1.jpg",
+        "car": "mclaren-f1",
+        "relative_path": "sourcing-pass-apr-2026/mclaren-f1/15-open-engine-bay-of-the-mclaren-f1-lm-showing-the-bmw-s702-v1.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/78/1995_McLaren_F1_LM_6.1_Engine.jpg"
+      },
+      {
+        "filename": "01-autocars-hero-photograph-of-the-bugatti-veyron-from-steve-cr.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/01-autocars-hero-photograph-of-the-bugatti-veyron-from-steve-cr.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-.jpg"
+      },
+      {
+        "filename": "02-autocar-editorial-photograph-of-the-veyron-exterior-from-cro.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/02-autocar-editorial-photograph-of-the-veyron-exterior-from-cro.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-1.jpg"
+      },
+      {
+        "filename": "03-third-autocar-editorial-photograph-of-the-veyron.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/03-third-autocar-editorial-photograph-of-the-veyron.jpg",
+        "source_url": "https://images.cdn.autocar.co.uk/sites/autocar.co.uk/files/bugatti-veyron-super-sport-2.jpg"
+      },
+      {
+        "filename": "04-veyron-chassis-50-the-validation-prototype-ferdinand-piech-p.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/04-veyron-chassis-50-the-validation-prototype-ferdinand-piech-p.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-1.jpg"
+      },
+      {
+        "filename": "05-chassis-50-the-car-that-ran-the-407-kmh-ehra-lessien-validat.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/05-chassis-50-the-car-that-ran-the-407-kmh-ehra-lessien-validat.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-2.jpg"
+      },
+      {
+        "filename": "06-engineering-detail-of-chassis-50-during-2005-development-tes.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/06-engineering-detail-of-chassis-50-during-2005-development-tes.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-3.jpg"
+      },
+      {
+        "filename": "07-profile-view-of-chassis-50-the-prototype-that-enabled-the-mo.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/07-profile-view-of-chassis-50-the-prototype-that-enabled-the-mo.jpg",
+        "source_url": "https://www.supercars.net/blog/wp-content/uploads/2025/10/Bugatti-Veyron-chassis-5-4.jpg"
+      },
+      {
+        "filename": "08-the-bugatti-eb-183-chiron-concept-unveiled-at-the-1999-frank.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/08-the-bugatti-eb-183-chiron-concept-unveiled-at-the-1999-frank.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/f/fa/Bugatti_Chiron_%288162%29.jpg"
+      },
+      {
+        "filename": "09-the-bugatti-eb-184-veyron-concept-1999-tokyo-motor-show-firs.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/09-the-bugatti-eb-184-veyron-concept-1999-tokyo-motor-show-firs.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/71/Bugatti_Veyron_18_4_Concept_%2854737722934%29.jpg"
+      },
+      {
+        "filename": "10-the-veyrons-80-litre-quad-turbo-w16-engine-open-view.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/10-the-veyrons-80-litre-quad-turbo-w16-engine-open-view.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/5/56/Bugatti_Veyron_8.0-litre_W16-cylinder_engine_-_Flickr_-_exfordy.jpg"
+      },
+      {
+        "filename": "11-the-w16-engine-installed-on-the-veyron-chassis-showing-the-p.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/11-the-w16-engine-installed-on-the-veyron-chassis-showing-the-p.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/8/81/W-16_on_a_Bugatti_Veyron_-_panoramio.jpg"
+      },
+      {
+        "filename": "12-the-bugatti-veyron-top-speed-key-the-mandatory-second-key-th.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/12-the-bugatti-veyron-top-speed-key-the-mandatory-second-key-th.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/7/77/Schl%C3%BCssel.jpg"
+      },
+      {
+        "filename": "13-bugatti-veyron-164-super-sport-the-1200-hp-variant-that-reto.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/13-bugatti-veyron-164-super-sport-the-1200-hp-variant-that-reto.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/4/47/Bugatti_Veyron_16.4_Super_Sport_%282%29.jpg"
+      },
+      {
+        "filename": "14-veyron-164-super-sport-world-record-edition-the-specific-edi.jpg",
+        "car": "veyron",
+        "relative_path": "sourcing-pass-apr-2026/veyron/14-veyron-164-super-sport-world-record-edition-the-specific-edi.jpg",
+        "source_url": "https://upload.wikimedia.org/wikipedia/commons/2/23/Bugatti_Veyron_16.4_Super_Sport_World_Record_Edition_-_54848058191.jpg"
+      }
+    ]
+  }
+}
