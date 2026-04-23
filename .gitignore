@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# uncompressed GLB originals — moved one level up out of the build root
+/public/models/.uncompressed

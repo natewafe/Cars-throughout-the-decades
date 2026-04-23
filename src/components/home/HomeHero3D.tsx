@@ -98,8 +98,8 @@ export function HomeHero3D() {
     <div className="home-hero-3d-wrap">
       <div className="home-hero-3d">
         <Canvas
-          dpr={[1.25, 2]}
-          shadows
+          dpr={[1, 1.5]}
+          shadows={{ type: THREE.PCFSoftShadowMap }}
           gl={{
             antialias: true,
             alpha: true,
@@ -215,7 +215,7 @@ function HeroCarModel({ car }: { car: HeroCar }) {
         scale={14}
         blur={2.6}
         far={4}
-        resolution={1024}
+        resolution={512}
       />
       <group ref={groupRef} scale={scale} position={[offset.x, offset.y + car.yBias, offset.z]}>
         <primitive object={model} />
@@ -233,7 +233,7 @@ function HeroLights() {
         position={[6, 10, 6]}
         intensity={2.4}
         color={"#ffffff"}
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
       />
       <directionalLight position={[-6, 4, -4]} intensity={0.8} color={"#dde6ff"} />
       <directionalLight position={[0, 6, -8]} intensity={1.1} color={"#ffe8cc"} />

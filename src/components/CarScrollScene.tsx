@@ -125,8 +125,11 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
       <div ref={pinRef} className="scene-sticky">
         <div className="scene-canvas">
           <Canvas
-            dpr={[1.5, 2.5]}
-            shadows
+            // Clamp to DPR 1.5 max — phones ship DPR 3, which triples the
+            // fragment-shader cost of every frame and is the single biggest
+            // mobile GPU drain after model size.
+            dpr={[1, 1.5]}
+            shadows={{ type: THREE.PCFSoftShadowMap }}
             gl={{
               antialias: true,
               alpha: true,
@@ -357,7 +360,7 @@ function SceneContents({
         position={[6, 10, 6]}
         intensity={2.4}
         color={"#ffffff"}
-        shadow-mapSize={[2048, 2048]}
+        shadow-mapSize={[1024, 1024]}
         shadow-camera-far={25}
         shadow-camera-left={-8}
         shadow-camera-right={8}
@@ -388,7 +391,7 @@ function SceneContents({
         scale={16}
         blur={3.0}
         far={5}
-        resolution={1024}
+        resolution={512}
       />
 
       <group scale={modelScale} position={centerOffset.toArray()}>
