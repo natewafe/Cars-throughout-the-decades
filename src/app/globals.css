@@ -120,6 +120,72 @@ body::before {
     radial-gradient(ellipse 70% 50% at 50% 55%, #ffffff 0%, rgba(255,255,255,0) 70%),
     linear-gradient(180deg, #f6f3ee 0%, #ece7dd 50%, #dcd3c2 100%);
   overflow: hidden;
+  /* Contain the WebGL canvas + pinned captions in their own stacking context
+     so they cannot bleed above sections that follow (title band, essay,
+     artifacts). Without this, the GPU-composited <canvas> could paint over
+     text or behind it depending on scroll position. */
+  isolation: isolate;
+  z-index: 0;
+}
+/* Veyron is orange — pair it with a cool, darker stage so the model reads
+   and the caption glass stays legible. A subtle vignette darkens the corners
+   where body text sits. */
+.scroll-scene[data-car="veyron"] {
+  color: #f0ebe1;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%),
+    radial-gradient(ellipse at 50% 120%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%),
+    linear-gradient(180deg, #2a2f3a 0%, #1d2029 60%, #141720 100%);
+}
+.scroll-scene[data-car="veyron"] .scene-caption {
+  background: rgba(26, 28, 36, 0.58);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #f3eee2;
+}
+.scroll-scene[data-car="veyron"] .scene-caption .caption-line {
+  color: #f3eee2;
+  text-shadow: 0 1px 30px rgba(0,0,0,0.5);
+}
+.scroll-scene[data-car="veyron"] .scene-caption .caption-eyebrow {
+  color: #e4c06a;
+}
+.scroll-scene[data-car="veyron"] .scene-finale {
+  background: radial-gradient(ellipse at 50% 50%, rgba(20,23,32,0) 25%, rgba(20,23,32,0.94) 80%);
+}
+.scroll-scene[data-car="veyron"] .scene-finale .finale-title { color: #f3eee2; }
+.scroll-scene[data-car="veyron"] .scene-hint { color: rgba(243, 238, 226, 0.5); }
+
+/* Veyron article sections: the primary-source imagery skews orange and washes
+   out the type. A paper-raised scrim + subtle top/bottom gradient restores
+   readable contrast without killing the warmth of the images themselves. */
+article[data-car="veyron"] .artifact-masonry figure.artifact figcaption {
+  background: linear-gradient(180deg, rgba(255,253,249,0.94) 0%, rgba(255,253,249,1) 100%);
+  padding: 0.9rem 0.9rem 1rem;
+  position: relative;
+  z-index: 1;
+}
+article[data-car="veyron"] .artifacts-intro {
+  background: linear-gradient(180deg, rgba(255,253,249,0.9) 0%, rgba(255,253,249,1) 100%);
+  padding: 1rem 1.25rem;
+  border-left: 2px solid var(--color-brass-dark);
+}
+article[data-car="veyron"] .artifact-section-header {
+  background: linear-gradient(180deg, rgba(255,253,249,0.92) 0%, rgba(255,253,249,1) 100%);
+  padding: 1rem 0.25rem;
+}
+/* Sections after the pinned scene must sit in their own stacking context
+   with an opaque background so the canvas never shows through them. */
+.exhibit-after {
+  position: relative;
+  z-index: 1;
+  isolation: isolate;
+  background: var(--color-paper);
+}
+.artifacts-block {
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  background: var(--color-paper);
 }
 .scene-sticky {
   position: relative;
@@ -216,31 +282,50 @@ body::before {
   position: absolute;
   top: 50%;
   transform: translateY(calc(-50% + 8px));
-  max-width: 460px;
+  width: min(360px, 30vw);
+  max-width: 360px;
   opacity: 0;
   transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: none;
-  z-index: 3;
-  padding: 1.1rem 1.35rem;
+  z-index: 5;
+  padding: 1rem 1.2rem;
   /* Glass panel so captions stay readable over any part of the car */
-  background: rgba(255, 253, 249, 0.62);
+  background: rgba(255, 253, 249, 0.72);
   border: 1px solid rgba(40, 26, 10, 0.08);
   border-radius: 2px;
   backdrop-filter: blur(14px) saturate(1.1);
   -webkit-backdrop-filter: blur(14px) saturate(1.1);
   box-shadow: 0 20px 50px -20px rgba(40, 26, 10, 0.18);
 }
-.scene-caption.left   { left: 4vw; }
-.scene-caption.right  { right: 4vw; text-align: right; }
+/* Push captions hard to the page edge so the car stays visible between them. */
+.scene-caption.left   { left: 2.5vw; }
+.scene-caption.right  { right: 2.5vw; text-align: right; }
 .scene-caption.bottom {
-  top: auto; bottom: 6%;
-  left: 50%; right: auto;
-  transform: translateX(-50%) translateY(8px);
-  text-align: center;
-  max-width: 600px;
+  top: auto; bottom: 5%;
+  left: 2.5vw; right: auto;
+  width: min(420px, 38vw);
+  max-width: 420px;
+  transform: translateY(8px);
+  text-align: left;
 }
 .scene-caption.is-live { opacity: 1; transform: translateY(-50%); }
-.scene-caption.bottom.is-live { transform: translateX(-50%) translateY(0); }
+.scene-caption.bottom.is-live { transform: translateY(0); }
+@media (max-width: 720px) {
+  /* On narrow screens, stick captions to the bottom so they never cross the
+     main bodywork silhouette. */
+  .scene-caption,
+  .scene-caption.left,
+  .scene-caption.right {
+    top: auto; bottom: 5%;
+    left: 4vw; right: 4vw;
+    width: auto; max-width: none;
+    text-align: left;
+    transform: translateY(12px);
+  }
+  .scene-caption.is-live,
+  .scene-caption.left.is-live,
+  .scene-caption.right.is-live { transform: translateY(0); }
+}
 
 .scene-caption {
   z-index: 3;
@@ -632,12 +717,25 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
 /* ============ HERO ============ */
 .home-hero {
   position: relative;
-  padding: 7.5rem 0 5rem;
+  padding: 4.5rem 0 5rem;
   overflow: hidden;
   background:
     radial-gradient(ellipse 80% 60% at 70% 40%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 65%),
     linear-gradient(180deg, var(--color-paper) 0%, var(--color-paper-raised) 100%);
 }
+/* Top band: eyebrow kicker + full-width headline — lands near top of page. */
+.home-hero-top {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem 2.5rem;
+}
+@media (min-width: 1024px) {
+  .home-hero-top { padding: 0 3rem 3.5rem; }
+}
+.home-hero-top .home-hero-title {
+  max-width: 22ch;
+}
+/* Asymmetric lower grid: copy/CTAs on left, 3D stage offset right. */
 .home-hero-grid {
   position: relative;
   max-width: 1400px;
@@ -646,11 +744,11 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   display: grid;
   grid-template-columns: 1fr;
   gap: 3rem;
-  align-items: center;
+  align-items: start;
 }
 @media (min-width: 1024px) {
   .home-hero-grid {
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: 0.95fr 1.05fr;
     gap: 4rem;
     padding: 0 3rem;
   }
@@ -762,7 +860,68 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   pointer-events: none;
   background: linear-gradient(to top, rgba(160,140,100,0.22) 0%, rgba(0,0,0,0) 30%);
 }
+.home-hero-3d-wrap { position: absolute; inset: 0; }
 .home-hero-3d { position: absolute; inset: 0; z-index: 1; }
+
+/* Coming-soon typographic plate (fifth carousel slot with no model). */
+.hero-coming-soon {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  text-align: center;
+  padding: 2rem;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 55%, rgba(255,255,255,0.6) 0%, rgba(255,255,255,0) 70%);
+}
+.hero-coming-kicker {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-brass-dark);
+}
+.hero-coming-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-style: italic;
+  color: var(--color-ink);
+  line-height: 1.05;
+  max-width: 18ch;
+}
+.hero-coming-sub {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+}
+
+/* Carousel pips inside the stage label */
+.stage-pips {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.stage-pip {
+  width: 28px;
+  height: 2px;
+  background: rgba(40, 26, 10, 0.2);
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  transition: background 0.4s ease, width 0.4s cubic-bezier(0.2,0.8,0.2,1);
+}
+.stage-pip:hover { background: rgba(40, 26, 10, 0.45); }
+.stage-pip.is-active {
+  width: 48px;
+  background: var(--color-brass-dark);
+}
 .home-hero-3d canvas {
   display: block;
   width: 100% !important;
@@ -883,33 +1042,50 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   line-height: 1.5;
 }
 
-.exhibits-directory { position: relative; }
-.exhibits-preview {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: min(40vw, 380px);
-  aspect-ratio: 4/5;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate3d(0, 0, 0) translate(-50%, -50%);
-  transition: opacity 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
-  z-index: 10;
-  border: 1px solid var(--color-rule);
-  background: var(--color-paper);
-  box-shadow: 0 40px 80px -20px rgba(40, 26, 10, 0.35);
-  overflow: hidden;
+/* Exhibits list: stable side-pinned preview (no cursor follow).
+   Every <img> mounts at once and we just cross-fade opacity. */
+.exhibits-directory {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
 }
-.exhibits-preview.is-live { opacity: 1; }
-.exhibits-preview img {
+@media (min-width: 900px) {
+  .exhibits-directory {
+    grid-template-columns: 1fr minmax(320px, 400px);
+    gap: 3rem;
+    align-items: start;
+  }
+}
+.exhibits-preview-pin {
+  display: none;
+  position: relative;
+  aspect-ratio: 4/5;
+  width: 100%;
+  overflow: hidden;
+  background: var(--color-paper);
+  border: 1px solid var(--color-rule);
+  box-shadow: 0 40px 80px -20px rgba(40, 26, 10, 0.35);
+}
+@media (min-width: 900px) {
+  .exhibits-preview-pin {
+    display: block;
+    position: sticky;
+    top: 6rem;
+    order: 2;
+  }
+  .exhibits-list { order: 1; }
+}
+.exhibits-preview-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+  opacity: 0;
+  transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-@media (max-width: 768px) {
-  .exhibits-preview { display: none; }
-}
+.exhibits-preview-img.is-live { opacity: 1; }
 
 .exhibits-list {
   border-top: 1px solid var(--color-rule);
@@ -1015,10 +1191,18 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
    HOMEPAGE PART 2 — polaroid stack, featured stack, four rooms
    ================================================================ */
 
-/* ============ POLAROID (ArtifactStack) ============ */
+/* ============ POLAROID (ArtifactStack) ============
+   Pure-CSS stack & fan. Three states:
+     collapsed (default)        — cards stacked with visible peek edges.
+     .is-open                   — click mode, fanned out after toggle.
+     .mode-hover:hover / parent-hover — fanned out while hovering.
+   No per-child hover variants — the PARENT owns the state so the cursor can
+   move freely across the polaroids without flickering. */
 .artifact-stack {
   pointer-events: auto;
+  isolation: isolate;
 }
+.artifact-stack.mode-click { cursor: pointer; }
 .polaroid {
   position: absolute;
   background: #faf6ec;
@@ -1031,8 +1215,66 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  cursor: grab;
+  transition: transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+              box-shadow 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
   will-change: transform;
+}
+
+/* Collapsed (stacked) — edges clearly peek so you can tell there are 3. */
+.polaroid-left   { transform: translate(-22%, 6%) rotate(-7deg);  z-index: 1; }
+.polaroid-right  { transform: translate(22%, 6%) rotate(7deg);    z-index: 2; }
+.polaroid-middle { transform: translate(0, -4%) rotate(-2deg);    z-index: 3; }
+
+/* Expanded (fanned) — triggered by click-state, direct hover on hover-mode,
+   or an ancestor .room-card hover for cards wrapping the stack in a Link. */
+.artifact-stack.is-open .polaroid-left,
+.artifact-stack.mode-hover:hover .polaroid-left,
+.room-card:hover .artifact-stack.mode-hover .polaroid-left {
+  transform: translate(-85%, 0) rotate(-10deg);
+}
+.artifact-stack.is-open .polaroid-right,
+.artifact-stack.mode-hover:hover .polaroid-right,
+.room-card:hover .artifact-stack.mode-hover .polaroid-right {
+  transform: translate(85%, 0) rotate(10deg);
+}
+.artifact-stack.is-open .polaroid-middle,
+.artifact-stack.mode-hover:hover .polaroid-middle,
+.room-card:hover .artifact-stack.mode-hover .polaroid-middle {
+  transform: translate(0, -8%) rotate(0deg);
+}
+
+/* Inside the four-rooms cards the container is narrower and clips overflow,
+   so we use a gentler fan that stays inside the card bounds. */
+.room-card:hover .artifact-stack.mode-hover .polaroid-left {
+  transform: translate(-45%, -2%) rotate(-8deg);
+}
+.room-card:hover .artifact-stack.mode-hover .polaroid-right {
+  transform: translate(45%, -2%) rotate(8deg);
+}
+.room-card:hover .artifact-stack.mode-hover .polaroid-middle {
+  transform: translate(0, -10%) rotate(0deg);
+  z-index: 4;
+}
+
+.stack-hint {
+  position: absolute;
+  bottom: -2.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  pointer-events: none;
+  white-space: nowrap;
+  transition: opacity 0.4s ease;
+}
+.artifact-stack.mode-click:hover .stack-hint { color: var(--color-brass-dark); }
+
+/* Respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .polaroid { transition: none; }
 }
 .polaroid::before {
   /* Subtle warm paper wash */

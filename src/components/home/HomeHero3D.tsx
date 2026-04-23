@@ -1,44 +1,153 @@
 "use client";
 
-import { Suspense, useMemo, useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import {
-  ContactShadows,
-  Environment,
-  useGLTF,
-} from "@react-three/drei";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { ContactShadows, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
-/** Standalone R3F showroom for the homepage hero — a slow auto-orbit of the
- * Countach rendered with the same clearcoat/HDRI treatment as the exhibit pages.
- * Client-only (R3F is WebGL). */
+/** Carousel of hero cars with distinct close-up framings per car, plus a
+ * "Coming Soon" fifth slot rendered as a typographic plate (no model).
+ *
+ * Only one GLB is mounted at a time and prior ones are released from the
+ * useGLTF cache on switch — this keeps memory bounded so the hero can live on
+ * the same site as the per-exhibit scroll scene without stacking GPU cost. */
+
+type HeroCar = {
+  slug: string;
+  url: string | null;
+  label: string;
+  decade: string;
+  eyebrow: string;
+  /** Spherical camera framing: [azimuth deg, polar deg, radius multiplier].
+   *  Detail shots use tighter radii and off-center azimuths. */
+  framing: [number, number, number];
+  /** Rotation speed (rad/sec) while active; low values give a slow detail pan. */
+  spin: number;
+  /** Optional constant Y-offset added after grounding (world units). */
+  yBias: number;
+};
+
+const HERO_CARS: HeroCar[] = [
+  {
+    slug: "countach",
+    url: "/models/countach.glb",
+    label: "Lamborghini Countach",
+    decade: "1974 · Sant'Agata",
+    eyebrow: "Now Showing · Room I",
+    framing: [45, 76, 0.58],
+    spin: 0.12,
+    yBias: 0.15,
+  },
+  {
+    slug: "959",
+    url: "/models/959.glb",
+    label: "Porsche 959",
+    decade: "1986 · Zuffenhausen",
+    eyebrow: "Room II · Detail",
+    framing: [125, 82, 0.62],
+    spin: 0.08,
+    yBias: 0.1,
+  },
+  {
+    slug: "f1",
+    url: "/models/f1.glb",
+    label: "McLaren F1",
+    decade: "1992 · Woking",
+    eyebrow: "Room III · Detail",
+    framing: [-40, 72, 0.55],
+    spin: 0.1,
+    yBias: 0.1,
+  },
+  {
+    slug: "veyron",
+    url: "/models/veyron.glb",
+    label: "Bugatti Veyron 16.4",
+    decade: "2005 · Molsheim",
+    eyebrow: "Room IV · Detail",
+    framing: [160, 80, 0.6],
+    spin: 0.09,
+    yBias: 0.1,
+  },
+  {
+    slug: "coming-soon",
+    url: null,
+    label: "Ferrari SF90 Stradale",
+    decade: "2020 · Maranello",
+    eyebrow: "Gallery V · Coming Soon",
+    framing: [0, 80, 1],
+    spin: 0,
+    yBias: 0,
+  },
+];
+
+const CYCLE_MS = 6500;
+
 export function HomeHero3D() {
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setActive((i) => (i + 1) % HERO_CARS.length);
+    }, CYCLE_MS);
+    return () => window.clearInterval(id);
+  }, []);
+
+  const car = HERO_CARS[active];
+
   return (
-    <div className="home-hero-3d">
-      <Canvas
-        dpr={[1.5, 2.5]}
-        shadows
-        gl={{
-          antialias: true,
-          alpha: true,
-          powerPreference: "high-performance",
-          toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.05,
-        }}
-        camera={{ fov: 28, near: 0.1, far: 500, position: [5, 1.8, 5] }}
-      >
-        <Suspense fallback={null}>
-          <HeroScene />
-        </Suspense>
-      </Canvas>
+    <div className="home-hero-3d-wrap">
+      <div className="home-hero-3d">
+        <Canvas
+          dpr={[1.25, 2]}
+          shadows
+          gl={{
+            antialias: true,
+            alpha: true,
+            powerPreference: "high-performance",
+            toneMapping: THREE.ACESFilmicToneMapping,
+            toneMappingExposure: 1.05,
+          }}
+          camera={{ fov: 28, near: 0.1, far: 500, position: [5, 1.8, 5] }}
+        >
+          <Suspense fallback={null}>
+            {car.url ? <HeroCarModel key={car.slug} car={car} /> : null}
+            <HeroLights />
+          </Suspense>
+        </Canvas>
+
+        {!car.url && (
+          <div className="hero-coming-soon">
+            <span className="hero-coming-kicker">Next Exhibit</span>
+            <span className="hero-coming-title">{car.label}</span>
+            <span className="hero-coming-sub">A fifth room is being installed.</span>
+          </div>
+        )}
+      </div>
+
+      <div className="home-hero-stage-label">
+        <span className="eyebrow">{car.eyebrow}</span>
+        <span className="stage-title">{car.label}</span>
+        <span className="stage-meta">{car.decade}</span>
+        <div className="stage-pips" role="tablist" aria-label="Featured cars">
+          {HERO_CARS.map((c, i) => (
+            <button
+              key={c.slug}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              aria-label={c.label}
+              className={`stage-pip${i === active ? " is-active" : ""}`}
+              onClick={() => setActive(i)}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
 
-function HeroScene() {
-  const { scene: gltf } = useGLTF("/models/countach.glb") as unknown as {
-    scene: THREE.Group;
-  };
+function HeroCarModel({ car }: { car: HeroCar }) {
+  const { scene: gltf } = useGLTF(car.url!) as unknown as { scene: THREE.Group };
   const groupRef = useRef<THREE.Group | null>(null);
 
   const { model, scale, offset } = useMemo(() => {
@@ -75,19 +184,47 @@ function HeroScene() {
     box.getCenter(center);
     const longest = Math.max(size.x, size.y, size.z);
     const s = 4 / longest;
-    return {
-      model: cloned,
-      scale: s,
-      offset: center.clone().multiplyScalar(-s),
-    };
+    // Ground the model: translate XZ to center, translate Y so bbox.min.y == 0.
+    const offs = new THREE.Vector3(-center.x * s, -box.min.y * s, -center.z * s);
+    return { model: cloned, scale: s, offset: offs };
   }, [gltf]);
+
+  useEffect(() => {
+    const url = car.url!;
+    return () => {
+      try {
+        useGLTF.clear(url);
+      } catch {
+        /* noop */
+      }
+    };
+  }, [car.url]);
 
   useFrame((_, delta) => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.15;
+      groupRef.current.rotation.y += delta * car.spin;
     }
   });
 
+  return (
+    <>
+      <HeroCamera framing={car.framing} />
+      <ContactShadows
+        position={[0, 0.001, 0]}
+        opacity={0.58}
+        scale={14}
+        blur={2.6}
+        far={4}
+        resolution={1024}
+      />
+      <group ref={groupRef} scale={scale} position={[offset.x, offset.y + car.yBias, offset.z]}>
+        <primitive object={model} />
+      </group>
+    </>
+  );
+}
+
+function HeroLights() {
   return (
     <>
       <ambientLight intensity={0.35} />
@@ -101,19 +238,31 @@ function HeroScene() {
       <directionalLight position={[-6, 4, -4]} intensity={0.8} color={"#dde6ff"} />
       <directionalLight position={[0, 6, -8]} intensity={1.1} color={"#ffe8cc"} />
       <Environment preset="warehouse" environmentIntensity={0.9} />
-      <ContactShadows
-        position={[0, -1.995, 0]}
-        opacity={0.55}
-        scale={14}
-        blur={2.6}
-        far={4}
-        resolution={1024}
-      />
-      <group ref={groupRef} scale={scale} position={offset.toArray()}>
-        <primitive object={model} />
-      </group>
     </>
   );
 }
 
-useGLTF.preload("/models/countach.glb");
+function HeroCamera({ framing }: { framing: [number, number, number] }) {
+  const { camera } = useThree();
+  const current = useRef({ theta: framing[0], phi: framing[1], r: framing[2] });
+
+  useFrame((_, delta) => {
+    const [thetaDeg, phiDeg, radius] = framing;
+    const k = 1 - Math.pow(0.001, delta);
+    current.current.theta += (thetaDeg - current.current.theta) * k;
+    current.current.phi += (phiDeg - current.current.phi) * k;
+    current.current.r += (radius - current.current.r) * k;
+    const theta = (current.current.theta * Math.PI) / 180;
+    const phi = (current.current.phi * Math.PI) / 180;
+    const r = 6 * current.current.r;
+    camera.position.set(
+      r * Math.sin(phi) * Math.sin(theta),
+      Math.max(0.4, r * Math.cos(phi) + 1.0),
+      r * Math.sin(phi) * Math.cos(theta)
+    );
+    camera.lookAt(0, 0.9, 0);
+    camera.updateProjectionMatrix();
+  });
+
+  return null;
+}

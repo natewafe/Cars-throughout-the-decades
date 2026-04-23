@@ -11,7 +11,7 @@ export function CarExhibit({ car, next }: { car: Car; next?: Car }) {
   const artifacts = artifactsBySlug[car.slug];
 
   return (
-    <article className="relative">
+    <article className="relative" data-car={car.slug} style={{ isolation: "isolate" }}>
       {/* Scroll-driven 3D scene hero */}
       {scene && car.modelUrl && (
         <CarScrollScene
@@ -23,7 +23,7 @@ export function CarExhibit({ car, next }: { car: Car; next?: Car }) {
       )}
 
       {/* Title band below the scene */}
-      <section className="border-y border-[color:var(--color-rule)] bg-[color:var(--color-paper-raised)]">
+      <section className="exhibit-after border-y border-[color:var(--color-rule)] bg-[color:var(--color-paper-raised)]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-12 py-14 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
             <div className="eyebrow">{car.decade} · Exhibit</div>
@@ -42,7 +42,7 @@ export function CarExhibit({ car, next }: { car: Car; next?: Car }) {
       </section>
 
       {/* STATS BAND */}
-      <section className="border-b border-[color:var(--color-rule)] bg-[color:var(--color-paper-raised)]">
+      <section className="exhibit-after border-b border-[color:var(--color-rule)] bg-[color:var(--color-paper-raised)]">
         <div className="mx-auto max-w-[1400px] px-6 lg:px-12 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
           {car.stats.map((s) => (
             <Reveal key={s.label}>
@@ -58,7 +58,7 @@ export function CarExhibit({ car, next }: { car: Car; next?: Car }) {
       </section>
 
       {/* ESSAY */}
-      <section className="mx-auto max-w-[1400px] px-6 lg:px-12 py-24 md:py-32">
+      <section className="exhibit-after mx-auto max-w-[1400px] px-6 lg:px-12 py-24 md:py-32">
         <div className="grid gap-20 md:grid-cols-[1fr_2fr]">
           <Reveal>
             <div className="eyebrow">The Exhibit</div>
@@ -97,7 +97,7 @@ export function CarExhibit({ car, next }: { car: Car; next?: Car }) {
 
       {/* NEXT EXHIBIT */}
       {next && (
-        <section className="border-t border-[color:var(--color-rule)]">
+        <section className="exhibit-after border-t border-[color:var(--color-rule)]">
           <Link
             href={`/${next.slug}`}
             className="block mx-auto max-w-[1400px] px-6 lg:px-12 py-24 md:py-32 group"

@@ -5,7 +5,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   ContactShadows,
   Environment,
-  MeshReflectorMaterial,
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
@@ -49,6 +48,16 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
   // Shared scroll progress — written by ScrollTrigger, read by R3F useFrame.
   const progressRef = useRef(0);
+  // Horizontal bias for the camera. -1 = caption on right → model shifts left;
+  // +1 = caption on left → model shifts right; 0 = centered.
+  const sideBiasRef = useRef(0);
+
+  useEffect(() => {
+    useGLTF.preload(modelUrl);
+    return () => {
+      useGLTF.clear(modelUrl);
+    };
+  }, [modelUrl]);
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
@@ -70,12 +79,21 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
           progressRef.current = p;
 
           // DOM overlays — written directly, no React state
+          let activeBias = 0;
           scene.captions.forEach((cap, i) => {
             const node = captionRefs.current[i];
             if (!node) return;
             const active = p >= cap.from && p <= cap.to;
             node.classList.toggle("is-live", active);
+            if (active) {
+              // Left caption → shift model right; right caption → shift left;
+              // bottom caption → no horizontal bias, only vertical handled by camera.
+              if (cap.pos === "left") activeBias = 1;
+              else if (cap.pos === "right") activeBias = -1;
+              else activeBias = 0;
+            }
           });
+          sideBiasRef.current = activeBias;
           if (finaleRef.current) {
             finaleRef.current.classList.toggle("is-live", p >= 0.92);
           }
@@ -91,8 +109,19 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
   captionRefs.current = [];
 
+  // Derive a per-car theme slug for the scene background. The Veyron's
+  // primary-hero imagery is a bold orange, which clashes with our default
+  // warm-cream gradient — switch that car to a cooler, darker stage.
+  const themeSlug = modelUrl.includes("veyron")
+    ? "veyron"
+    : modelUrl.includes("959")
+    ? "959"
+    : modelUrl.includes("f1")
+    ? "f1"
+    : "countach";
+
   return (
-    <section ref={sectionRef} className="scroll-scene">
+    <section ref={sectionRef} className="scroll-scene" data-car={themeSlug}>
       <div ref={pinRef} className="scene-sticky">
         <div className="scene-canvas">
           <Canvas
@@ -114,6 +143,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
                 materialOverrides={scene.materialOverrides}
                 doorRig={scene.doorRig}
                 progressRef={progressRef}
+                sideBiasRef={sideBiasRef}
               />
             </Suspense>
           </Canvas>
@@ -157,12 +187,14 @@ function SceneContents({
   materialOverrides,
   doorRig,
   progressRef,
+  sideBiasRef,
 }: {
   modelUrl: string;
   keyframes: SceneConfig["keyframes"];
   materialOverrides?: MaterialOverride[];
   doorRig?: DoorRig;
   progressRef: ProgressRef;
+  sideBiasRef: ProgressRef;
 }) {
   const { scene: gltfScene } = useGLTF(modelUrl) as unknown as {
     scene: THREE.Group;
@@ -221,9 +253,18 @@ function SceneContents({
     const longest = Math.max(size.x, size.y, size.z);
     const targetSize = 4;
     const s = targetSize / longest;
+    // Ground plane in this scene sits at y = -2 (see ContactShadows position
+    // below). Translate Y so bbox.min.y after scaling == -2, i.e. car's tyres
+    // are on the ground instead of centered around the origin.
+    const GROUND_Y = -2;
+    const offs = new THREE.Vector3(
+      -center.x * s,
+      GROUND_Y - box.min.y * s,
+      -center.z * s
+    );
     return {
       modelScale: s,
-      centerOffset: center.clone().multiplyScalar(-s),
+      centerOffset: offs,
       baseRadius: (targetSize * Math.sqrt(3)) / 2,
     };
   }, [model]);
@@ -338,29 +379,15 @@ function SceneContents({
       {/* Studio HDRI supplies real reflections on paint + glass */}
       <Environment preset="warehouse" environmentIntensity={0.9} background={false} />
 
-      {/* Reflective showroom floor */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.001, 0]} receiveShadow>
-        <planeGeometry args={[40, 40]} />
-        <MeshReflectorMaterial
-          blur={[280, 100]}
-          resolution={1024}
-          mixBlur={0.9}
-          mixStrength={18}
-          roughness={0.82}
-          depthScale={1.1}
-          minDepthThreshold={0.4}
-          maxDepthThreshold={1.4}
-          color="#d9d2c2"
-          metalness={0.4}
-          mirror={0.0}
-        />
-      </mesh>
+      {/* No visible floor mesh — the page's gradient background shows through
+          the transparent canvas. A ContactShadow keeps the model grounded
+          visually without the horizon line that a MeshReflectorMaterial drew. */}
       <ContactShadows
-        position={[0, -1.995, 0]}
-        opacity={0.55}
-        scale={14}
-        blur={2.6}
-        far={4}
+        position={[0, -1.999, 0]}
+        opacity={0.62}
+        scale={16}
+        blur={3.0}
+        far={5}
         resolution={1024}
       />
 
@@ -372,6 +399,7 @@ function SceneContents({
         keyframes={keyframes}
         progressRef={progressRef}
         baseRadius={baseRadius}
+        sideBiasRef={sideBiasRef}
       />
     </>
   );
@@ -381,10 +409,12 @@ function CameraController({
   keyframes,
   progressRef,
   baseRadius,
+  sideBiasRef,
 }: {
   keyframes: SceneConfig["keyframes"];
   progressRef: ProgressRef;
   baseRadius: number;
+  sideBiasRef: ProgressRef;
 }) {
   const { camera } = useThree();
   const kfs = useMemo(
@@ -392,6 +422,7 @@ function CameraController({
     [keyframes]
   );
   const current = useRef<Orbit>({ ...kfs[0].orbit });
+  const bias = useRef(0);
 
   const sample = (p: number): Orbit => {
     for (let i = 0; i < kfs.length - 1; i++) {
@@ -421,23 +452,30 @@ function CameraController({
     current.current.phi = lerp(current.current.phi, target.phi, k);
     current.current.radius = lerp(current.current.radius, target.radius, k);
 
+    // Lerp the side-bias so the shift feels like breathing, not snapping.
+    const targetBias = sideBiasRef.current;
+    bias.current += (targetBias - bias.current) * (1 - Math.pow(0.02, delta));
+
     const theta = (current.current.theta * Math.PI) / 180;
     const phi = (current.current.phi * Math.PI) / 180;
     const r = baseRadius * (current.current.radius / 100) * 2.4;
 
+    // Side-bias (world units): move the camera target + camera horizontally
+    // so the car visibly shifts to the opposite side of the viewport from the
+    // active caption. Strength scales with radius so it reads the same at any
+    // zoom level.
+    const biasStrength = 0.28 * r;
+    const tx = bias.current * biasStrength;
+
     camera.position.set(
-      r * Math.sin(phi) * Math.sin(theta),
+      r * Math.sin(phi) * Math.sin(theta) + tx,
       r * Math.cos(phi),
       r * Math.sin(phi) * Math.cos(theta)
     );
-    camera.lookAt(0, 0, 0);
+    camera.lookAt(tx, 0, 0);
     camera.updateProjectionMatrix();
   });
 
   return null;
 }
 
-useGLTF.preload("/models/countach.glb");
-useGLTF.preload("/models/959.glb");
-useGLTF.preload("/models/f1.glb");
-useGLTF.preload("/models/veyron.glb");

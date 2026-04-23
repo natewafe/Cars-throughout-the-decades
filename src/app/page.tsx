@@ -66,30 +66,31 @@ export default function HomePage() {
 
       {/* ============ HERO ============ */}
       <section className="home-hero" data-parallax-container>
+        <div className="home-hero-top">
+          <div className="eyebrow home-hero-kicker">
+            <span className="kicker-line" /> A virtual exhibition
+          </div>
+          <h1
+            className="serif-display home-hero-title"
+            style={{ fontSize: "var(--text-display)" }}
+          >
+            <WordReveal as="span" stagger={0.06}>
+              The machines that
+            </WordReveal>
+            <br />
+            <WordReveal
+              as="span"
+              stagger={0.06}
+              delay={0.35}
+              className="text-[color:var(--color-brass-dark)] italic"
+            >
+              redrew their decade.
+            </WordReveal>
+          </h1>
+        </div>
+
         <div className="home-hero-grid">
           <div className="home-hero-copy">
-            <div className="eyebrow home-hero-kicker">
-              <span className="kicker-line" /> A virtual exhibition
-            </div>
-
-            <h1
-              className="serif-display home-hero-title"
-              style={{ fontSize: "var(--text-display)" }}
-            >
-              <WordReveal as="span" stagger={0.06}>
-                The machines that
-              </WordReveal>
-              <br />
-              <WordReveal
-                as="span"
-                stagger={0.06}
-                delay={0.35}
-                className="text-[color:var(--color-brass-dark)] italic"
-              >
-                redrew their decade.
-              </WordReveal>
-            </h1>
-
             <p className="home-hero-lede">
               A permanent exhibit in four rooms. Each one a portrait of a single
               automobile and the moment it shifted the language of the supercar.
@@ -112,7 +113,7 @@ export default function HomePage() {
               </div>
               <div>
                 <div className="eyebrow">Decades</div>
-                <div className="meta-value">1970 → 2010</div>
+                <div className="meta-value">1970s → 2000s</div>
               </div>
               <div>
                 <div className="eyebrow">Artifacts</div>
@@ -123,11 +124,6 @@ export default function HomePage() {
 
           <div className="home-hero-stage" data-parallax="0.25">
             <HomeHero3DClient />
-            <div className="home-hero-stage-label">
-              <span className="eyebrow">Now Showing · Room I</span>
-              <span className="stage-title">Lamborghini Countach LP400</span>
-              <span className="stage-meta">Italy · 1974 → 1990</span>
-            </div>
           </div>
         </div>
       </section>
@@ -227,7 +223,8 @@ export default function HomePage() {
                 </h2>
               </div>
               <p className="exhibits-caption">
-                Hover a row to glimpse the lead artifact. Click to enter the room.
+                Hover a row — the lead artifact swaps into the panel on the right.
+                Click to enter the room.
               </p>
             </header>
           </Reveal>

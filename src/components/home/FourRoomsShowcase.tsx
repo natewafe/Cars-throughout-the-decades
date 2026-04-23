@@ -42,6 +42,7 @@ export function FourRoomsShowcase({ rooms }: { rooms: RoomCard[] }) {
                 middleImage={room.artifacts[1]}
                 rightImage={room.artifacts[2]}
                 size="md"
+                mode="hover"
               />
             </div>
 

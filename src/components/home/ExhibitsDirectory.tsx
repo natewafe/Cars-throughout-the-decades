@@ -1,56 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useState } from "react";
 import type { Car } from "@/lib/cars";
 
 type CarWithPreview = Car & { previewImage: string };
 
+/** Textual exhibits list with a stable, side-pinned preview panel.
+ * Hovering a row cross-fades the preview to that car's lead artifact.
+ * No cursor tracking, no RAF, no mouse-move math — just a ring of <img>s
+ * with opacity transitions. Every image is in the DOM at mount so there is
+ * no pop-in. Below 900px the preview hides and rows render full-width. */
 export function ExhibitsDirectory({ cars }: { cars: CarWithPreview[] }) {
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const previewRef = useRef<HTMLDivElement | null>(null);
-  const [activeSrc, setActiveSrc] = useState<string | null>(null);
-  const pos = useRef({ x: 0, y: 0, tx: 0, ty: 0 });
-  const rafId = useRef<number | null>(null);
-
-  const onMove = useCallback((e: React.MouseEvent) => {
-    const rect = rootRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    pos.current.tx = e.clientX - rect.left;
-    pos.current.ty = e.clientY - rect.top;
-  }, []);
-
-  useEffect(() => {
-    const tick = () => {
-      pos.current.x += (pos.current.tx - pos.current.x) * 0.18;
-      pos.current.y += (pos.current.ty - pos.current.y) * 0.18;
-      if (previewRef.current) {
-        previewRef.current.style.transform = `translate3d(${pos.current.x}px, ${pos.current.y}px, 0) translate(-50%, -50%)`;
-      }
-      rafId.current = requestAnimationFrame(tick);
-    };
-    rafId.current = requestAnimationFrame(tick);
-    return () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
-  }, []);
+  const [activeSlug, setActiveSlug] = useState<string>(cars[0]?.slug ?? "");
 
   return (
-    <div
-      ref={rootRef}
-      className="exhibits-directory"
-      onMouseMove={onMove}
-      onMouseLeave={() => setActiveSrc(null)}
-    >
-      <div
-        ref={previewRef}
-        className={`exhibits-preview ${activeSrc ? "is-live" : ""}`}
-        aria-hidden="true"
-      >
-        {activeSrc && (
+    <div className="exhibits-directory">
+      <div className="exhibits-preview-pin" aria-hidden="true">
+        {cars.map((c) => (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={activeSrc} alt="" />
-        )}
+          <img
+            key={c.slug}
+            src={c.previewImage}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            className={`exhibits-preview-img${c.slug === activeSlug ? " is-live" : ""}`}
+          />
+        ))}
       </div>
 
       <ul className="exhibits-list">
@@ -59,8 +36,8 @@ export function ExhibitsDirectory({ cars }: { cars: CarWithPreview[] }) {
             <Link
               href={`/${car.slug}`}
               className="exhibit-row group"
-              onMouseEnter={() => setActiveSrc(car.previewImage)}
-              onFocus={() => setActiveSrc(car.previewImage)}
+              onMouseEnter={() => setActiveSlug(car.slug)}
+              onFocus={() => setActiveSlug(car.slug)}
             >
               <span className="exhibit-num">{String(i + 1).padStart(2, "0")}</span>
               <span className="exhibit-title">
