@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -31,11 +30,6 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col">
-        <Script
-          type="module"
-          src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"
-          strategy="afterInteractive"
-        />
         <SmoothScroll />
         <SiteHeader />
         <main className="flex-1 pt-16">{children}</main>

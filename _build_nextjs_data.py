@@ -44,6 +44,13 @@ SCENES = {
             {"from": 0.68, "to": 0.86, "pos": "right",  "eyebrow": "Scissor door",              "line": "An idea so strange that every supercar since has tried to inherit it."},
         ],
         "finaleTitle": "The scissor door opens onto the 1980s.",
+        "doorRig": {
+            "match": r"SK_Door_FL",
+            "axis": "x",
+            "hingeOn": "zmax",
+            "maxRadians": 1.25,
+            "startProgress": 0.86,
+        },
     },
     "959": {
         "keyframes": [
@@ -62,9 +69,9 @@ SCENES = {
         ],
         "finaleTitle": "From Weissach to Woking. The 1990s are waiting.",
         "materialOverrides": [
-            # Guards-red paint, sRGB ~#C0171F -> linear [0.55, 0.012, 0.016]
             {"match": r"body|paint|lack|carrosserie|exterior|shell|karosserie", "color": [0.55, 0.012, 0.016, 1.0], "metallic": 0.85, "roughness": 0.28},
         ],
+        # 959 body is one unified mesh, doors can't be separated without Blender work.
     },
     "f1": {
         "keyframes": [
@@ -103,6 +110,13 @@ SCENES = {
             {"from": 0.68, "to": 0.86, "pos": "left",   "eyebrow": "Autocar, 2005",             "line": "“A car that, in motion, felt almost calm despite its statistics.”"},
         ],
         "finaleTitle": "1,001 horsepower. The decade closes at 253 mph.",
+        "doorRig": {
+            "match": r"doorLF",
+            "axis": "y",
+            "hingeOn": "zmax",
+            "maxRadians": 1.1,
+            "startProgress": 0.86,
+        },
     },
 }
 
@@ -355,11 +369,24 @@ def build_scenes_ts():
         "  metallic?: number;\n",
         "  roughness?: number;\n",
         "};\n",
+        "export type DoorRig = {\n",
+        "  /** Case-insensitive regex matching door node names. */\n",
+        "  match: string;\n",
+        "  /** Axis of rotation on the hinge pivot. */\n",
+        "  axis: \"x\" | \"y\" | \"z\";\n",
+        "  /** Which face of the door bounding box to treat as the hinge edge. */\n",
+        "  hingeOn: \"xmin\" | \"xmax\" | \"ymin\" | \"ymax\" | \"zmin\" | \"zmax\";\n",
+        "  /** Rotation at progress=1, in radians. */\n",
+        "  maxRadians: number;\n",
+        "  /** Scroll progress at which the door starts opening. */\n",
+        "  startProgress: number;\n",
+        "};\n",
         "export type SceneConfig = {\n",
         "  keyframes: SceneKeyframe[];\n",
         "  captions: SceneCaption[];\n",
         "  finaleTitle: string;\n",
         "  materialOverrides?: MaterialOverride[];\n",
+        "  doorRig?: DoorRig;\n",
         "};\n\n",
         "export const scenesBySlug: Record<string, SceneConfig> = {\n",
     ]
@@ -391,6 +418,15 @@ def build_scenes_ts():
                     parts.append(f"roughness: {ov['roughness']}")
                 out.append(f"      {{ {', '.join(parts)} }},\n")
             out.append("    ],\n")
+        if cfg.get("doorRig"):
+            dr = cfg["doorRig"]
+            out.append("    doorRig: {\n")
+            out.append(f"      match: {ts_string(dr['match'])},\n")
+            out.append(f"      axis: {ts_string(dr['axis'])},\n")
+            out.append(f"      hingeOn: {ts_string(dr['hingeOn'])},\n")
+            out.append(f"      maxRadians: {dr['maxRadians']},\n")
+            out.append(f"      startProgress: {dr['startProgress']},\n")
+            out.append("    },\n")
         out.append("  },\n")
     out.append("};\n")
     return "".join(out)

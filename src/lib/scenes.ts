@@ -17,11 +17,24 @@ export type MaterialOverride = {
   metallic?: number;
   roughness?: number;
 };
+export type DoorRig = {
+  /** Case-insensitive regex matching door node names. */
+  match: string;
+  /** Axis of rotation on the hinge pivot. */
+  axis: "x" | "y" | "z";
+  /** Which face of the door bounding box to treat as the hinge edge. */
+  hingeOn: "xmin" | "xmax" | "ymin" | "ymax" | "zmin" | "zmax";
+  /** Rotation at progress=1, in radians. */
+  maxRadians: number;
+  /** Scroll progress at which the door starts opening. */
+  startProgress: number;
+};
 export type SceneConfig = {
   keyframes: SceneKeyframe[];
   captions: SceneCaption[];
   finaleTitle: string;
   materialOverrides?: MaterialOverride[];
+  doorRig?: DoorRig;
 };
 
 export const scenesBySlug: Record<string, SceneConfig> = {
@@ -41,6 +54,13 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       { from: 0.68, to: 0.86, pos: "right", eyebrow: "Scissor door", line: "An idea so strange that every supercar since has tried to inherit it." },
     ],
     finaleTitle: "The scissor door opens onto the 1980s.",
+    doorRig: {
+      match: "SK_Door_FL",
+      axis: "x",
+      hingeOn: "zmax",
+      maxRadians: 1.25,
+      startProgress: 0.86,
+    },
   },
   "959": {
     keyframes: [
@@ -98,5 +118,12 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       { from: 0.68, to: 0.86, pos: "left", eyebrow: "Autocar, 2005", line: "“A car that, in motion, felt almost calm despite its statistics.”" },
     ],
     finaleTitle: "1,001 horsepower. The decade closes at 253 mph.",
+    doorRig: {
+      match: "doorLF",
+      axis: "y",
+      hingeOn: "zmax",
+      maxRadians: 1.1,
+      startProgress: 0.86,
+    },
   },
 };

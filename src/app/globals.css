@@ -113,7 +113,7 @@ body::before {
 .scroll-scene {
   position: relative;
   width: 100%;
-  height: 500vh;
+  height: 320vh;
   color: var(--color-ink);
   background:
     radial-gradient(ellipse 70% 50% at 50% 55%, #ffffff 0%, rgba(255,255,255,0) 70%),
@@ -149,15 +149,18 @@ body::before {
     linear-gradient(to top, rgba(160,140,100,0.18) 0%, rgba(0,0,0,0) 35%);
   z-index: 1;
 }
-.scene-sticky model-viewer {
+.scene-canvas {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  --poster-color: transparent;
-  background: transparent;
   pointer-events: none;
   z-index: 2;
+}
+.scene-canvas canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 .scene-hint {
   position: absolute;
@@ -252,13 +255,16 @@ body::before {
   justify-content: center;
   gap: 0.8rem;
   opacity: 0;
+  /* Container is non-interactive so wheel and touch pass through to the page. */
   pointer-events: none;
   background: radial-gradient(ellipse at 50% 50%, rgba(246,243,238,0) 25%, rgba(246,243,238,0.92) 80%);
   transition: opacity 0.8s ease;
   z-index: 4;
   text-align: center;
 }
-.scene-finale.is-live { opacity: 1; pointer-events: auto; }
+.scene-finale.is-live { opacity: 1; }
+/* Only the CTA button should capture clicks; everything else stays scroll-through. */
+.scene-finale.is-live .finale-cta { pointer-events: auto; }
 .scene-finale .finale-eyebrow {
   font-family: var(--font-inter), sans-serif;
   font-size: 0.7rem;
