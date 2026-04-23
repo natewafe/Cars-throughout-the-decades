@@ -1,4 +1,4 @@
-/* shared.css — used by all exhibit/gallery pages */
+/* shared.css, used by all exhibit/gallery pages */
 
 :root {
   --black: #0a0a0a;
@@ -127,7 +127,7 @@ nav {
   padding: 5rem 3rem 8rem;
 }
 
-/* OBJECT LABEL — the museum caption style */
+/* OBJECT LABEL, the museum caption style */
 .object-label {
   border-left: 2px solid var(--gold);
   padding: 1rem 1.5rem;
