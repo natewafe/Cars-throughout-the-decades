@@ -92,13 +92,23 @@
       rafId = requestAnimationFrame(tick);
     }
 
-    // Defer start until model-viewer loads.
+    const loadState = el.querySelector('.scene-load');
+
     mv.addEventListener('load', () => {
+      if (loadState) loadState.classList.add('is-done');
       mv.setAttribute('camera-orbit', formatOrbit(current));
       onScroll();
       cancelAnimationFrame(rafId);
       tick();
     }, { once: true });
+
+    mv.addEventListener('error', (ev) => {
+      if (loadState) {
+        loadState.classList.add('is-error');
+        loadState.textContent = 'Model failed to load. Start a local server (see legacy/serve.bat) — browsers block file:// loads of .glb files.';
+      }
+      console.error('model-viewer load error', ev.detail || ev);
+    });
 
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onScroll);

@@ -29,6 +29,46 @@
   --poster-color: transparent;
 }
 
+.scene-load {
+  position: absolute;
+  inset: auto 0 50% 0;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(201,168,76,0.55);
+  z-index: 3;
+  transition: opacity 0.5s ease;
+  padding: 0 2rem;
+  line-height: 1.8;
+  pointer-events: none;
+}
+.scene-load::after {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 1px;
+  background: var(--gold);
+  margin: 0.75rem auto 0;
+  animation: scene-load-pulse 1.4s ease-in-out infinite;
+}
+@keyframes scene-load-pulse {
+  0%, 100% { opacity: 0.2; transform: scaleX(0.4); }
+  50%      { opacity: 1;   transform: scaleX(1);   }
+}
+.scene-load.is-done { opacity: 0; }
+.scene-load.is-error {
+  color: #e06c75;
+  pointer-events: auto;
+  max-width: 520px;
+  margin: 0 auto;
+  left: 0; right: 0;
+}
+.scene-load.is-error::after { display: none; }
+
 .scene-hint {
   position: absolute;
   bottom: 1.5rem;
