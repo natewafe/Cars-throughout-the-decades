@@ -1,9 +1,14 @@
 import { Reveal } from "@/components/Reveal";
+import { bibliography } from "@/lib/bibliography";
 
 export const metadata = {
   title: "About — The Motor Gallery",
   description: "About The Motor Gallery and the curation of cars through the decades.",
 };
+
+function fmtBib(s: string) {
+  return s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+}
 
 export default function AboutPage() {
   return (
@@ -48,8 +53,8 @@ export default function AboutPage() {
           <Reveal delay={160}>
             <p>
               The collection is deliberately small. A larger survey would obscure the
-              argument. Four cars over four decades — the Countach, the 959, the
-              McLaren F1, the Veyron — tell the whole story of what the supercar
+              argument. Four cars over four decades, the Countach, the 959, the
+              McLaren F1, the Veyron, tell the whole story of what the supercar
               became, and why.
             </p>
           </Reveal>
@@ -79,6 +84,32 @@ export default function AboutPage() {
           </Reveal>
         ))}
       </div>
+
+      {/* Consolidated bibliography */}
+      <section
+        id="bibliography"
+        className="mt-32 pt-16 border-t border-[color:var(--color-rule)]"
+      >
+        <Reveal>
+          <div className="eyebrow">Bibliography</div>
+          <h2 className="mt-4 serif-display" style={{ fontSize: "var(--text-h1)" }}>
+            Primary-source artifacts cited across the four galleries.
+          </h2>
+          <p className="mt-4 text-[color:var(--color-ink-muted)] max-w-2xl">
+            Every image and text deduplicated and alphabetized by author. Chicago style.
+          </p>
+        </Reveal>
+
+        <ol className="mt-12 space-y-5 text-[color:var(--color-ink-muted)] leading-relaxed">
+          {bibliography.map((entry, i) => (
+            <li
+              key={i}
+              className="pl-6 -indent-6 text-[0.95rem]"
+              dangerouslySetInnerHTML={{ __html: fmtBib(entry) }}
+            />
+          ))}
+        </ol>
+      </section>
     </article>
   );
 }

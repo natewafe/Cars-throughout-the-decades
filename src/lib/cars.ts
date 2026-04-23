@@ -32,6 +32,7 @@ export const cars: Car[] = [
       { label: "Units built", value: "1,983" },
     ],
     hero: { caption: "Lamborghini Countach · 1974–1990 · Sant'Agata Bolognese" },
+    modelUrl: "/models/countach.glb",
     images: [
       "/images/countach-01.webp",
       "/images/countach-02.webp",
@@ -57,6 +58,7 @@ export const cars: Car[] = [
       { label: "Units built", value: "292" },
     ],
     hero: { caption: "Porsche 959 · 1986–1988 · Zuffenhausen" },
+    modelUrl: "/models/959.glb",
     images: [],
   },
   {
@@ -77,6 +79,7 @@ export const cars: Car[] = [
       { label: "Units built", value: "106" },
     ],
     hero: { caption: "McLaren F1 · 1992–1998 · Woking" },
+    modelUrl: "/models/f1.glb",
     images: [],
   },
   {
@@ -97,6 +100,7 @@ export const cars: Car[] = [
       { label: "Units built", value: "450" },
     ],
     hero: { caption: "Bugatti Veyron 16.4 · 2005–2015 · Molsheim" },
+    modelUrl: "/models/veyron.glb",
     images: [],
   },
 ];
