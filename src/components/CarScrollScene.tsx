@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, invalidate } from "@react-three/fiber";
 import {
   ContactShadows,
   Environment,
@@ -11,6 +11,7 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DoorRig, MaterialOverride, SceneConfig } from "@/lib/scenes";
+import { disposeClonedScene } from "@/lib/disposeScene";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -77,6 +78,8 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
         onUpdate: (self) => {
           const p = self.progress;
           progressRef.current = p;
+          // Canvas is frameloop="demand" — kick a render this frame.
+          invalidate();
 
           // DOM overlays — written directly, no React state
           let activeBias = 0;
@@ -125,9 +128,10 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
       <div ref={pinRef} className="scene-sticky">
         <div className="scene-canvas">
           <Canvas
-            // Clamp to DPR 1.5 max — phones ship DPR 3, which triples the
-            // fragment-shader cost of every frame and is the single biggest
-            // mobile GPU drain after model size.
+            // Render only when something changes (scroll invalidates above,
+            // useFrame hooks render only when progress mutates camera/doors).
+            // Prevents 60fps GPU burn when the user has stopped scrolling.
+            frameloop="demand"
             dpr={[1, 1.5]}
             shadows={{ type: THREE.PCFSoftShadowMap }}
             gl={{
@@ -338,6 +342,14 @@ function SceneContents({
     doorPivotRef.current = doorPivot;
   }, [doorPivot]);
 
+  // Free cloned geometries & materials on unmount. Textures are owned by the
+  // useGLTF cache and are not disposed here.
+  useEffect(() => {
+    return () => {
+      disposeClonedScene(model);
+    };
+  }, [model]);
+
   useFrame(() => {
     if (doorRig && doorPivotRef.current) {
       const p = progressRef.current;
@@ -461,13 +473,15 @@ function CameraController({
 
     const theta = (current.current.theta * Math.PI) / 180;
     const phi = (current.current.phi * Math.PI) / 180;
-    const r = baseRadius * (current.current.radius / 100) * 2.4;
+    // 1.75 (was 2.4) pulls the camera ~27% closer so the car fills the frame
+    // at every keyframe. The text is what should yield to the car, not the
+    // other way around.
+    const r = baseRadius * (current.current.radius / 100) * 1.75;
 
-    // Side-bias (world units): move the camera target + camera horizontally
-    // so the car visibly shifts to the opposite side of the viewport from the
-    // active caption. Strength scales with radius so it reads the same at any
-    // zoom level.
-    const biasStrength = 0.28 * r;
+    // Side-bias (world units): shift camera + target laterally away from the
+    // active caption. Bump strength (0.28 → 0.38) so at the closer zoom the
+    // car still fully clears side captions.
+    const biasStrength = 0.38 * r;
     const tx = bias.current * biasStrength;
 
     camera.position.set(

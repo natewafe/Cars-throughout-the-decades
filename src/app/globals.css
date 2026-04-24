@@ -127,33 +127,18 @@ body::before {
   isolation: isolate;
   z-index: 0;
 }
-/* Veyron is orange — pair it with a cool, darker stage so the model reads
-   and the caption glass stays legible. A subtle vignette darkens the corners
-   where body text sits. */
+/* Veyron stage: a warm mid-stone that complements the orange body without
+   competing with it, and without the near-black void of the previous pass.
+   The car is the showstopper — the background is a gallery wall, nothing more. */
 .scroll-scene[data-car="veyron"] {
-  color: #f0ebe1;
+  color: var(--color-ink);
   background:
-    radial-gradient(ellipse 80% 60% at 50% 50%, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0) 60%),
-    radial-gradient(ellipse at 50% 120%, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%),
-    linear-gradient(180deg, #2a2f3a 0%, #1d2029 60%, #141720 100%);
-}
-.scroll-scene[data-car="veyron"] .scene-caption {
-  background: rgba(26, 28, 36, 0.58);
-  border-color: rgba(255, 255, 255, 0.08);
-  color: #f3eee2;
-}
-.scroll-scene[data-car="veyron"] .scene-caption .caption-line {
-  color: #f3eee2;
-  text-shadow: 0 1px 30px rgba(0,0,0,0.5);
+    radial-gradient(ellipse 70% 55% at 50% 55%, #f3ede1 0%, rgba(243,237,225,0) 65%),
+    linear-gradient(180deg, #e7dfd0 0%, #d8ceba 55%, #bfb29a 100%);
 }
 .scroll-scene[data-car="veyron"] .scene-caption .caption-eyebrow {
-  color: #e4c06a;
+  color: var(--color-brass-dark);
 }
-.scroll-scene[data-car="veyron"] .scene-finale {
-  background: radial-gradient(ellipse at 50% 50%, rgba(20,23,32,0) 25%, rgba(20,23,32,0.94) 80%);
-}
-.scroll-scene[data-car="veyron"] .scene-finale .finale-title { color: #f3eee2; }
-.scroll-scene[data-car="veyron"] .scene-hint { color: rgba(243, 238, 226, 0.5); }
 
 /* Veyron article sections: the primary-source imagery skews orange and washes
    out the type. A paper-raised scrim + subtle top/bottom gradient restores
@@ -282,29 +267,34 @@ article[data-car="veyron"] .artifact-section-header {
   position: absolute;
   top: 50%;
   transform: translateY(calc(-50% + 8px));
-  width: min(360px, 30vw);
-  max-width: 360px;
+  /* Narrower than before (was 30vw/360px): captions sit in a slim column at
+     the page edge so the car is the showstopper, not the text panel. */
+  width: min(280px, 22vw);
+  max-width: 280px;
   opacity: 0;
   transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: none;
   z-index: 5;
-  padding: 1rem 1.2rem;
-  /* Glass panel so captions stay readable over any part of the car */
-  background: rgba(255, 253, 249, 0.72);
+  padding: 0.85rem 1rem;
+  background: rgba(255, 253, 249, 0.62);
   border: 1px solid rgba(40, 26, 10, 0.08);
   border-radius: 2px;
   backdrop-filter: blur(14px) saturate(1.1);
   -webkit-backdrop-filter: blur(14px) saturate(1.1);
   box-shadow: 0 20px 50px -20px rgba(40, 26, 10, 0.18);
 }
-/* Push captions hard to the page edge so the car stays visible between them. */
-.scene-caption.left   { left: 2.5vw; }
-.scene-caption.right  { right: 2.5vw; text-align: right; }
+/* Hard to the edge, out of the car's way. */
+.scene-caption.left   { left: 1.5vw; }
+.scene-caption.right  { right: 1.5vw; text-align: right; }
+/* The "bottom" slot used to be a 38vw panel spanning under the car — it
+   covered the rocker + front bumper. Tuck it into the bottom-left corner at
+   the same slim column width as the side captions so the car silhouette
+   remains clear across the whole scroll. */
 .scene-caption.bottom {
-  top: auto; bottom: 5%;
-  left: 2.5vw; right: auto;
-  width: min(420px, 38vw);
-  max-width: 420px;
+  top: auto; bottom: 4%;
+  left: 1.5vw; right: auto;
+  width: min(280px, 22vw);
+  max-width: 280px;
   transform: translateY(8px);
   text-align: left;
 }
@@ -342,9 +332,9 @@ article[data-car="veyron"] .artifact-section-header {
 .scene-caption .caption-line {
   display: block;
   font-family: var(--font-fraunces), serif;
-  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-size: clamp(1.25rem, 1.9vw, 1.7rem);
   font-weight: 300;
-  line-height: 1.2;
+  line-height: 1.25;
   color: var(--color-ink);
   text-shadow: 0 1px 40px rgba(255,255,255,0.7);
 }

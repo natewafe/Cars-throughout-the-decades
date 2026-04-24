@@ -2,74 +2,139 @@
 
 Primary-source images wired into the Next.js exhibit. Served from `public/artifacts/<car>/`.
 
-| Filename | Car route | Figure # |
-| --- | --- | --- |
-| `csere-959-main-photo.jpg` | `/959` | 1 |
-| `csere-959-102.jpg` | `/959` | 2 |
-| `kimble-959-cutaway-s1200.webp` | `/959` | 3 |
-| `959-rothmans-paris-dakar-1986.jpg` | `/959` | 4 |
-| `959-ralph-lauren-collection.jpg` | `/959` | 5 |
-| `959-ralph-lauren-interior.jpg` | `/959` | 6 |
-| `959-engine-bay.jpg` | `/959` | 7 |
-| `959-mechanical-sketch-stuttgart.jpg` | `/959` | 8 |
-| `959-gruppe-b-1983-factory-3.jpeg` | `/959` | 9 |
-| `959-gruppe-b-1983-frankfurt-iaa-factory.jpeg` | `/959` | 10 |
-| `959-gruppe-b-concept-1983.jpg` | `/959` | 11 |
-| `959-gruppe-b-concept-rear-1983.jpg` | `/959` | 12 |
-| `961-le-mans-1986.jpg` | `/959` | 13 |
-| `rt-feb-1976-page-01.jpg` | `/countach` | 1 |
-| `rt-feb-1976-page-02.jpg` | `/countach` | 2 |
-| `perkins-countach-hero.jpg` | `/countach` | 3 |
-| `perkins-countach-inline-1.jpg` | `/countach` | 4 |
-| `perkins-countach-inline-2.jpg` | `/countach` | 5 |
-| `perkins-countach-inline-3.jpg` | `/countach` | 6 |
-| `perkins-countach-inline-4.jpg` | `/countach` | 7 |
-| `perkins-countach-periscopica-1976.jpg` | `/countach` | 8 |
-| `pirelli-countach-poster-1986.jpg` | `/countach` | 9 |
-| `walter-wolf-red-countach.jpg` | `/countach` | 10 |
-| `wolf-of-wall-street-countach-rm-sothebys.webp` | `/countach` | 11 |
-| `bertone-countach-miura-1980s.jpg` | `/countach` | 12 |
-| `bertone-countach-stratos-1970s.jpg` | `/countach` | 13 |
-| `gandini-designer-1976.jpg` | `/countach` | 14 |
-| `countach-lp500-prototype-2008-recreation.jpg` | `/countach` | 15 |
-| `autocar-mclaren-f1-02.jpg` | `/f1` | 1 |
-| `autocar-mclaren-f1-03.jpg` | `/f1` | 2 |
-| `autocar-mclaren-f1-05.jpg` | `/f1` | 3 |
-| `autocar-mclaren-f1-08.jpg` | `/f1` | 4 |
-| `autocar-mclaren-f1-012.jpg` | `/f1` | 5 |
-| `autocar-mclaren-f1-020.jpg` | `/f1` | 6 |
-| `car-magazine-june-1994-cover.jpg` | `/f1` | 7 |
-| `car-magazine-june-1994-spread-01.jpg` | `/f1` | 8 |
-| `car-magazine-june-1994-spread-02.jpg` | `/f1` | 9 |
-| `car-magazine-june-1994-spread-03.jpg` | `/f1` | 10 |
-| `car-magazine-june-1994-spread-04.jpg` | `/f1` | 11 |
-| `car-magazine-june-1994-spread-05.jpg` | `/f1` | 12 |
-| `car-magazine-june-1994-spread-06.jpg` | `/f1` | 13 |
-| `f1-gtr-1995-le-mans-winner.jpg` | `/f1` | 14 |
-| `f1-gtr-nielsen-bscher-donington-1995.jpg` | `/f1` | 15 |
-| `elon-musk-mclaren-f1-delivery-1999-01.jpg` | `/f1` | 16 |
-| `elon-musk-mclaren-f1-delivery-1999-02.jpg` | `/f1` | 17 |
-| `elon-musk-mclaren-f1-delivery-1999-03.jpg` | `/f1` | 18 |
-| `gordon-murray-1996-le-mans.jpg` | `/f1` | 19 |
-| `f1-1996-front-end-detail.jpg` | `/f1` | 20 |
-| `f1-lm-engine-bay.jpg` | `/f1` | 21 |
-| `autocar-veyron-hero.jpg` | `/veyron` | 1 |
-| `autocar-veyron-01.jpg` | `/veyron` | 2 |
-| `autocar-veyron-02.jpg` | `/veyron` | 3 |
-| `autocar-veyron-03.jpg` | `/veyron` | 4 |
-| `autocar-veyron-04.jpg` | `/veyron` | 5 |
-| `autocar-veyron-06.jpg` | `/veyron` | 6 |
-| `autocar-veyron-review-05.jpg` | `/veyron` | 7 |
-| `autocar-veyron-review-223.jpg` | `/veyron` | 8 |
-| `veyron-interior-2007.jpg` | `/veyron` | 9 |
-| `veyron-w16-engine.jpg` | `/veyron` | 10 |
-| `veyron-w16-on-chassis.jpg` | `/veyron` | 11 |
-| `veyron-chassis-5-0-validation-prototype-01.jpg` | `/veyron` | 12 |
-| `veyron-chassis-5-0-validation-prototype-02.jpg` | `/veyron` | 13 |
-| `veyron-chassis-5-0-validation-prototype-03.jpg` | `/veyron` | 14 |
-| `veyron-chassis-5-0-validation-prototype-04.jpg` | `/veyron` | 15 |
-| `eb-18-3-chiron-concept-1999.jpg` | `/veyron` | 16 |
-| `eb-18-3-chiron-rear-1999.jpg` | `/veyron` | 17 |
-| `eb-18-4-veyron-concept.jpg` | `/veyron` | 18 |
-| `veyron-16-4-early-2004.jpg` | `/veyron` | 19 |
-| `veyron-key-schlussel-2005.jpg` | `/veyron` | 20 |
+## Figure inventory
+
+| Figure ID | Gallery Page | Tier | Filename | Chicago Short Footnote | Source Page URL |
+| --- | --- | --- | --- | --- | --- |
+| 1 | `/959` | Tier 1 · Primary | `csere-959-main-photo.webp` | Csere, "1987 Porsche 959 Archived Test." | https://www.caranddriver.com/reviews/a15143088/1987-porsche-959-archived-test-review/ |
+| 2 | `/959` | Tier 1 · Primary | `csere-959-102.webp` | Csere, "1987 Porsche 959 Archived Test." | https://www.caranddriver.com/reviews/a15143088/1987-porsche-959-archived-test-review/ |
+| 3 | `/959` | Tier 1 · Secondary | `kimble-959-cutaway-s1200.webp` | Kimble, Porsche 959 Cutaway Illustration. | https://www.motorsport.com/automotive/news/cutaway-classic-explore-the-amazing-porsche-959-745046/745046/ |
+| 4 | `/959` | Tier 2 + 4 | `959-rothmans-paris-dakar-1986.webp` | Valder137, *Porsche 959 1986 Paris-Dakar Rothmans Racer*. | https://commons.wikimedia.org/wiki/File:Porsche_959_1986_Paris_Dakar_Racer_Rothmann_Racing_LFrontSide_PorscheM_9June2013.jpg |
+| 5 | `/959` | Tier 2 + 4 | `01-car-and-driver-photograph-from-csaba-cseres-november-1987-ar.jpg` | Car and Driver, Porsche 959 Road Test Photograph. | https://www.caranddriver.com/reviews/a15143088/1987-porsche-959-archived-test-review/ |
+| 6 | `/959` | Tier 2 + 4 | `02-studio-photograph-of-the-959-accompanying-cseres-archived-ca.jpg` | Car and Driver, Porsche 959 Studio Photograph. | https://www.caranddriver.com/reviews/a15143088/1987-porsche-959-archived-test-review/ |
+| 7 | `/959` | Tier 2 + 4 | `959-ralph-lauren-collection.webp` | Uncredited, *1988 Porsche 959 Komfort, Ralph Lauren Collection*. | https://commons.wikimedia.org/wiki/File:Porsche_959_34_left.jpg |
+| 8 | `/959` | Tier 2 + 4 | `959-ralph-lauren-interior.webp` | Uncredited, *1988 Porsche 959 Interior, Ralph Lauren Collection*. | https://commons.wikimedia.org/wiki/File:Porsche_959_interior.jpg |
+| 9 | `/959` | Tier 2 + 4 | `11-ralph-laurens-1988-porsche-959-komfort-the-private-american-.jpg` | Uncredited, 1988 Porsche 959 Komfort. | https://commons.wikimedia.org/wiki/File:Porsche_959_34_left.jpg |
+| 10 | `/959` | Tier 2 + 4 | `959-mechanical-sketch-stuttgart.webp` | Rouk40130, *Porsche 959 Mechanical Sketch*. | https://commons.wikimedia.org/wiki/File:959_mecanical_sketch_in_Stuttgart_museum.jpg |
+| 11 | `/959` | Tier 2 + 4 | `959-engine-bay.webp` | Sfoskett, *Porsche 959 Engine*. | https://commons.wikimedia.org/wiki/File:Porsche_959_engine.jpg |
+| 12 | `/959` | Tier 2 + 4 | `03-david-kimbles-factory-style-cutaway-illustration-of-the-pors.webp` | David Kimble, Porsche 959 Cutaway Illustration. | https://www.motorsport.com/automotive/news/cutaway-classic-explore-the-amazing-porsche-959-745046/745046/ |
+| 13 | `/959` | Tier 2 + 4 | `10-factory-mechanical-sketch-of-the-959-on-display-at-the-porsc.jpg` | Rouk40130, Porsche 959 Mechanical Sketch. | https://commons.wikimedia.org/wiki/File:959_mecanical_sketch_in_Stuttgart_museum.jpg |
+| 14 | `/959` | Tier 2 + 4 | `12-the-porsche-959s-twin-sequential-turbo-285l-flat-six-engine-.jpg` | Sfoskett, Porsche 959 Engine. | https://commons.wikimedia.org/wiki/File:Porsche_959_engine.jpg |
+| 15 | `/959` | Tier 2 + 4 | `959-gruppe-b-1983-frankfurt-iaa-factory.webp` | Porsche AG, *'Gruppe B' Concept at 1983 Frankfurt IAA*. | https://www.stuttcars.com/porsche-959-gruppe-b/ |
+| 16 | `/959` | Tier 2 + 4 | `959-gruppe-b-1983-factory-3.webp` | Porsche AG, *Porsche 959 'Gruppe B' Concept, Rothmans Livery*. | https://www.stuttcars.com/porsche-959-gruppe-b/ |
+| 17 | `/959` | Tier 2 + 4 | `959-gruppe-b-concept-1983.webp` | leduardo, *Porsche 959 Concept Car Gruppe B 1983*. | https://commons.wikimedia.org/wiki/File:Porsche_959_Concept_Car_Gruppe_B_1983.jpg |
+| 18 | `/959` | Tier 2 + 4 | `959-gruppe-b-concept-rear-1983.webp` | leduardo, *Porsche 959 Concept Car Gruppe B 1983 (rear)*. | https://commons.wikimedia.org/wiki/File:Porsche_959_Concept_Car_Gruppe_B_1983_(rear).jpg |
+| 19 | `/959` | Tier 2 + 4 | `961-le-mans-1986.webp` | Migl, *Porsche 961 (1987 Le Mans No. 203)*. | https://commons.wikimedia.org/wiki/File:Porsche_961_(1987_24_Hours_of_Le_Mans,_No.203)_in_the_Porsche-Museum_(2009).jpg |
+| 20 | `/959` | Tier 2 + 4 | `04-porsches-factory-press-photograph-of-the-gruppe-b-concept-ca.jpeg` | Porsche AG, Porsche 'Gruppe B' Concept at 1983 Frankfurt IAA. | https://www.stuttcars.com/porsche-959-gruppe-b/ |
+| 21 | `/959` | Tier 2 + 4 | `05-factory-image-showing-the-1983-gruppe-b-concept-in-rothmans-.jpeg` | Porsche AG, Porsche 959 'Gruppe B' Concept. | https://www.stuttcars.com/porsche-959-gruppe-b/ |
+| 22 | `/959` | Tier 2 + 4 | `06-the-group-b-959-prototype-now-in-the-prototyp-museum-hamburg.jpg` | Ad Meskens, Porsche 959 Prototype Group B at Hamburg Prototyp Museum. | https://commons.wikimedia.org/wiki/File:Hamburg_Prototyp_Porsche_959_Prototype_Group_B.jpg |
+| 23 | `/959` | Tier 2 + 4 | `07-the-rothmans-liveried-959-that-won-the-1986-paris-dakar-rall.jpg` | Valder137, Porsche 959 1986 Paris-Dakar Rothmans Racer. | https://commons.wikimedia.org/wiki/File:Porsche_959_1986_Paris_Dakar_Racer_Rothmann_Racing_LFrontSide_PorscheM_9June2013_(14989626056).jpg |
+| 24 | `/959` | Tier 2 + 4 | `08-1985-porsche-959-paris-dakar-prototype-the-ickxbrasseur-entr.jpg` | edvvc, 1985 Porsche 959 Paris-Dakar. | https://commons.wikimedia.org/wiki/File:1985_Porsche_959_Paris-Dakar_-_Flickr_-_edvvc.jpg |
+| 25 | `/959` | Tier 2 + 4 | `09-the-porsche-961-a-959-based-le-mans-race-car-in-its-1987-le-.jpg` | Alexander Migl, Porsche 961 (1987 Le Mans No. 203). | https://commons.wikimedia.org/wiki/File:Porsche_961_(1987_24_Hours_of_Le_Mans,_No.203)_in_the_Porsche-Museum_(2009)_IMG_2761.jpg |
+| 1 | `/countach` | Tier 1 · Primary | `rt-feb-1976-page-01.webp` | Road & Track, "Lamborghini Countach Road Test," Feb. 1976. | https://www.curbsideclassic.com/vintage-reviews/road-track-vintage-road-test-1976-lamborghini-countach-fastest-car-weve-ever-tested/ |
+| 2 | `/countach` | Tier 1 · Primary | `rt-feb-1976-page-02.webp` | Road & Track, "Lamborghini Countach Road Test," Feb. 1976, p. 2. | https://www.curbsideclassic.com/vintage-reviews/road-track-vintage-road-test-1976-lamborghini-countach-fastest-car-weve-ever-tested/ |
+| 3 | `/countach` | Tier 1 · Secondary | `perkins-countach-hero.webp` | Perkins, "5 Things You Didn't Know About the Lamborghini Countach." | https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach |
+| 4 | `/countach` | Tier 1 · Secondary | `perkins-countach-inline-1.webp` | Perkins, The Drive Countach article. | https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach |
+| 5 | `/countach` | Tier 1 · Secondary | `perkins-countach-inline-2.webp` | Perkins, The Drive Countach article. | https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach |
+| 6 | `/countach` | Tier 1 · Secondary | `perkins-countach-inline-3.webp` | Perkins, The Drive Countach article. | https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach |
+| 7 | `/countach` | Tier 1 · Secondary | `perkins-countach-inline-4.webp` | Perkins, The Drive Countach article. | https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach |
+| 8 | `/countach` | Tier 1 · Secondary | `perkins-countach-periscopica-1976.webp` | The Drive, 1976 Countach LP400 Periscopica. | https://www.thedrive.com/vintage/5226/5-things-you-didnt-know-about-the-lamborghini-countach |
+| 9 | `/countach` | Tier 2 + 4 | `pirelli-countach-poster-1986.webp` | Pirelli, *Countach Top View Poster*. | https://commons.wikimedia.org/wiki/File:1986_Pirelli_Countach_top_view_poster.jpg |
+| 10 | `/countach` | Tier 2 + 4 | `01-first-page-of-road-tracks-february-1976-countach-lp400-road-.jpg` | Road & Track, "Lamborghini Countach Road Test,". | https://www.curbsideclassic.com/vintage-reviews/road-track-vintage-road-test-1976-lamborghini-countach-fastest-car-weve-ever-tested/ |
+| 11 | `/countach` | Tier 2 + 4 | `02-second-page-of-the-rt-february-1976-countach-test-with-instr.jpg` | Road & Track, "Lamborghini Countach Road Test,". | https://www.curbsideclassic.com/vintage-reviews/road-track-vintage-road-test-1976-lamborghini-countach-fastest-car-weve-ever-tested/ |
+| 12 | `/countach` | Tier 2 + 4 | `03-pirelli-factory-advertising-poster-of-the-countach-in-top-do.jpg` | Pirelli, Countach Top View Poster. | https://commons.wikimedia.org/wiki/File:1986_Pirelli_Countach_top_view_poster.jpg |
+| 13 | `/countach` | Tier 2 + 4 | `walter-wolf-red-countach.webp` | Walter Wolf with Countach LP400 Speciale, c. 1976, LamboCars archive. | https://www.lambocars.com/walter-wolf-specials/ |
+| 14 | `/countach` | Tier 2 + 4 | `wolf-of-wall-street-countach-rm-sothebys.webp` | RM Sotheby's, *Wolf of Wall Street Countach 25th Anniversary*. | https://rmsothebys.com/media-center/press-releases/one-of-two-the-wolf-of-wall-street-lamborghini-countachs-comes-to-market-iconic-wall-street-raging-bull-headlines-rm-sothebys-upcoming-new-york-sale/ |
+| 15 | `/countach` | Tier 2 + 4 | `gandini-designer-1976.webp` | Unknown photographer, *Marcello Gandini in 1976*, 1976, Wikimedia Commons. | https://commons.wikimedia.org/wiki/File:Marcello_Gandini_in_1976.jpg |
+| 16 | `/countach` | Tier 2 + 4 | `bertone-countach-stratos-1970s.webp` | Alexander, *Nuccio Bertone with the Stratos and Countach*. | https://commons.wikimedia.org/wiki/File:1970s_Nuccio_Bertone_Stratos_and_Countach.jpg |
+| 17 | `/countach` | Tier 2 + 4 | `bertone-countach-miura-1980s.webp` | Unknown photographer, *Nuccio Bertone with the Countach and Miura*. | https://commons.wikimedia.org/wiki/File:1980s_Nuccio_Bertone,_Countach_and_Miura.jpg |
+| 18 | `/countach` | Tier 2 + 4 | `04-walter-wolf-with-his-first-countach-lp400-speciale-chassis-1.jpg` | Lamborghini / Walter Wolf archive, "Walter Wolf with Countach LP400 Speciale,". | https://www.lambocars.com/walter-wolf-specials/ |
+| 19 | `/countach` | Tier 2 + 4 | `05-walter-wolf-specification-countach-wide-body-with-flared-arc.jpg` | contri, Lamborghini WOLF Countach. | https://commons.wikimedia.org/wiki/File:Lamborghini_WOLF_Countach_(8014528335).jpg |
+| 20 | `/countach` | Tier 2 + 4 | `06-wolf-countach-front-three-quarter-showing-the-wolf-livery-sc.jpg` | contri, Lamborghini WOLF Countach. | https://commons.wikimedia.org/wiki/File:Lamborghini_WOLF_Countach_(8014530312).jpg |
+| 21 | `/countach` | Tier 2 + 4 | `07-jody-scheckter-driving-the-walter-wolf-f1-team-car-at-brands.jpg` | Gillfoto, Jody Scheckter in the Walter Wolf F1 at Brands Hatch. | https://commons.wikimedia.org/wiki/File:Jody_Scheckter_Wolf_Brands_Hatch_1977.jpg |
+| 22 | `/countach` | Tier 2 + 4 | `09-portrait-of-marcello-gandini-bertones-designer-who-penned-th.jpg` | Unknown photographer, Marcello Gandini in 1976. | https://commons.wikimedia.org/wiki/File:Marcello_Gandini_in_1976.jpg |
+| 23 | `/countach` | Tier 2 + 4 | `10-bertone-founder-nuccio-bertone-with-the-lancia-stratos-and-l.jpg` | Jesse Alexander, Nuccio Bertone with the Stratos and Countach. | https://commons.wikimedia.org/wiki/File:1970s_Nuccio_Bertone_Stratos_and_Countach.jpg |
+| 24 | `/countach` | Tier 2 + 4 | `countach-lp500-prototype-2008-recreation.webp` | Hamster, *Lamborghini Countach LP500 Prototype*. | https://commons.wikimedia.org/wiki/File:1982_Lamborghini_Countach_LP500.jpg |
+| 25 | `/countach` | Tier 2 + 4 | `11-the-countach-lp500-prototype-reconstructed-the-yellow-berton.jpg` | Dave Hamster, Lamborghini Countach LP500 Prototype. | https://commons.wikimedia.org/wiki/File:1982_Lamborghini_Countach_LP500.jpg |
+| 26 | `/countach` | Tier 2 + 4 | `12-1988-lamborghini-countach-25th-anniversary-edition-in-silver.jpg` | MrWalkr, 1988 Lamborghini Countach 25th Anniversary Silver. | https://commons.wikimedia.org/wiki/File:1988_Lamborghini_Countach_25th_Anniversary_Silver.jpg |
+| 27 | `/countach` | Tier 2 + 4 | `13-1988-countach-25th-anniversary-edition-hong-kong.jpg` | Jones028, 1988 Lamborghini Countach 25th Anniversary Edition. | https://commons.wikimedia.org/wiki/File:1988_Lamborghini_Countach_25th_Anniversary_Edition_-_Hong_Kong_(48902428828).jpg |
+| 28 | `/countach` | Tier 2 + 4 | `08-the-1989-lamborghini-countach-25th-anniversary-chassis-kla12.webp` | RM Sotheby's, 1989 Lamborghini Countach 25th Anniversary from The Wolf of Wall Street. | https://rmsothebys.com/media-center/press-releases/one-of-two-the-wolf-of-wall-street-lamborghini-countachs-comes-to-market-iconic-wall-street-raging-bull-headlines-rm-sothebys-upcoming-new-york-sale/ |
+| 1 | `/f1` | Tier 1 · Primary | `autocar-mclaren-f1-02.webp` | Cropley, "McLaren F1: Full Test." | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 2 | `/f1` | Tier 1 · Primary | `autocar-mclaren-f1-03.webp` | Cropley, "McLaren F1: Full Test." | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 3 | `/f1` | Tier 1 · Primary | `autocar-mclaren-f1-05.webp` | Cropley, "McLaren F1: Full Test." | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 4 | `/f1` | Tier 1 · Primary | `autocar-mclaren-f1-08.webp` | Cropley, "McLaren F1: Full Test." | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 5 | `/f1` | Tier 1 · Primary | `autocar-mclaren-f1-012.webp` | Cropley, "McLaren F1: Full Test." | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 6 | `/f1` | Tier 1 · Primary | `autocar-mclaren-f1-020.webp` | Cropley, "McLaren F1: Full Test." | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 7 | `/f1` | Tier 1 · Secondary | `car-magazine-june-1994-cover.webp` | Car Magazine, June 1994 cover. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 8 | `/f1` | Tier 1 · Secondary | `car-magazine-june-1994-spread-01.webp` | Car Magazine, June 1994 McLaren F1 spread 1. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 9 | `/f1` | Tier 1 · Secondary | `car-magazine-june-1994-spread-02.webp` | Car Magazine, June 1994 McLaren F1 spread 2. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 10 | `/f1` | Tier 1 · Secondary | `car-magazine-june-1994-spread-03.webp` | Car Magazine, June 1994 McLaren F1 spread 3. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 11 | `/f1` | Tier 2 + 4 | `car-magazine-june-1994-spread-04.webp` | *Car Magazine*, June 1994 McLaren F1 spread. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 12 | `/f1` | Tier 2 + 4 | `car-magazine-june-1994-spread-05.webp` | *Car Magazine*, June 1994 McLaren F1 spread. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 13 | `/f1` | Tier 2 + 4 | `car-magazine-june-1994-spread-06.webp` | *Car Magazine*, June 1994 McLaren F1 spread. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 14 | `/f1` | Tier 2 + 4 | `f1-gtr-1995-le-mans-winner.webp` | Spycatcher58, *1995 Le Mans-Winning McLaren F1 GTR*. | https://commons.wikimedia.org/wiki/File:1995_Le_Mans_winning_McLaren_F1_GTR_display_at_Goodwood_Festival_of_Speed.jpg |
+| 15 | `/f1` | Tier 2 + 4 | `f1-gtr-nielsen-bscher-donington-1995.webp` | Lee, *McLaren F1 GTR, Nielsen and Bscher at Donington, 1995*. | https://commons.wikimedia.org/wiki/File:Mclaren_F1_GTR_-_John_Nielsen_&_Thomas_Bscher_at_Donington_1995.jpg |
+| 16 | `/f1` | Tier 2 + 4 | `01-autocars-editorial-photograph-of-the-mclaren-f1-from-steve-c.jpg` | Autocar, McLaren F1 Road-Test Photograph. | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 17 | `/f1` | Tier 2 + 4 | `02-autocar-interior-central-driving-position-photograph-of-the-.jpg` | Autocar, McLaren F1 Interior. | https://www.autocar.co.uk/car-review/mclaren/f1 |
+| 18 | `/f1` | Tier 2 + 4 | `03-car-magazine-june-1994-cover-featuring-the-mclaren-f1-the-se.jpg` | Car Magazine, June 1994 cover. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 19 | `/f1` | Tier 2 + 4 | `04-first-spread-of-car-magazines-june-1994-original-mclaren-f1-.jpg` | Car Magazine, June 1994 McLaren F1 road-test. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 20 | `/f1` | Tier 2 + 4 | `05-second-spread-of-car-magazines-june-1994-f1-test-interior-ar.jpg` | Car Magazine, June 1994 McLaren F1 road-test. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 21 | `/f1` | Tier 2 + 4 | `06-third-car-magazine-june-1994-spread-showing-the-bmw-s702-v12.jpg` | Car Magazine, June 1994 McLaren F1 road-test. | https://www.carmagazine.co.uk/car-reviews/magazine-reviews/the-first-mclaren-f1-review-car-magazine-june-1994-supercar-test/ |
+| 22 | `/f1` | Tier 2 + 4 | `elon-musk-mclaren-f1-delivery-1999-01.webp` | CNN archival footage, *Elon Musk Takes Delivery of His McLaren F1*, 1999. | https://insideevs.com/features/465537/elon-musk-getting-delivery-mclaren-f1/ |
+| 23 | `/f1` | Tier 2 + 4 | `elon-musk-mclaren-f1-delivery-1999-02.webp` | CNN archival footage, *Elon Musk Receives McLaren F1*, 1999. | https://insideevs.com/features/465537/elon-musk-getting-delivery-mclaren-f1/ |
+| 24 | `/f1` | Tier 2 + 4 | `elon-musk-mclaren-f1-delivery-1999-03.webp` | CNN archival footage, *Elon Musk Standing Beside His New McLaren F1*, 1999. | https://insideevs.com/features/465537/elon-musk-getting-delivery-mclaren-f1/ |
+| 25 | `/f1` | Tier 2 + 4 | `gordon-murray-1996-le-mans.webp` | Lee, *Gordon Murray in the Paddock at the 1996 Le Mans*. | https://commons.wikimedia.org/wiki/File:Gordon_Murray_chats_in_the_paddock_behind_the_pits_at_the_1996_Le_Mans.jpg |
+| 26 | `/f1` | Tier 2 + 4 | `07-28-year-old-elon-musk-taking-delivery-of-his-silver-mclaren-.jpg` | CNN archival footage, Elon Musk Takes Delivery of His McLaren F1. | https://insideevs.com/features/465537/elon-musk-getting-delivery-mclaren-f1/ |
+| 27 | `/f1` | Tier 2 + 4 | `08-musk-beside-the-f1-during-the-1999-delivery.jpg` | CNN archival footage, Elon Musk Receives McLaren F1. | https://insideevs.com/features/465537/elon-musk-getting-delivery-mclaren-f1/ |
+| 28 | `/f1` | Tier 2 + 4 | `14-gordon-murray-the-f1s-designer-in-the-paddock-at-the-1996-le.jpg` | Martin Lee, Gordon Murray in the Paddock at the 1996 Le Mans. | https://commons.wikimedia.org/wiki/File:Gordon_Murray_chats_in_the_paddock_behind_the_pits_at_the_1996_Le_Mans_(51816281021).jpg |
+| 29 | `/f1` | Tier 2 + 4 | `f1-lm-engine-bay.webp` | Jay, *1995 McLaren F1 LM Engine Bay*. | https://commons.wikimedia.org/wiki/File:1995_McLaren_F1_LM_6.1_Engine.jpg |
+| 30 | `/f1` | Tier 2 + 4 | `f1-1996-front-end-detail.webp` | Jay, *1996 McLaren F1 Chassis No. 63 Front End*. | https://commons.wikimedia.org/wiki/File:1996_McLaren_F1_Chassis_No_63_6.1_Front_End.jpg |
+| 31 | `/f1` | Tier 2 + 4 | `15-open-engine-bay-of-the-mclaren-f1-lm-showing-the-bmw-s702-v1.jpg` | Chelsea Jay, 1995 McLaren F1 LM Engine Bay. | https://commons.wikimedia.org/wiki/File:1995_McLaren_F1_LM_6.1_Engine.jpg |
+| 32 | `/f1` | Tier 2 + 4 | `09-the-winning-59-kokusai-kaihatsu-yamaichi-mclaren-f1-gtr-team.jpg` | Martin Lee, Winning McLaren F1 GTR #59 Team on the Podium at Le Mans 1995. | https://commons.wikimedia.org/wiki/File:The_wining_Mclaren_F1_GTR_-59_team_of_Yannick_Dalmas,_Masanori_Sekiya_%26_J.J.Lehto_on_the_podium_at_Le_Mans_1995_(49627444137).jpg |
+| 33 | `/f1` | Tier 2 + 4 | `10-the-winning-59-f1-gtr-at-the-ford-chicane-1995-le-mans.jpg` | Martin Lee, Winning McLaren F1 GTR #59 at Ford Chicane. | https://commons.wikimedia.org/wiki/File:The_wining_Mclaren_F1_GTR_-59_of_Yannick_Dalmas,_Masanori_Sekiya_%26_J.J.Lehto_at_Ford_Chicane_at_Le_Mans_1995_(49627167201).jpg |
+| 34 | `/f1` | Tier 2 + 4 | `11-the-3rd-place-51-f1-gtr-team-wallace-derek-bell-justin-bell-.jpg` | Martin Lee, 3rd Place McLaren F1 GTR #51 Team on Podium. | https://commons.wikimedia.org/wiki/File:The_3rd_place_Mclaren_F1_GTR_-51_team_of_Andy_Wallace,_Derek_Bell_%26_Justin_Bell_on_the_podium_at_Le_Mans_1995_(49627171486).jpg |
+| 35 | `/f1` | Tier 2 + 4 | `12-all-three-podium-finishers-at-the-1995-le-mans-24-hours-mcla.jpg` | Martin Lee, 1st/2nd/3rd Place Finishers at Le Mans 1995 Podium. | https://commons.wikimedia.org/wiki/File:The_1st,_2nd_%26_3rd_place_finishers_on_the_podium_at_Le_Mans_1995_(49626653518).jpg |
+| 36 | `/f1` | Tier 2 + 4 | `13-the-1995-le-mans-winning-mclaren-f1-gtr-01r-on-display-at-go.jpg` | Spycatcher58, 1995 Le Mans Winning McLaren F1 GTR at Goodwood Festival of Speed. | https://commons.wikimedia.org/wiki/File:1995_Le_Mans_winning_McLaren_F1_GTR_display_at_Goodwood_Festival_of_Speed.jpg |
+| 1 | `/veyron` | Tier 1 · Primary | `autocar-veyron-hero.webp` | Cropley, "Bugatti Veyron 2005 First Drive." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 2 | `/veyron` | Tier 1 · Primary | `autocar-veyron-01.webp` | Cropley, "Bugatti Veyron 2005 First Drive." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 3 | `/veyron` | Tier 1 · Primary | `autocar-veyron-02.webp` | Cropley, "Bugatti Veyron 2005 First Drive." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 4 | `/veyron` | Tier 1 · Primary | `autocar-veyron-03.webp` | Cropley, "Bugatti Veyron 2005 First Drive." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 5 | `/veyron` | Tier 1 · Primary | `autocar-veyron-04.webp` | Cropley, "Bugatti Veyron 2005 First Drive." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 6 | `/veyron` | Tier 1 · Primary | `autocar-veyron-06.webp` | Cropley, "Bugatti Veyron 2005 First Drive." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 7 | `/veyron` | Tier 1 · Secondary | `autocar-veyron-review-05.webp` | Autocar, "Bugatti Veyron 2005-2015 Review." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015 |
+| 8 | `/veyron` | Tier 1 · Secondary | `autocar-veyron-review-223.webp` | Autocar, "Bugatti Veyron 2005-2015 Review." | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015 |
+| 9 | `/veyron` | Tier 2 + 4 | `01-autocars-hero-photograph-of-the-bugatti-veyron-from-steve-cr.jpg` | Autocar, Bugatti Veyron Hero Photograph. | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 10 | `/veyron` | Tier 2 + 4 | `02-autocar-editorial-photograph-of-the-veyron-exterior-from-cro.jpg` | Autocar, Bugatti Veyron Exterior Detail. | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 11 | `/veyron` | Tier 2 + 4 | `03-third-autocar-editorial-photograph-of-the-veyron.jpg` | Autocar, Bugatti Veyron Editorial Photograph 3. | https://www.autocar.co.uk/car-review/bugatti/veyron-2005-2015/first-drives/bugatti-veyron-2005-first-drive |
+| 12 | `/veyron` | Tier 2 + 4 | `veyron-w16-engine.webp` | Snelson, *Bugatti Veyron 8.0-litre W16 Engine*. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_8.0-litre_W16-cylinder_engine_-_Flickr_-_exfordy.jpg |
+| 13 | `/veyron` | Tier 2 + 4 | `veyron-w16-on-chassis.webp` | Poset, *W16 Engine on a Bugatti Veyron Chassis*. | https://commons.wikimedia.org/wiki/File:W-16_on_a_Bugatti_Veyron_-_panoramio.jpg |
+| 14 | `/veyron` | Tier 2 + 4 | `veyron-interior-2007.webp` | Michael KR, *Bugatti Veyron Interior*. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_Innenraum_489.JPG |
+| 15 | `/veyron` | Tier 2 + 4 | `04-veyron-chassis-50-the-validation-prototype-ferdinand-piech-p.jpg` | Bugatti AG, Bugatti Veyron Chassis 5.0 Validation Prototype. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 16 | `/veyron` | Tier 2 + 4 | `05-chassis-50-the-car-that-ran-the-407-kmh-ehra-lessien-validat.jpg` | Bugatti AG, Bugatti Veyron Chassis 5.0. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 17 | `/veyron` | Tier 2 + 4 | `06-engineering-detail-of-chassis-50-during-2005-development-tes.jpg` | Bugatti AG, Bugatti Veyron Chassis 5.0. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 18 | `/veyron` | Tier 2 + 4 | `07-profile-view-of-chassis-50-the-prototype-that-enabled-the-mo.jpg` | Bugatti AG, Bugatti Veyron Chassis 5.0. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 19 | `/veyron` | Tier 2 + 4 | `10-the-veyrons-80-litre-quad-turbo-w16-engine-open-view.jpg` | Brian Snelson, Bugatti Veyron 8.0-litre W16 Engine. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_8.0-litre_W16-cylinder_engine_-_Flickr_-_exfordy.jpg |
+| 20 | `/veyron` | Tier 2 + 4 | `11-the-w16-engine-installed-on-the-veyron-chassis-showing-the-p.jpg` | Dane Poset, W16 Engine on a Bugatti Veyron Chassis. | https://commons.wikimedia.org/wiki/File:W-16_on_a_Bugatti_Veyron_-_panoramio.jpg |
+| 21 | `/veyron` | Tier 2 + 4 | `12-the-bugatti-veyron-top-speed-key-the-mandatory-second-key-th.jpg` | EricS, Bugatti Veyron Top-Speed Key. | https://commons.wikimedia.org/wiki/File:Schl%C3%BCssel.jpg |
+| 22 | `/veyron` | Tier 2 + 4 | `eb-18-3-chiron-concept-1999.webp` | Scuderi Ferrari, *Bugatti EB 18.3 Chiron Concept*. | https://commons.wikimedia.org/wiki/File:Bugatti_Chiron_(8162).jpg |
+| 23 | `/veyron` | Tier 2 + 4 | `eb-18-3-chiron-rear-1999.webp` | Scuderi Ferrari, *Bugatti EB 18.3 Chiron Concept, Rear*. | https://commons.wikimedia.org/wiki/File:Bugatti_Chiron_(8169).jpg |
+| 24 | `/veyron` | Tier 2 + 4 | `eb-18-4-veyron-concept.webp` | More Cars, *Bugatti Veyron 18.4 Concept*. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_18_4_Concept.jpg |
+| 25 | `/veyron` | Tier 2 + 4 | `veyron-16-4-early-2004.webp` | GerardM, *Bugatti Veyron 16.4 Pre-Production*. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_16.4_2.JPG |
+| 26 | `/veyron` | Tier 2 + 4 | `veyron-key-schlussel-2005.webp` | EricS, *Bugatti Veyron Top-Speed Key*. | https://commons.wikimedia.org/wiki/File:Schlüssel.jpg |
+| 27 | `/veyron` | Tier 2 + 4 | `veyron-chassis-5-0-validation-prototype-01.webp` | Bugatti AG, Bugatti Veyron Chassis 5.0, 2005. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 28 | `/veyron` | Tier 2 + 4 | `veyron-chassis-5-0-validation-prototype-02.webp` | Bugatti AG, Bugatti Veyron Chassis 5.0, Ehra-Lessien Era. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 29 | `/veyron` | Tier 2 + 4 | `veyron-chassis-5-0-validation-prototype-03.webp` | Bugatti AG, Bugatti Veyron Chassis 5.0, Engineering Detail. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 30 | `/veyron` | Tier 2 + 4 | `veyron-chassis-5-0-validation-prototype-04.webp` | Bugatti AG, Bugatti Veyron Chassis 5.0, Profile. | https://www.supercars.net/blog/bugatti-veyron-chassis-5-0-the-dream-that-defined-the-hypercar-era/ |
+| 31 | `/veyron` | Tier 2 + 4 | `08-the-bugatti-eb-183-chiron-concept-unveiled-at-the-1999-frank.jpg` | Scuderi Ferrari, Bugatti EB 18.3 Chiron Concept. | https://commons.wikimedia.org/wiki/File:Bugatti_Chiron_(8162).jpg |
+| 32 | `/veyron` | Tier 2 + 4 | `09-the-bugatti-eb-184-veyron-concept-1999-tokyo-motor-show-firs.jpg` | More Cars, Bugatti Veyron 18.4 Concept. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_18_4_Concept_(54737722934).jpg |
+| 33 | `/veyron` | Tier 2 + 4 | `13-bugatti-veyron-164-super-sport-the-1200-hp-variant-that-reto.jpg` | Alexandre Prevot, Bugatti Veyron 16.4 Super Sport. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_16.4_Super_Sport_(2).jpg |
+| 34 | `/veyron` | Tier 2 + 4 | `14-veyron-164-super-sport-world-record-edition-the-specific-edi.jpg` | Alexandre Prevot, Bugatti Veyron 16.4 Super Sport World Record Edition. | https://commons.wikimedia.org/wiki/File:Bugatti_Veyron_16.4_Super_Sport_World_Record_Edition_-_54848058191.jpg |
+
+## Summary
+
+- `/countach`: 28 figures
+- `/959`: 25 figures
+- `/f1`: 36 figures
+- `/veyron`: 34 figures
+- Total figures: 123
+- Bibliography entries: 106

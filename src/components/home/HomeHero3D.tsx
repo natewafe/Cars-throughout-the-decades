@@ -4,6 +4,7 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { ContactShadows, Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { disposeClonedScene } from "@/lib/disposeScene";
 
 /** Carousel of hero cars with distinct close-up framings per car, plus a
  * "Coming Soon" fifth slot rendered as a typographic plate (no model).
@@ -84,18 +85,48 @@ const CYCLE_MS = 6500;
 
 export function HomeHero3D() {
   const [active, setActive] = useState(0);
+  const wrapRef = useRef<HTMLDivElement | null>(null);
+  const visibleRef = useRef(true);
 
   useEffect(() => {
+    // Only remount the heavy HeroCarModel (which re-clones ~50 materials) while
+    // the tab is visible AND the hero is on-screen. Without this, the carousel
+    // leaks WebGL programs every 6.5s forever, which is the dominant cause of
+    // the tab-crash after ~60s of dwell on the homepage.
+    const onVis = () => {
+      visibleRef.current =
+        document.visibilityState === "visible" && visibleRef.current !== false;
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    let onScreen = true;
+    const io =
+      wrapRef.current && "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            (entries) => {
+              onScreen = entries[0]?.isIntersecting ?? true;
+            },
+            { threshold: 0.05 }
+          )
+        : null;
+    if (io && wrapRef.current) io.observe(wrapRef.current);
+
     const id = window.setInterval(() => {
+      if (document.visibilityState !== "visible" || !onScreen) return;
       setActive((i) => (i + 1) % HERO_CARS.length);
     }, CYCLE_MS);
-    return () => window.clearInterval(id);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVis);
+      io?.disconnect();
+      window.clearInterval(id);
+    };
   }, []);
 
   const car = HERO_CARS[active];
 
   return (
-    <div className="home-hero-3d-wrap">
+    <div className="home-hero-3d-wrap" ref={wrapRef}>
       <div className="home-hero-3d">
         <Canvas
           dpr={[1, 1.5]}
@@ -189,16 +220,20 @@ function HeroCarModel({ car }: { car: HeroCar }) {
     return { model: cloned, scale: s, offset: offs };
   }, [gltf]);
 
+  // On unmount (next carousel tick), dispose the cloned geometries &
+  // materials we created in the useMemo above — these are NOT reclaimed by
+  // useGLTF.clear, and are the WebGL resources that leak per cycle.
   useEffect(() => {
     const url = car.url!;
     return () => {
+      disposeClonedScene(model);
       try {
         useGLTF.clear(url);
       } catch {
         /* noop */
       }
     };
-  }, [car.url]);
+  }, [car.url, model]);
 
   useFrame((_, delta) => {
     if (groupRef.current) {

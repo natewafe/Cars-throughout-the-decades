@@ -40,8 +40,8 @@ export type SceneConfig = {
 export const scenesBySlug: Record<string, SceneConfig> = {
   "countach": {
     keyframes: [
-      [0.0, "25deg 78deg 135%"],
-      [0.18, "80deg 84deg 105%"],
+      [0.0, "25deg 78deg 105%"],
+      [0.18, "80deg 84deg 92%"],
       [0.38, "170deg 82deg 110%"],
       [0.58, "265deg 78deg 95%"],
       [0.8, "325deg 72deg 70%"],
@@ -64,8 +64,8 @@ export const scenesBySlug: Record<string, SceneConfig> = {
   },
   "959": {
     keyframes: [
-      [0.0, "20deg 82deg 140%"],
-      [0.22, "80deg 92deg 90%"],
+      [0.0, "20deg 82deg 108%"],
+      [0.22, "80deg 92deg 82%"],
       [0.45, "160deg 80deg 110%"],
       [0.68, "225deg 75deg 95%"],
       [0.88, "320deg 80deg 58%"],
@@ -84,8 +84,8 @@ export const scenesBySlug: Record<string, SceneConfig> = {
   },
   "f1": {
     keyframes: [
-      [0.0, "40deg 88deg 150%"],
-      [0.22, "110deg 82deg 110%"],
+      [0.0, "40deg 88deg 115%"],
+      [0.22, "110deg 82deg 95%"],
       [0.45, "190deg 85deg 105%"],
       [0.68, "260deg 78deg 95%"],
       [0.88, "30deg 68deg 55%"],
@@ -104,8 +104,8 @@ export const scenesBySlug: Record<string, SceneConfig> = {
   },
   "veyron": {
     keyframes: [
-      [0.0, "15deg 82deg 145%"],
-      [0.22, "90deg 90deg 95%"],
+      [0.0, "15deg 82deg 112%"],
+      [0.22, "90deg 90deg 85%"],
       [0.45, "180deg 82deg 115%"],
       [0.68, "215deg 72deg 85%"],
       [0.88, "325deg 78deg 55%"],

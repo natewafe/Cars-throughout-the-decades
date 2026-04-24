@@ -4,6 +4,7 @@ import "./globals.css";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { HeapLogger } from "@/components/HeapLogger";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -31,6 +32,7 @@ export default function RootLayout({
     <html lang="en" className={`${fraunces.variable} ${inter.variable} h-full`}>
       <body className="min-h-full flex flex-col">
         <SmoothScroll />
+        <HeapLogger />
         <SiteHeader />
         <main className="flex-1 pt-16">{children}</main>
         <SiteFooter />
