@@ -2,9 +2,10 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, useGLTF } from "@react-three/drei";
+import { ContactShadows, Environment, PerformanceMonitor, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { disposeClonedScene } from "@/lib/disposeScene";
+import { useQualityProfile } from "@/lib/deviceTier";
 
 /** Carousel of hero cars with distinct close-up framings per car, plus a
  * "Coming Soon" fifth slot rendered as a typographic plate (no model).
@@ -85,8 +86,10 @@ const CYCLE_MS = 6500;
 
 export function HomeHero3D() {
   const [active, setActive] = useState(0);
+  const [dprCap, setDprCap] = useState<number | null>(null);
   const wrapRef = useRef<HTMLDivElement | null>(null);
   const visibleRef = useRef(true);
+  const quality = useQualityProfile();
 
   useEffect(() => {
     // Only remount the heavy HeroCarModel (which re-clones ~50 materials) while
@@ -129,10 +132,12 @@ export function HomeHero3D() {
     <div className="home-hero-3d-wrap" ref={wrapRef}>
       <div className="home-hero-3d">
         <Canvas
-          dpr={[1, 1.5]}
-          shadows={{ type: THREE.PCFSoftShadowMap }}
+          dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
+          shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFShadowMap } : false}
           gl={{
-            antialias: true,
+            // antialias off on low-end — MSAA is a 2-4x fragment cost and the
+            // DPR downscale alone is usually enough smoothing there.
+            antialias: quality.tier !== "low",
             alpha: true,
             powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
@@ -140,9 +145,18 @@ export function HomeHero3D() {
           }}
           camera={{ fov: 28, near: 0.1, far: 500, position: [5, 1.8, 5] }}
         >
+          {/* Apple-style: if frame time sags past ~45 fps for a second,
+              drop pixel ratio one notch. Climbs back once the device recovers.
+              The static tier still sets the CEILING; PerformanceMonitor only
+              drops below it, never above. */}
+          <PerformanceMonitor
+            bounds={(_refreshrate) => [45, 60]}
+            onIncline={() => setDprCap((c) => (c && c < quality.dpr[1] ? c + 0.25 : null))}
+            onDecline={() => setDprCap((c) => Math.max(1, (c ?? quality.dpr[1]) - 0.25))}
+          />
           <Suspense fallback={null}>
-            {car.url ? <HeroCarModel key={car.slug} car={car} /> : null}
-            <HeroLights />
+            {car.url ? <HeroCarModel key={car.slug} car={car} quality={quality} /> : null}
+            <HeroLights enableEnv={quality.enableEnv} shadowMapSize={quality.shadowMapSize} />
           </Suspense>
         </Canvas>
 
@@ -177,7 +191,13 @@ export function HomeHero3D() {
   );
 }
 
-function HeroCarModel({ car }: { car: HeroCar }) {
+function HeroCarModel({
+  car,
+  quality,
+}: {
+  car: HeroCar;
+  quality: ReturnType<typeof useQualityProfile>;
+}) {
   const { scene: gltf } = useGLTF(car.url!) as unknown as { scene: THREE.Group };
   const groupRef = useRef<THREE.Group | null>(null);
 
@@ -192,15 +212,17 @@ function HeroCarModel({ car }: { car: HeroCar }) {
         const std = (mat as THREE.MeshStandardMaterial).clone();
         std.envMapIntensity = 1.6;
         const name = (std.name || mesh.name || "").toLowerCase();
+        // Paint/body panels: keep MeshStandardMaterial and push metalness/
+        // roughness/envMapIntensity so it reads as shiny paint. We used to
+        // promote to MeshPhysicalMaterial via `phys.copy(std)`, but that
+        // requires source.clearcoatNormalScale / sheenColor / specularColor
+        // to exist — MeshStandardMaterial doesn't have those fields, so the
+        // copy crashes with "Cannot read properties of undefined (reading 'x')"
+        // whenever a mesh name matches this regex.
         if (/paint|body|lack|carrosserie|karosserie|exterior|shell/.test(name)) {
-          const phys = new THREE.MeshPhysicalMaterial();
-          phys.copy(std as unknown as THREE.MeshPhysicalMaterial);
-          phys.clearcoat = 1;
-          phys.clearcoatRoughness = 0.08;
-          phys.metalness = 0.8;
-          phys.roughness = 0.3;
-          phys.envMapIntensity = 1.8;
-          return phys;
+          std.metalness = Math.max(std.metalness ?? 0.6, 0.8);
+          std.roughness = Math.min(std.roughness ?? 0.35, 0.3);
+          std.envMapIntensity = 1.8;
         }
         return std;
       };
@@ -250,7 +272,7 @@ function HeroCarModel({ car }: { car: HeroCar }) {
         scale={14}
         blur={2.6}
         far={4}
-        resolution={512}
+        resolution={quality.contactShadowResolution}
       />
       <group ref={groupRef} scale={scale} position={[offset.x, offset.y + car.yBias, offset.z]}>
         <primitive object={model} />
@@ -259,20 +281,28 @@ function HeroCarModel({ car }: { car: HeroCar }) {
   );
 }
 
-function HeroLights() {
+function HeroLights({
+  enableEnv,
+  shadowMapSize,
+}: {
+  enableEnv: boolean;
+  shadowMapSize: number;
+}) {
   return (
     <>
-      <ambientLight intensity={0.35} />
+      <ambientLight intensity={enableEnv ? 0.35 : 0.65} />
       <directionalLight
         castShadow
         position={[6, 10, 6]}
         intensity={2.4}
         color={"#ffffff"}
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={[shadowMapSize, shadowMapSize]}
       />
       <directionalLight position={[-6, 4, -4]} intensity={0.8} color={"#dde6ff"} />
       <directionalLight position={[0, 6, -8]} intensity={1.1} color={"#ffe8cc"} />
-      <Environment preset="warehouse" environmentIntensity={0.9} />
+      {/* HDRI env probe is the single heaviest thing on integrated GPUs.
+          Low tier falls back to 3-point lighting only. */}
+      {enableEnv && <Environment preset="warehouse" environmentIntensity={0.9} />}
     </>
   );
 }

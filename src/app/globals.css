@@ -267,10 +267,10 @@ article[data-car="veyron"] .artifact-section-header {
   position: absolute;
   top: 50%;
   transform: translateY(calc(-50% + 8px));
-  /* Narrower than before (was 30vw/360px): captions sit in a slim column at
-     the page edge so the car is the showstopper, not the text panel. */
-  width: min(280px, 22vw);
-  max-width: 280px;
+  /* Narrow column at the page edge. The camera's side-bias shifts the car
+     AWAY from whichever edge is live, so there's never overlap. */
+  width: min(260px, 20vw);
+  max-width: 260px;
   opacity: 0;
   transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: none;
@@ -286,17 +286,16 @@ article[data-car="veyron"] .artifact-section-header {
 /* Hard to the edge, out of the car's way. */
 .scene-caption.left   { left: 1.5vw; }
 .scene-caption.right  { right: 1.5vw; text-align: right; }
-/* The "bottom" slot used to be a 38vw panel spanning under the car — it
-   covered the rocker + front bumper. Tuck it into the bottom-left corner at
-   the same slim column width as the side captions so the car silhouette
-   remains clear across the whole scroll. */
+/* Bottom caption goes to the bottom-RIGHT corner so it shares the same lateral
+   axis as the right-side camera bias (car will already be shifted left for
+   this slot's scroll range). */
 .scene-caption.bottom {
   top: auto; bottom: 4%;
-  left: 1.5vw; right: auto;
-  width: min(280px, 22vw);
-  max-width: 280px;
+  right: 1.5vw; left: auto;
+  width: min(260px, 20vw);
+  max-width: 260px;
   transform: translateY(8px);
-  text-align: left;
+  text-align: right;
 }
 .scene-caption.is-live { opacity: 1; transform: translateY(-50%); }
 .scene-caption.bottom.is-live { transform: translateY(0); }
