@@ -41,10 +41,9 @@ export const cameraPresets: Record<string, CameraPreset> = {
     rotationStart: -Math.PI * 0.15,
     modelOffset: [0, 0, 0],
     slideDirection: -1,
-    // GLB ships with hidden underbody mesh that pushes whole-model bbox
-    // below the wheels — the wheel-name auto-detection misses some node
-    // names, so we apply a manual nudge to plant tires on the cyc.
-    groundOffsetY: -0.45,
+    // No groundOffsetY — wheel-bbox auto-detection in CarScrollScene
+    // handles the 959's hidden underbody. Adding a manual nudge here
+    // double-corrects and pushes it under the floor.
   },
   // Bugatti Veyron — elevated 3/4 → rear-top sweep.
   veyron: {

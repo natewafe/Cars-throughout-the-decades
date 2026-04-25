@@ -48,19 +48,30 @@ export function makePhysicalGlass(
   std: THREE.MeshStandardMaterial,
   anisotropy: number
 ): THREE.MeshPhysicalMaterial {
-  // Reverted from transmission-based refractive glass — it produced
-  // distorted/dark windows on the 959, Countach, and Veyron because their
-  // GLBs ship with interior geometry that refracts unpredictably. Plain
-  // transparent glass with low roughness is the look the user actually
-  // wants: clear, slightly reflective, no fake refraction.
+  // Plain clear glass. We DROP the GLB's baked roughnessMap/normalMap/
+  // metalnessMap on glass meshes — Countach (and others) ships with a
+  // grunge roughness map baked into windshield UVs that reads as
+  // "cloudy" no matter how low we set roughness. Replace with a uniform
+  // smooth surface.
   const phys = new THREE.MeshPhysicalMaterial();
   transferStdFields(std, phys, anisotropy);
   phys.color.setHex(0xffffff);
+  phys.map = null;
+  phys.roughnessMap = null;
+  phys.metalnessMap = null;
+  phys.normalMap = null;
+  phys.aoMap = null;
   phys.metalness = 0;
-  phys.roughness = 0.05;
+  phys.roughness = 0;
   phys.transparent = true;
-  phys.opacity = 0.4;
-  phys.envMapIntensity = 0.8;
+  phys.opacity = 0.12;
+  // depthWrite:false stops stacked glass faces (windshield outer+inner,
+  // double-pane side windows) from compounding to ~70% opacity. Each
+  // pane now contributes its own 0.12 instead of fogging the whole car.
+  phys.depthWrite = false;
+  // Drop env reflections to a hint — high envMapIntensity on glass
+  // throws a reflection of the HDRI back at the camera and reads as haze.
+  phys.envMapIntensity = 0.4;
   phys.needsUpdate = true;
   return phys;
 }
@@ -112,12 +123,20 @@ export function upgradeMaterial(
     // 2. Glass
     if (/glass|window|windshield|vetro/.test(name)) {
       if (opts.usePhysicalPaint) return makePhysicalGlass(std, opts.anisotropy);
-      // Low-tier: cheap transparent glass, no transmission render pass.
+      // Low-tier: cheap transparent glass. Same map-clearing + depthWrite
+      // logic as the Physical path so stacked panes don't fog up.
+      std.color.setHex(0xffffff);
+      std.map = null;
+      std.roughnessMap = null;
+      std.metalnessMap = null;
+      std.normalMap = null;
+      std.aoMap = null;
       std.transparent = true;
-      std.opacity = Math.min(std.opacity, 0.6);
+      std.opacity = 0.12;
+      std.depthWrite = false;
       std.metalness = 0;
-      std.roughness = 0.05;
-      std.envMapIntensity = 0.8;
+      std.roughness = 0;
+      std.envMapIntensity = 0.4;
       return std;
     }
 

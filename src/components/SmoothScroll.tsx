@@ -26,7 +26,30 @@ export function SmoothScroll() {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
+    // Lenis caches scroll bounds at init. Lazy-loaded artifact images +
+    // late-mounting 3D scenes grow the document AFTER that snapshot, and
+    // the user can't scroll past the stale max. Watch body height and
+    // tell Lenis + ScrollTrigger to recompute whenever it grows.
+    let lastHeight = document.documentElement.scrollHeight;
+    let pendingFrame = 0;
+    const recompute = () => {
+      const h = document.documentElement.scrollHeight;
+      if (h === lastHeight) return;
+      lastHeight = h;
+      lenis.resize();
+      ScrollTrigger.refresh();
+    };
+    const ro = new ResizeObserver(() => {
+      // Coalesce bursts of mutation into one rAF — image loads can fire
+      // dozens of resize events in a single tick.
+      cancelAnimationFrame(pendingFrame);
+      pendingFrame = requestAnimationFrame(recompute);
+    });
+    ro.observe(document.body);
+
     return () => {
+      cancelAnimationFrame(pendingFrame);
+      ro.disconnect();
       gsap.ticker.remove(tick);
       lenis.destroy();
     };

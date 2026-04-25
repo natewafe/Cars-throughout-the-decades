@@ -44,13 +44,17 @@ export function SceneCyclorama({ floorY = -0.5 }: { floorY?: number }) {
     // Vertical gradient via vertex colors — bottom warm cream, top dim.
     const pos = geom.attributes.position;
     const colors = new Float32Array(pos.count * 3);
+    // Gradient softened: bottom matches the page bg exactly, top is a
+    // hair darker (just enough to imply soft bounce shadow on the wall).
+    // Scene fog handles the actual horizon dissolve — the geometry's
+    // top edge fades to fog color before the camera ever sees it.
     const bottom = new THREE.Color("#f5f1ea");
-    const top = new THREE.Color("#d8d2c2");
+    const top = new THREE.Color("#ece6d8");
     const wallTopY = floorY + 5;
     for (let i = 0; i < pos.count; i++) {
       const y = pos.getY(i);
       const t = THREE.MathUtils.clamp((y - floorY) / (wallTopY - floorY), 0, 1);
-      const c = bottom.clone().lerp(top, Math.pow(t, 0.7));
+      const c = bottom.clone().lerp(top, Math.pow(t, 1.4));
       colors[i * 3] = c.r;
       colors[i * 3 + 1] = c.g;
       colors[i * 3 + 2] = c.b;

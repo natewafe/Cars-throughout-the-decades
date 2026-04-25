@@ -17,8 +17,13 @@ import { BlendFunction } from "postprocessing";
 export function ScenePostFX({
   ssaoSamples = 16,
   ssaoRadius = 0.07,
-  ssaoIntensity = 22,
-  bloomIntensity = 0.4,
+  // SSAO intensity dropped from 22 → 12. At 22 the wheel arches and panel
+  // gaps were reading as smudges, which compounded with bloom to look
+  // "hazy" across the bodywork. 12 still grounds the car visibly.
+  ssaoIntensity = 12,
+  // Bloom dropped from 0.4 → 0.18. We were getting a soft glow on every
+  // chrome highlight that blurred the bodywork edges.
+  bloomIntensity = 0.18,
 }: {
   ssaoSamples?: number;
   ssaoRadius?: number;
@@ -46,7 +51,9 @@ export function ScenePostFX({
           on chrome / glass / brake-light glass bloom, not the whole car. */}
       <Bloom
         intensity={bloomIntensity}
-        luminanceThreshold={0.9}
+        // Threshold raised to 0.95 — only true pure-white highlights
+        // (chrome, brake-light glass) bloom now, never paint.
+        luminanceThreshold={0.95}
         luminanceSmoothing={0.025}
         mipmapBlur
       />

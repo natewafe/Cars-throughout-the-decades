@@ -165,15 +165,9 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
           </RevealCardSection>
         ))}
 
-        {nextHref && (
-          <RevealCardSection extraClass="text-card-finale">
-            <span className="finale-eyebrow">Next Exhibit</span>
-            <span className="finale-title">{scene.finaleTitle}</span>
-            <a className="finale-cta" href={nextHref}>
-              Enter {nextLabel} →
-            </a>
-          </RevealCardSection>
-        )}
+        {/* Finale card removed at user request — no in-scene "Next Exhibit"
+            CTA. Footer-level next-exhibit link in CarExhibit.tsx is
+            untouched. */}
       </div>
     </section>
   );
@@ -320,6 +314,22 @@ function SceneContents({
       disposeClonedScene(model);
     };
   }, [model]);
+
+  // Atmospheric fog — color matches the .scroll-scene page background so
+  // the cyclorama's back wall fades into the page seamlessly at the
+  // horizon. Near/far tuned so the car sits in front of the fog (stays
+  // crisp) while the cyc's top edge dissolves before it ever gets to
+  // the camera.
+  const { scene: r3fScene } = useThree();
+  useEffect(() => {
+    const isVeyron = modelUrl.includes("veyron");
+    const fogColor = new THREE.Color(isVeyron ? "#e7dfd0" : "#f5f1ea");
+    const prevFog = r3fScene.fog;
+    r3fScene.fog = new THREE.Fog(fogColor, 9, 18);
+    return () => {
+      r3fScene.fog = prevFog;
+    };
+  }, [r3fScene, modelUrl]);
 
   // Door open: drives off scroll progress like before.
   useFrame(() => {
