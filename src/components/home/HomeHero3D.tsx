@@ -145,7 +145,7 @@ export function HomeHero3D() {
             alpha: true,
             powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 1.05,
+            toneMappingExposure: 0.8,
           }}
           camera={{ fov: 28, near: 0.1, far: 500, position: [5, 1.8, 5] }}
         >

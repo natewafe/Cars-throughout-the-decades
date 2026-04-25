@@ -11,7 +11,7 @@ import { Environment } from "@react-three/drei";
  *  clinical. */
 export function SceneEnvironment({
   preset = "studio",
-  intensity = 1.0,
+  intensity = 0.6,
 }: {
   preset?: "studio" | "warehouse" | "city" | "apartment" | "dawn" | "sunset" | "forest" | "lobby" | "night" | "park";
   intensity?: number;

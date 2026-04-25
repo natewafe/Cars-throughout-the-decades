@@ -14,7 +14,7 @@ export function SceneLighting({ shadowMapSize }: { shadowMapSize: number }) {
       <directionalLight
         castShadow
         position={[6, 10, 6]}
-        intensity={2.5}
+        intensity={1.5}
         color="#ffffff"
         shadow-mapSize={[shadowMapSize, shadowMapSize]}
         shadow-bias={-0.0001}
@@ -35,7 +35,7 @@ export function SceneLighting({ shadowMapSize }: { shadowMapSize: number }) {
       {/* Rim — from behind, warm tint, separates silhouette from background. */}
       <directionalLight
         position={[0, 6, -8]}
-        intensity={1.5}
+        intensity={1.0}
         color="#ffe8cc"
       />
     </>

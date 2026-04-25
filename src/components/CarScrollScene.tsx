@@ -44,10 +44,18 @@ const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
 // Cubic inOut — gentler than quad, avoids the "pause" feeling at keyframes.
 const smoothstep = (t: number) => t * t * (3 - 2 * t);
 
-/** Top-level DOM wrapper: pinned section, captions, finale, GSAP scroll. */
+/** Two-column sticky layout: left half is a CSS-sticky 3D canvas, right
+ *  half is the flowing text column. ScrollTrigger drives camera progress
+ *  off the section's own scroll position (no GSAP pin spacer needed —
+ *  position:sticky handles the pinning natively, which avoids the lazy-
+ *  image-grows-document-height bug GSAP pinning was causing).
+ *
+ *  Caption blocks live in the right column as normal flow content; each
+ *  is sized to ~one viewport, so they appear sequentially as the user
+ *  scrolls. Camera keyframes still scrub 0→1 across the full section.
+ */
 export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const pinRef = useRef<HTMLDivElement | null>(null);
   const captionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const finaleRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLSpanElement | null>(null);
@@ -56,8 +64,8 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
   // Shared scroll progress — written by ScrollTrigger, read by R3F useFrame.
   const progressRef = useRef(0);
-  // Horizontal bias for the camera. -1 = caption on right → model shifts left;
-  // +1 = caption on left → model shifts right; 0 = centered.
+  // Side-bias is no longer needed (text & canvas are in distinct columns)
+  // but the camera controller still reads this ref — keep it pinned at 0.
   const sideBiasRef = useRef(0);
 
   useEffect(() => {
@@ -69,45 +77,28 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
   useLayoutEffect(() => {
     const section = sectionRef.current;
-    const pin = pinRef.current;
-    if (!section || !pin) return;
+    if (!section) return;
 
-    // Ensure any prior ScrollTriggers on this section are disposed (route swap).
     const ctx = gsap.context(() => {
       ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: "+=280%",
-        pin: pin,
-        // scrub 0.6 makes the timeline lag scroll by ~0.6s — gives physical weight
-        // without feeling sluggish. The ref-driven R3F reads progressRef each frame.
+        end: "bottom bottom",
+        // scrub 0.6 makes the timeline lag scroll by ~0.6s — gives physical
+        // weight without feeling sluggish.
         scrub: 0.6,
         onUpdate: (self) => {
           const p = self.progress;
           progressRef.current = p;
 
-          // DOM overlays — written directly, no React state.
-          let activeBias = 0;
-          let activePos: string = "";
+          // Reveal caption blocks based on scroll position. Each caption
+          // owns a viewport's worth of right-column scroll; entering its
+          // window adds .is-live (CSS handles the fade-up).
           scene.captions.forEach((cap, i) => {
             const node = captionRefs.current[i];
             if (!node) return;
-            const active = p >= cap.from && p <= cap.to;
-            node.classList.toggle("is-live", active);
-            if (active) {
-              // Caption on left  → shift car right (+1).
-              // Caption on right → shift car left  (-1).
-              // Bottom caption now sits in the bottom-RIGHT corner, so it
-              // biases the same direction as `right`.
-              if (cap.pos === "left") activeBias = 1;
-              else activeBias = -1;
-              activePos = cap.pos;
-            }
+            node.classList.toggle("is-live", p >= cap.from && p <= cap.to);
           });
-          sideBiasRef.current = activeBias;
-          if (section) {
-            section.setAttribute("data-active-caption", activePos);
-          }
           if (finaleRef.current) {
             finaleRef.current.classList.toggle("is-live", p >= 0.92);
           }
@@ -123,9 +114,6 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
   captionRefs.current = [];
 
-  // Derive a per-car theme slug for the scene background. The Veyron's
-  // primary-hero imagery is a bold orange, which clashes with our default
-  // warm-cream gradient — switch that car to a cooler, darker stage.
   const themeSlug = modelUrl.includes("veyron")
     ? "veyron"
     : modelUrl.includes("959")
@@ -136,8 +124,9 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
   return (
     <section ref={sectionRef} className="scroll-scene" data-car={themeSlug}>
-      <div ref={pinRef} className="scene-sticky">
-        <div className="scene-canvas">
+      {/* LEFT — sticky 3D canvas column. */}
+      <div className="scene-canvas-col">
+        <div className="scene-canvas-sticky">
           <Canvas
             dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
             shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFSoftShadowMap } : false}
@@ -146,7 +135,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
               alpha: true,
               powerPreference: "high-performance",
               toneMapping: THREE.ACESFilmicToneMapping,
-              toneMappingExposure: 1.05,
+              toneMappingExposure: 0.8,
             }}
             camera={{ fov: 30, near: 0.1, far: 500 }}
           >
@@ -168,34 +157,39 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
               {quality.enablePost && <ScenePostFX />}
             </Suspense>
           </Canvas>
+          <span ref={hintRef} className="scene-hint">
+            Scroll to explore
+          </span>
         </div>
+      </div>
 
+      {/* RIGHT — flowing text column. Each caption block ~ 1 viewport tall. */}
+      <div className="scene-text-col">
         {scene.captions.map((cap, i) => (
           <div
             key={i}
             ref={(el) => {
               captionRefs.current[i] = el;
             }}
-            className={`scene-caption ${cap.pos}`}
+            className="scene-caption-block"
           >
-            <span className="caption-eyebrow">{cap.eyebrow}</span>
-            <span className="caption-line">{cap.line}</span>
+            <div className="scene-caption-inner">
+              <span className="caption-eyebrow">{cap.eyebrow}</span>
+              <span className="caption-line">{cap.line}</span>
+            </div>
           </div>
         ))}
-
         {nextHref && (
-          <div ref={finaleRef} className="scene-finale">
-            <span className="finale-eyebrow">Next Exhibit</span>
-            <span className="finale-title">{scene.finaleTitle}</span>
-            <a className="finale-cta" href={nextHref}>
-              Enter {nextLabel} →
-            </a>
+          <div ref={finaleRef} className="scene-caption-block scene-finale-block">
+            <div className="scene-caption-inner">
+              <span className="finale-eyebrow">Next Exhibit</span>
+              <span className="finale-title">{scene.finaleTitle}</span>
+              <a className="finale-cta" href={nextHref}>
+                Enter {nextLabel} →
+              </a>
+            </div>
           </div>
         )}
-
-        <span ref={hintRef} className="scene-hint">
-          Scroll to explore
-        </span>
       </div>
     </section>
   );
@@ -446,24 +440,19 @@ function CameraController({
     current.current.phi = lerp(current.current.phi, target.phi, k);
     current.current.radius = lerp(current.current.radius, target.radius, k);
 
-    // Side-bias smoothing — tightened from 0.02 → 0.0005 per-sec so the car
-    // clears the caption in ~200ms instead of ~1s (was noticeable as "text
-    // on top of car" for the first second of each caption).
-    const targetBias = sideBiasRef.current;
-    bias.current += (targetBias - bias.current) * (1 - Math.pow(0.0005, delta));
+    // Side-bias retained as a ref but always 0 in the new split-column
+    // layout — text and canvas no longer share viewport space.
+    void sideBiasRef;
+    void bias;
 
     const theta = (current.current.theta * Math.PI) / 180;
     const phi = (current.current.phi * Math.PI) / 180;
-    // Showstopper framing: 1.15 (was 1.55, was 1.75, was 2.4). The car
-    // silhouette now fills ~85% of the viewport height at keyframe 0.
-    const r = baseRadius * (current.current.radius / 100) * 1.15;
+    // 1.55x multiplier (was 1.15) — the canvas is now ~half viewport width,
+    // so horizontal FOV is roughly halved. Need extra pull-back to keep
+    // the car silhouette inside the canvas column on every keyframe.
+    const r = baseRadius * (current.current.radius / 100) * 1.55;
 
-    // Side-bias: shift camera + target laterally so the car visibly clears
-    // the active caption column. 1.05r (was 0.7r) — captions are now wider
-    // (~38vw) text wells, so the car needs a bigger lateral push to actually
-    // get out of their way instead of sitting half-behind them.
-    const biasStrength = 1.05 * r;
-    const tx = bias.current * biasStrength;
+    const tx = 0;
 
     // Camera raised off the ground: lift it by lookAtY so we're always
     // looking level-across at the car's vertical center instead of up at it.

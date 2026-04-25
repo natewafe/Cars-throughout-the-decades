@@ -121,34 +121,30 @@ body::before {
   .reveal { opacity: 1; transform: none; }
 }
 
-/* ========= Scroll-driven 3D scene: gallery showroom =========
-   GSAP ScrollTrigger pins `.scene-sticky` itself (no CSS sticky needed). */
+/* ========= Scroll-driven 3D scene: 2-column sticky showroom =========
+   Left column: position:sticky 100vh canvas. Right column: flowing text
+   blocks, one per caption, ~1 viewport tall each. The section's own height
+   (sum of caption block heights) is the scroll runway; ScrollTrigger reads
+   progress directly from it — no GSAP pin spacer involved. */
 .scroll-scene {
   position: relative;
   width: 100%;
-  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Solid cream — no radial gradient. The HDRI was previously bleeding
+     onto a near-white center which read as "blown out". A flat warm
+     paper tone matches the rest of the site and lets the car carry the
+     visual weight. */
+  background: #f5f1ea;
   color: var(--color-ink);
-  background:
-    radial-gradient(ellipse 70% 50% at 50% 55%, #ffffff 0%, rgba(255,255,255,0) 70%),
-    linear-gradient(180deg, #f6f3ee 0%, #ece7dd 50%, #dcd3c2 100%);
-  overflow: hidden;
-  /* Contain the WebGL canvas + pinned captions in their own stacking context
-     so they cannot bleed above sections that follow (title band, essay,
-     artifacts). Without this, the GPU-composited <canvas> could paint over
-     text or behind it depending on scroll position. */
   isolation: isolate;
   z-index: 0;
 }
-/* Veyron stage: a warm mid-stone that complements the orange body without
-   competing with it, and without the near-black void of the previous pass.
-   The car is the showstopper — the background is a gallery wall, nothing more. */
+/* Veyron stage: cooler stone tone to complement orange bodywork. */
 .scroll-scene[data-car="veyron"] {
-  color: var(--color-ink);
-  background:
-    radial-gradient(ellipse 70% 55% at 50% 55%, #f3ede1 0%, rgba(243,237,225,0) 65%),
-    linear-gradient(180deg, #e7dfd0 0%, #d8ceba 55%, #bfb29a 100%);
+  background: #e7dfd0;
 }
-.scroll-scene[data-car="veyron"] .scene-caption .caption-eyebrow {
+.scroll-scene[data-car="veyron"] .caption-eyebrow {
   color: var(--color-brass-dark);
 }
 
@@ -184,50 +180,59 @@ article[data-car="veyron"] .artifact-section-header {
   isolation: isolate;
   background: var(--color-paper);
 }
-.scene-sticky {
+/* LEFT COLUMN — sticky 3D canvas. */
+.scene-canvas-col {
   position: relative;
-  width: 100%;
+}
+.scene-canvas-sticky {
+  position: sticky;
+  top: 0;
   height: 100vh;
-  overflow: hidden;
-  /* isolate paint to keep scroll smooth */
-  contain: strict;
-  will-change: transform;
-}
-.scene-sticky::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: 6%;
-  width: 70%;
-  height: 28%;
-  transform: translateX(-50%);
-  background: radial-gradient(ellipse at center, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0) 70%);
-  filter: blur(18px);
-  z-index: 0;
-  pointer-events: none;
-}
-.scene-sticky::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background:
-    linear-gradient(to bottom, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0) 20%),
-    linear-gradient(to top, rgba(160,140,100,0.18) 0%, rgba(0,0,0,0) 35%);
-  z-index: 1;
-}
-.scene-canvas {
-  position: absolute;
-  inset: 0;
   width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 2;
+  overflow: hidden;
+  /* Always let vertical scroll pass through, even when the cursor /
+     finger is over the canvas. R3F's <Canvas> sets touch-action:none on
+     its inner div by default to capture pointer events for picking — we
+     don't pick anything in this scene, so we override here at the
+     wrapper level too. */
+  touch-action: pan-y;
+  overscroll-behavior: auto;
 }
-.scene-canvas canvas {
+/* The R3F canvas itself is purely visual — no orbit, no clicks, no drag.
+   Disabling pointer events on it guarantees wheel/touch events always
+   bubble up to the page (Lenis) and never get trapped by R3F's internal
+   pointer manager. If we ever add OrbitControls or click-to-inspect,
+   re-enable per-component. */
+.scene-canvas-sticky canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
+  pointer-events: none;
+  touch-action: pan-y;
+}
+
+/* RIGHT COLUMN — flowing text blocks, ~1 viewport per caption. */
+.scene-text-col {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+}
+.scene-caption-block {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 8vh 6vw;
+}
+.scene-caption-inner {
+  max-width: 32rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.scene-caption-block.is-live .scene-caption-inner {
+  opacity: 1;
+  transform: translateY(0);
 }
 .scene-hint {
   position: absolute;
@@ -275,6 +280,10 @@ article[data-car="veyron"] .artifact-section-header {
 .scene-load.is-error { color: #e06c75; }
 .scene-load.is-error::after { display: none; }
 
+/* The block below targets the OLD .scene-caption class (replaced by
+   .scene-caption-block in the split-column rewrite). DOM no longer
+   produces .scene-caption nodes, so everything here is dead — left in
+   place to keep diff small; will be deleted in a follow-up cleanup. */
 .scene-caption {
   position: absolute;
   top: 50%;
@@ -413,6 +422,98 @@ article[data-car="veyron"] .artifact-section-header {
   line-height: 1.25;
   color: var(--color-ink);
   text-shadow: 0 1px 40px rgba(255,255,255,0.7);
+}
+
+/* ===== Active caption typography (split-column layout) ===== */
+.caption-eyebrow {
+  display: block;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-brass-dark);
+  margin-bottom: 1rem;
+}
+.caption-line {
+  display: block;
+  font-family: var(--font-fraunces), serif;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: 300;
+  line-height: 1.2;
+  color: var(--color-ink);
+}
+
+/* Per-car typographic signatures — each exhibit reads distinct without
+   restructuring the layout. */
+.scroll-scene[data-car="countach"] .scene-caption-inner {
+  border-left: 3px solid var(--color-brass-dark);
+  padding-left: 1.5rem;
+}
+.scroll-scene[data-car="countach"] .caption-line {
+  font-style: italic;
+}
+.scroll-scene[data-car="959"] .caption-eyebrow {
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
+  letter-spacing: 0.18em;
+}
+.scroll-scene[data-car="f1"] .caption-line {
+  font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+  line-height: 1.15;
+}
+.scroll-scene[data-car="veyron"] .caption-line {
+  color: #2a2014;
+}
+
+/* Finale block at the end of the right text column. */
+.scene-finale-block .scene-caption-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.finale-eyebrow {
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--color-brass-dark);
+}
+.finale-title {
+  font-family: var(--font-fraunces), serif;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  line-height: 1.15;
+  font-weight: 300;
+  color: var(--color-ink);
+}
+.finale-cta {
+  align-self: flex-start;
+  margin-top: 0.5rem;
+  padding: 0.85rem 1.5rem;
+  border: 1px solid var(--color-brass-dark);
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-ink);
+  text-decoration: none;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.finale-cta:hover {
+  background: var(--color-brass-dark);
+  color: var(--color-paper);
+}
+
+/* Mobile — stack canvas above text. */
+@media (max-width: 900px) {
+  .scroll-scene {
+    grid-template-columns: 1fr !important;
+  }
+  .scene-canvas-sticky {
+    height: 60vh;
+  }
+  .scene-caption-block {
+    min-height: 80vh;
+    padding: 6vh 6vw;
+  }
 }
 
 .scene-finale {
@@ -992,6 +1093,13 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   display: block;
   width: 100% !important;
   height: 100% !important;
+  /* See .scene-canvas-sticky canvas — same reasoning. The hero is a
+     non-interactive carousel, so we never want it to swallow scroll. */
+  pointer-events: none;
+  touch-action: pan-y;
+}
+.home-hero-3d {
+  touch-action: pan-y;
 }
 .home-hero-stage-label {
   position: absolute;
