@@ -223,27 +223,103 @@ body::before {
   letter-spacing: -0.01em;
 }
 
-/* Per-car typographic signatures */
+/* ===== Per-era card variants =====
+   Each car's card adopts the visual language of its decade so the four
+   exhibits don't all read identically. Cards rise from below with a
+   blur-to-sharp Motion reveal (driven from the React side). */
+
+/* COUNTACH (Lambo, 1970s) — bold racing-program plate, period red stripe. */
 .scroll-scene[data-car="countach"] .text-card {
-  border-left: 3px solid var(--color-brass-dark);
+  background: rgba(252, 248, 240, 0.85);
+  border: none;
+  border-left: 5px solid #cc2d2d;
+  border-radius: 0;
+  padding-left: 2.25rem;
+}
+.scroll-scene[data-car="countach"] .caption-eyebrow {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #cc2d2d;
 }
 .scroll-scene[data-car="countach"] .caption-line {
   font-style: italic;
+  font-weight: 400;
+}
+
+/* 959 (Porsche, 1980s) — minimal modernist museum label. */
+.scroll-scene[data-car="959"] .text-card {
+  background: #f8f6f1;
+  border: none;
+  border-radius: 0;
+  box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.08), 0 30px 70px -30px rgba(40, 26, 10, 0.18);
 }
 .scroll-scene[data-car="959"] .caption-eyebrow {
   font-family: var(--font-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
+  letter-spacing: 0.2em;
+  color: #6c6864;
+}
+.scroll-scene[data-car="959"] .caption-line {
+  font-family: var(--font-inter), sans-serif;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  color: #1a1816;
+}
+
+/* F1 (McLaren, 1990s) — aged museum placard, parchment + gold border + grain. */
+.scroll-scene[data-car="f1"] .text-card {
+  background-color: #f4ead5;
+  /* Subtle paper-grain noise — fixed, mix-blend-multiply via the parent
+     body grain layer; here we layer a finer grain only on the card. */
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.4 0 0 0 0 0.32 0 0 0 0 0.18 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  background-blend-mode: multiply;
+  border: 1px solid #c9a96b;
+  border-radius: 0;
+  box-shadow: 0 24px 60px -28px rgba(60, 42, 18, 0.4);
+}
+.scroll-scene[data-car="f1"] .caption-eyebrow {
+  font-family: var(--font-fraunces), serif;
+  font-style: italic;
   letter-spacing: 0.18em;
+  color: #8a6a2c;
 }
 .scroll-scene[data-car="f1"] .caption-line {
+  font-family: var(--font-fraunces), serif;
   font-size: clamp(1.7rem, 2.8vw, 2.6rem);
   line-height: 1.15;
-}
-.scroll-scene[data-car="veyron"] .caption-line {
   color: #2a2014;
 }
+
+/* VEYRON (Bugatti, 2000s) — art-deco navy + double-gold filigree. */
 .scroll-scene[data-car="veyron"] .text-card {
-  background: rgba(231, 223, 208, 0.78);
-  border-color: rgba(80, 60, 30, 0.2);
+  background: #0f1a2e;
+  /* Outer hairline + inner gold gives the "double" border look without
+     two physical borders fighting backdrop-blur. */
+  border: 2px solid #c9a96b;
+  outline: 1px solid #0f1a2e;
+  outline-offset: 4px;
+  border-radius: 0;
+  box-shadow: 0 30px 70px -25px rgba(0, 0, 0, 0.55);
+}
+.scroll-scene[data-car="veyron"] .caption-eyebrow {
+  font-family: var(--font-fraunces), serif;
+  letter-spacing: 0.32em;
+  color: #c9a96b;
+}
+.scroll-scene[data-car="veyron"] .caption-line {
+  color: #ece4d2;
+}
+.scroll-scene[data-car="veyron"] .finale-eyebrow,
+.scroll-scene[data-car="veyron"] .finale-title {
+  color: #c9a96b;
+}
+.scroll-scene[data-car="veyron"] .finale-cta {
+  border-color: #c9a96b;
+  color: #ece4d2;
+}
+.scroll-scene[data-car="veyron"] .finale-cta:hover {
+  background: #c9a96b;
+  color: #0f1a2e;
 }
 
 /* FINALE — same card chrome, with CTA */

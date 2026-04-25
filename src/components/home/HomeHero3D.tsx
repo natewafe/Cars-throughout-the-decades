@@ -136,6 +136,8 @@ export function HomeHero3D() {
     <div className="home-hero-3d-wrap" ref={wrapRef}>
       <div className="home-hero-3d">
         <Canvas
+          // See CarScrollScene — same scroll-pass-through reasoning.
+          style={{ touchAction: "pan-y", pointerEvents: "none" }}
           dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
           shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFSoftShadowMap } : false}
           gl={{

@@ -13,11 +13,13 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DoorRig, MaterialOverride, SceneConfig } from "@/lib/scenes";
 import { disposeClonedScene } from "@/lib/disposeScene";
 import { useQualityProfile, type QualityProfile } from "@/lib/deviceTier";
-import { upgradeMaterial } from "@/lib/materialUpgrade";
+import { upgradeMaterial, resetUnriggedDoors } from "@/lib/materialUpgrade";
 import { SceneLighting } from "@/components/3d/SceneLighting";
 import { SceneEnvironment } from "@/components/3d/SceneEnvironment";
 import { ScenePostFX } from "@/components/3d/ScenePostFX";
+import { SceneCyclorama } from "@/components/3d/SceneCyclorama";
 import { getCameraPreset, type CameraPreset } from "@/lib/cameraPresets";
+import { motion, useScroll, useTransform } from "motion/react";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -53,8 +55,6 @@ const smoothstepRange = (min: number, max: number, val: number) =>
  */
 export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const finaleRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLSpanElement | null>(null);
   const quality = useQualityProfile();
   const [dprCap, setDprCap] = useState<number | null>(null);
@@ -81,17 +81,8 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
         onUpdate: (self) => {
           const p = self.progress;
           progressRef.current = p;
-
-          // Per-card reveal — each caption owns a slice of progress equal to
-          // its block. Use cap.from / cap.to from the scene config.
-          scene.captions.forEach((cap, i) => {
-            const node = cardRefs.current[i];
-            if (!node) return;
-            node.classList.toggle("is-live", p >= cap.from && p <= cap.to);
-          });
-          if (finaleRef.current) {
-            finaleRef.current.classList.toggle("is-live", p >= 0.92);
-          }
+          // Card reveals are now driven by Motion's useScroll per-section,
+          // so we only handle the scroll-hint fade here.
           if (hintRef.current) {
             hintRef.current.style.opacity = p > 0.02 ? "0" : "1";
           }
@@ -101,8 +92,6 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
     return () => ctx.revert();
   }, [scene]);
-
-  cardRefs.current = [];
 
   const themeSlug = modelUrl.includes("veyron")
     ? "veyron"
@@ -119,6 +108,11 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
       {/* FULL-BLEED STICKY CANVAS */}
       <div className="scene-canvas-sticky">
         <Canvas
+          // touchAction:pan-y on R3F's wrapper div is critical — R3F sets
+          // touchAction:none by default to support drag-to-orbit. Our scene
+          // has no orbit/click, so we forfeit pointer events to keep wheel
+          // and touch scroll always reaching Lenis at the document level.
+          style={{ touchAction: "pan-y", pointerEvents: "none" }}
           dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
           shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFSoftShadowMap } : false}
           gl={{
@@ -152,35 +146,26 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
         </span>
       </div>
 
-      {/* TEXT OVERLAY — floating cards layered above the canvas. */}
+      {/* TEXT OVERLAY — floating cards revealed via Motion's useScroll. */}
       <div className="scene-text-overlay">
         {/* First viewport is empty — car is centered & auto-rotating. */}
         <section className="text-section text-section-spacer" aria-hidden />
 
         {scene.captions.map((cap, i) => (
-          <section key={i} className="text-section">
-            <div
-              ref={(el) => {
-                cardRefs.current[i] = el;
-              }}
-              className="text-card"
-            >
-              <span className="caption-eyebrow">{cap.eyebrow}</span>
-              <span className="caption-line">{cap.line}</span>
-            </div>
-          </section>
+          <RevealCardSection key={i}>
+            <span className="caption-eyebrow">{cap.eyebrow}</span>
+            <span className="caption-line">{cap.line}</span>
+          </RevealCardSection>
         ))}
 
         {nextHref && (
-          <section className="text-section">
-            <div ref={finaleRef} className="text-card text-card-finale">
-              <span className="finale-eyebrow">Next Exhibit</span>
-              <span className="finale-title">{scene.finaleTitle}</span>
-              <a className="finale-cta" href={nextHref}>
-                Enter {nextLabel} →
-              </a>
-            </div>
-          </section>
+          <RevealCardSection extraClass="text-card-finale">
+            <span className="finale-eyebrow">Next Exhibit</span>
+            <span className="finale-title">{scene.finaleTitle}</span>
+            <a className="finale-cta" href={nextHref}>
+              Enter {nextLabel} →
+            </a>
+          </RevealCardSection>
         )}
       </div>
     </section>
@@ -216,8 +201,12 @@ function SceneContents({
         anisotropy: quality.anisotropy,
       });
     });
+    // F1 (and any car w/o a doorRig) ships with door transforms in some
+    // GLBs already opened; reset them. No-op if the open state is in
+    // vertex positions instead.
+    resetUnriggedDoors(cloned, !!doorRig);
     return cloned;
-  }, [gltfScene, quality.usePhysicalPaint, quality.anisotropy]);
+  }, [gltfScene, quality.usePhysicalPaint, quality.anisotropy, doorRig]);
 
   // Center model on its bbox; ground tires at y = -0.5 (matches preset camera Y).
   const { modelScale, centerOffset } = useMemo(() => {
@@ -327,12 +316,22 @@ function SceneContents({
 
   return (
     <>
-      <SceneLighting shadowMapSize={quality.shadowMapSize} />
+      <SceneLighting
+        shadowMapSize={quality.shadowMapSize}
+        enableSoftbox={quality.tier !== "low"}
+      />
       {quality.enableEnv && <SceneEnvironment />}
 
+      {/* Curved cyclorama — seamless floor → back wall sweep. Replaces
+          the old "two flat planes meeting at a seam" look. */}
+      <SceneCyclorama floorY={-0.5} />
+
+      {/* ContactShadows still rendered ON TOP of the cyc to ground the
+          car with a faint wheel-arch shadow that the cyc material
+          (rough 0.6) can't produce on its own. */}
       <ContactShadows
-        position={[0, -0.499, 0]}
-        opacity={0.6}
+        position={[0, -0.498, 0]}
+        opacity={0.5}
         scale={15}
         blur={2.5}
         far={4}
@@ -351,6 +350,37 @@ function SceneContents({
         modelGroupRef={modelGroupRef}
       />
     </>
+  );
+}
+
+/** Per-card scroll-driven reveal. Uses Motion's useScroll against the
+ *  section so each card animates as it enters the viewport: rises from
+ *  below, blurs sharp, fades in, and tilts subtly toward the user. */
+function RevealCardSection({
+  children,
+  extraClass = "",
+}: {
+  children: React.ReactNode;
+  extraClass?: string;
+}) {
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "center center"],
+  });
+  const opacity = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 1]);
+  const y = useTransform(scrollYProgress, [0, 1], [60, 0]);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [2.5, 0]);
+  const filter = useTransform(scrollYProgress, [0, 1], ["blur(8px)", "blur(0px)"]);
+  return (
+    <section ref={ref} className="text-section">
+      <motion.div
+        className={`text-card ${extraClass}`}
+        style={{ opacity, y, rotateX, filter, transformPerspective: 1200 }}
+      >
+        {children}
+      </motion.div>
+    </section>
   );
 }
 

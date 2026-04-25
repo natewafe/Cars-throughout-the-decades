@@ -50,16 +50,35 @@ export function makePhysicalGlass(
 ): THREE.MeshPhysicalMaterial {
   const phys = new THREE.MeshPhysicalMaterial();
   transferStdFields(std, phys, anisotropy);
-  // Real glass: transmission for refraction, low roughness, no metallic.
+  // Real automotive glass — clear, no tint. transferStdFields() copied a
+  // baked-in color from the GLB which on most car models is a subtle blue
+  // or green; explicitly override to white so the windows read as plain
+  // glass instead of "tinted privacy windows."
+  phys.color.setHex(0xffffff);
   phys.metalness = 0;
   phys.roughness = 0.05;
-  phys.transmission = 0.9;
-  phys.thickness = 0.5;
+  phys.transmission = 0.95;
+  phys.thickness = 0.3;
+  phys.ior = 1.5;
   phys.envMapIntensity = 0.8;
   phys.transparent = true;
-  // Slight tint preserves the OEM glass look (most car GLBs ship subtle blue).
   phys.needsUpdate = true;
   return phys;
+}
+
+/** Reset rotation on door-named nodes when the car has no scroll-driven
+ *  doorRig. Some GLBs ship with the door already in an open transform —
+ *  this puts it back to bind pose. If the open state is encoded in vertex
+ *  positions instead of a node transform, this is a no-op (only fix in
+ *  that case is to re-export the GLB closed). */
+export function resetUnriggedDoors(root: THREE.Object3D, hasDoorRig: boolean): void {
+  if (hasDoorRig) return;
+  root.traverse((obj) => {
+    if (/door|hinge/i.test(obj.name)) {
+      obj.rotation.set(0, 0, 0);
+      obj.updateMatrix();
+    }
+  });
 }
 
 /** Single-pass material walker shared by both 3D scenes. Six buckets:
