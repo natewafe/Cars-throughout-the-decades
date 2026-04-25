@@ -48,20 +48,19 @@ export function makePhysicalGlass(
   std: THREE.MeshStandardMaterial,
   anisotropy: number
 ): THREE.MeshPhysicalMaterial {
+  // Reverted from transmission-based refractive glass — it produced
+  // distorted/dark windows on the 959, Countach, and Veyron because their
+  // GLBs ship with interior geometry that refracts unpredictably. Plain
+  // transparent glass with low roughness is the look the user actually
+  // wants: clear, slightly reflective, no fake refraction.
   const phys = new THREE.MeshPhysicalMaterial();
   transferStdFields(std, phys, anisotropy);
-  // Real automotive glass — clear, no tint. transferStdFields() copied a
-  // baked-in color from the GLB which on most car models is a subtle blue
-  // or green; explicitly override to white so the windows read as plain
-  // glass instead of "tinted privacy windows."
   phys.color.setHex(0xffffff);
   phys.metalness = 0;
   phys.roughness = 0.05;
-  phys.transmission = 0.95;
-  phys.thickness = 0.3;
-  phys.ior = 1.5;
-  phys.envMapIntensity = 0.8;
   phys.transparent = true;
+  phys.opacity = 0.4;
+  phys.envMapIntensity = 0.8;
   phys.needsUpdate = true;
   return phys;
 }

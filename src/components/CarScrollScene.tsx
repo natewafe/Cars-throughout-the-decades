@@ -104,7 +104,14 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
   const preset = getCameraPreset(themeSlug);
 
   return (
-    <section ref={sectionRef} className="scroll-scene" data-car={themeSlug}>
+    <section
+      ref={sectionRef}
+      className="scroll-scene"
+      data-car={themeSlug}
+      // Cars whose preset slides them right (slideDirection: 1) need the
+      // text overlay on the LEFT — and vice versa. Drives a CSS rule.
+      data-slide={preset.slideDirection === 1 ? "right" : "left"}
+    >
       {/* FULL-BLEED STICKY CANVAS */}
       <div className="scene-canvas-sticky">
         <Canvas
@@ -208,20 +215,38 @@ function SceneContents({
     return cloned;
   }, [gltfScene, quality.usePhysicalPaint, quality.anisotropy, doorRig]);
 
-  // Center model on its bbox; ground tires at y = -0.5 (matches preset camera Y).
+  // Center model on its bbox + ground TIRES at y = -0.5. Some GLBs (the
+  // 959 in particular) ship with hidden underbody meshes whose bbox.min.y
+  // sits below the wheels — using whole-model bbox would float the visible
+  // car. Find wheel/tire-named meshes and use their combined bbox.min.y if
+  // present; otherwise fall back to the whole-model bbox.
   const { modelScale, centerOffset } = useMemo(() => {
-    const box = new THREE.Box3().setFromObject(model);
+    const wholeBox = new THREE.Box3().setFromObject(model);
     const size = new THREE.Vector3();
     const center = new THREE.Vector3();
-    box.getSize(size);
-    box.getCenter(center);
+    wholeBox.getSize(size);
+    wholeBox.getCenter(center);
     const longest = Math.max(size.x, size.y, size.z);
     const targetSize = 4;
     const s = targetSize / longest;
+
+    // Hunt for wheel/tire meshes for an accurate ground line.
+    const wheelBox = new THREE.Box3();
+    let wheelHits = 0;
+    model.traverse((obj) => {
+      const mesh = obj as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      if (/wheel|tire|tyre|rim/i.test(mesh.name) || /wheel|tire|tyre|rim/i.test((mesh.material as THREE.Material | undefined)?.name ?? "")) {
+        wheelBox.expandByObject(mesh);
+        wheelHits++;
+      }
+    });
+    const groundReference = wheelHits > 0 ? wheelBox.min.y : wholeBox.min.y;
+
     const GROUND_Y = -0.5;
     const offs = new THREE.Vector3(
       -center.x * s,
-      GROUND_Y - box.min.y * s,
+      GROUND_Y - groundReference * s,
       -center.z * s
     );
     return { modelScale: s, centerOffset: offs };
@@ -338,7 +363,14 @@ function SceneContents({
         resolution={quality.contactShadowResolution}
       />
 
-      <group ref={modelGroupRef} position={[preset.modelOffset[0], preset.modelOffset[1], preset.modelOffset[2]]}>
+      <group
+        ref={modelGroupRef}
+        position={[
+          preset.modelOffset[0],
+          preset.modelOffset[1] + (preset.groundOffsetY ?? 0),
+          preset.modelOffset[2],
+        ]}
+      >
         <group scale={modelScale} position={centerOffset.toArray()}>
           <primitive object={model} />
         </group>

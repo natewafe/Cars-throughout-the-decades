@@ -12,6 +12,9 @@ export type CameraPreset = {
   modelOffset: [number, number, number];
   /** -1 = slide left, +1 = slide right (under camera-facing convention). */
   slideDirection: 1 | -1;
+  /** Per-car nudge in world units to fix floating cars. Some GLBs have
+   *  hidden underbody/interior meshes that throw off bbox grounding. */
+  groundOffsetY?: number;
 };
 
 export const cameraPresets: Record<string, CameraPreset> = {
@@ -38,6 +41,10 @@ export const cameraPresets: Record<string, CameraPreset> = {
     rotationStart: -Math.PI * 0.15,
     modelOffset: [0, 0, 0],
     slideDirection: -1,
+    // GLB ships with hidden underbody mesh that pushes whole-model bbox
+    // below the wheels — the wheel-name auto-detection misses some node
+    // names, so we apply a manual nudge to plant tires on the cyc.
+    groundOffsetY: -0.45,
   },
   // Bugatti Veyron — elevated 3/4 → rear-top sweep.
   veyron: {

@@ -57,13 +57,9 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       { from: 0.68, to: 0.78, pos: "right", eyebrow: "Scissor door", line: "An idea so strange that every supercar since has tried to inherit it." },
     ],
     finaleTitle: "The scissor door opens onto the 1980s.",
-    doorRig: {
-      match: "SK_Door_FL",
-      axis: "x",
-      hingeOn: "zmax",
-      maxRadians: 1.25,
-      startProgress: 0.86,
-    },
+    // Door rig removed — the GLB's pivot for SK_Door_FL rotates the
+    // scissor door DOWNWARD instead of up, which reads as broken.
+    // Re-enable once the GLB hinge axis is fixed in Blender.
   },
   "959": {
     keyframes: [
