@@ -10,8 +10,8 @@ import { Environment } from "@react-three/drei";
  *  softbox. "warehouse" is warmer/dirtier. Swap via prop if a car looks too
  *  clinical. */
 export function SceneEnvironment({
-  preset = "studio",
-  intensity = 0.6,
+  preset = "warehouse",
+  intensity = 0.45,
 }: {
   preset?: "studio" | "warehouse" | "city" | "apartment" | "dawn" | "sunset" | "forest" | "lobby" | "night" | "park";
   intensity?: number;

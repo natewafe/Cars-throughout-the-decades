@@ -30,7 +30,10 @@ export type DoorRig = {
   startProgress: number;
 };
 export type SceneConfig = {
-  keyframes: SceneKeyframe[];
+  /** No longer consumed at runtime — camera is driven by per-slug presets in
+   *  src/lib/cameraPresets.ts. Field stays optional so the auto-generated
+   *  build script doesn't need a parallel patch. */
+  keyframes?: SceneKeyframe[];
   captions: SceneCaption[];
   finaleTitle: string;
   materialOverrides?: MaterialOverride[];

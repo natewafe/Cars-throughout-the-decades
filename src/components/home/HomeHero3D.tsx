@@ -145,7 +145,7 @@ export function HomeHero3D() {
             alpha: true,
             powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 0.8,
+            toneMappingExposure: 0.75,
           }}
           camera={{ fov: 28, near: 0.1, far: 500, position: [5, 1.8, 5] }}
         >
@@ -161,7 +161,7 @@ export function HomeHero3D() {
           <Suspense fallback={null}>
             {car.url ? <HeroCarModel key={car.slug} car={car} quality={quality} /> : null}
             <SceneLighting shadowMapSize={quality.shadowMapSize} />
-            {quality.enableEnv && <SceneEnvironment preset="studio" intensity={1.0} />}
+            {quality.enableEnv && <SceneEnvironment />}
             {quality.enablePost && <ScenePostFX />}
           </Suspense>
         </Canvas>

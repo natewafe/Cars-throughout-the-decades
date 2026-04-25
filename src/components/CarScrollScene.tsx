@@ -8,15 +8,16 @@ import {
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
-import { upgradeMaterial } from "@/lib/materialUpgrade";
-import { SceneLighting } from "@/components/3d/SceneLighting";
-import { SceneEnvironment } from "@/components/3d/SceneEnvironment";
-import { ScenePostFX } from "@/components/3d/ScenePostFX";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DoorRig, MaterialOverride, SceneConfig } from "@/lib/scenes";
 import { disposeClonedScene } from "@/lib/disposeScene";
 import { useQualityProfile, type QualityProfile } from "@/lib/deviceTier";
+import { upgradeMaterial } from "@/lib/materialUpgrade";
+import { SceneLighting } from "@/components/3d/SceneLighting";
+import { SceneEnvironment } from "@/components/3d/SceneEnvironment";
+import { ScenePostFX } from "@/components/3d/ScenePostFX";
+import { getCameraPreset, type CameraPreset } from "@/lib/cameraPresets";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -29,44 +30,36 @@ type Props = {
   nextLabel?: string;
 };
 
-type Orbit = { theta: number; phi: number; radius: number };
 type ProgressRef = { current: number };
 
-const ORBIT_RE = /(-?\d+(?:\.\d+)?)deg\s+(-?\d+(?:\.\d+)?)deg\s+(-?\d+(?:\.\d+)?)%/;
-
-function parseOrbit(str: string): Orbit {
-  const m = ORBIT_RE.exec(str.trim());
-  if (!m) return { theta: 0, phi: 80, radius: 120 };
-  return { theta: +m[1], phi: +m[2], radius: +m[3] };
-}
-const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const clamp01 = (x: number) => Math.max(0, Math.min(1, x));
-// Cubic inOut — gentler than quad, avoids the "pause" feeling at keyframes.
-const smoothstep = (t: number) => t * t * (3 - 2 * t);
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const smoothstep = (t: number) => {
+  const x = clamp01(t);
+  return x * x * (3 - 2 * x);
+};
+const smoothstepRange = (min: number, max: number, val: number) =>
+  smoothstep((val - min) / (max - min || 1));
 
-/** Two-column sticky layout: left half is a CSS-sticky 3D canvas, right
- *  half is the flowing text column. ScrollTrigger drives camera progress
- *  off the section's own scroll position (no GSAP pin spacer needed —
- *  position:sticky handles the pinning natively, which avoids the lazy-
- *  image-grows-document-height bug GSAP pinning was causing).
+/** Full-bleed sticky 3D canvas with floating text cards layered on top.
+ *  Architecture:
+ *    .scroll-scene (relative, height = N+1 viewports)
+ *      ├── .scene-canvas-sticky (position:sticky, full-bleed canvas)
+ *      └── .scene-text-overlay (relative z-10, pointer-events:none)
+ *           └── one .text-section per caption + finale
  *
- *  Caption blocks live in the right column as normal flow content; each
- *  is sized to ~one viewport, so they appear sequentially as the user
- *  scrolls. Camera keyframes still scrub 0→1 across the full section.
+ *  ScrollTrigger reads progress from the section's own scroll position;
+ *  no GSAP pin/spacer (which previously fought lazy-image height growth).
  */
 export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const captionRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const finaleRef = useRef<HTMLDivElement | null>(null);
   const hintRef = useRef<HTMLSpanElement | null>(null);
   const quality = useQualityProfile();
   const [dprCap, setDprCap] = useState<number | null>(null);
 
-  // Shared scroll progress — written by ScrollTrigger, read by R3F useFrame.
   const progressRef = useRef(0);
-  // Side-bias is no longer needed (text & canvas are in distinct columns)
-  // but the camera controller still reads this ref — keep it pinned at 0.
-  const sideBiasRef = useRef(0);
 
   useEffect(() => {
     useGLTF.preload(modelUrl);
@@ -84,18 +77,15 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
         trigger: section,
         start: "top top",
         end: "bottom bottom",
-        // scrub 0.6 makes the timeline lag scroll by ~0.6s — gives physical
-        // weight without feeling sluggish.
         scrub: 0.6,
         onUpdate: (self) => {
           const p = self.progress;
           progressRef.current = p;
 
-          // Reveal caption blocks based on scroll position. Each caption
-          // owns a viewport's worth of right-column scroll; entering its
-          // window adds .is-live (CSS handles the fade-up).
+          // Per-card reveal — each caption owns a slice of progress equal to
+          // its block. Use cap.from / cap.to from the scene config.
           scene.captions.forEach((cap, i) => {
-            const node = captionRefs.current[i];
+            const node = cardRefs.current[i];
             if (!node) return;
             node.classList.toggle("is-live", p >= cap.from && p <= cap.to);
           });
@@ -112,7 +102,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
     return () => ctx.revert();
   }, [scene]);
 
-  captionRefs.current = [];
+  cardRefs.current = [];
 
   const themeSlug = modelUrl.includes("veyron")
     ? "veyron"
@@ -122,95 +112,95 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
     ? "f1"
     : "countach";
 
+  const preset = getCameraPreset(themeSlug);
+
   return (
     <section ref={sectionRef} className="scroll-scene" data-car={themeSlug}>
-      {/* LEFT — sticky 3D canvas column. */}
-      <div className="scene-canvas-col">
-        <div className="scene-canvas-sticky">
-          <Canvas
-            dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
-            shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFSoftShadowMap } : false}
-            gl={{
-              antialias: quality.tier !== "low",
-              alpha: true,
-              powerPreference: "high-performance",
-              toneMapping: THREE.ACESFilmicToneMapping,
-              toneMappingExposure: 0.8,
-            }}
-            camera={{ fov: 30, near: 0.1, far: 500 }}
-          >
-            <PerformanceMonitor
-              bounds={() => [45, 60]}
-              onIncline={() => setDprCap((c) => (c && c < quality.dpr[1] ? c + 0.25 : null))}
-              onDecline={() => setDprCap((c) => Math.max(1, (c ?? quality.dpr[1]) - 0.25))}
+      {/* FULL-BLEED STICKY CANVAS */}
+      <div className="scene-canvas-sticky">
+        <Canvas
+          dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
+          shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFSoftShadowMap } : false}
+          gl={{
+            antialias: quality.tier !== "low",
+            alpha: true,
+            powerPreference: "high-performance",
+            toneMapping: THREE.ACESFilmicToneMapping,
+            toneMappingExposure: 0.75,
+          }}
+          camera={{ fov: 32, near: 0.1, far: 500, position: preset.initialCamera }}
+        >
+          <PerformanceMonitor
+            bounds={() => [45, 60]}
+            onIncline={() => setDprCap((c) => (c && c < quality.dpr[1] ? c + 0.25 : null))}
+            onDecline={() => setDprCap((c) => Math.max(1, (c ?? quality.dpr[1]) - 0.25))}
+          />
+          <Suspense fallback={null}>
+            <SceneContents
+              modelUrl={modelUrl}
+              materialOverrides={scene.materialOverrides}
+              doorRig={scene.doorRig}
+              progressRef={progressRef}
+              preset={preset}
+              quality={quality}
             />
-            <Suspense fallback={null}>
-              <SceneContents
-                modelUrl={modelUrl}
-                keyframes={scene.keyframes}
-                materialOverrides={scene.materialOverrides}
-                doorRig={scene.doorRig}
-                progressRef={progressRef}
-                sideBiasRef={sideBiasRef}
-                quality={quality}
-              />
-              {quality.enablePost && <ScenePostFX />}
-            </Suspense>
-          </Canvas>
-          <span ref={hintRef} className="scene-hint">
-            Scroll to explore
-          </span>
-        </div>
+            {quality.enablePost && <ScenePostFX />}
+          </Suspense>
+        </Canvas>
+        <span ref={hintRef} className="scene-hint">
+          Scroll to explore
+        </span>
       </div>
 
-      {/* RIGHT — flowing text column. Each caption block ~ 1 viewport tall. */}
-      <div className="scene-text-col">
+      {/* TEXT OVERLAY — floating cards layered above the canvas. */}
+      <div className="scene-text-overlay">
+        {/* First viewport is empty — car is centered & auto-rotating. */}
+        <section className="text-section text-section-spacer" aria-hidden />
+
         {scene.captions.map((cap, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              captionRefs.current[i] = el;
-            }}
-            className="scene-caption-block"
-          >
-            <div className="scene-caption-inner">
+          <section key={i} className="text-section">
+            <div
+              ref={(el) => {
+                cardRefs.current[i] = el;
+              }}
+              className="text-card"
+            >
               <span className="caption-eyebrow">{cap.eyebrow}</span>
               <span className="caption-line">{cap.line}</span>
             </div>
-          </div>
+          </section>
         ))}
+
         {nextHref && (
-          <div ref={finaleRef} className="scene-caption-block scene-finale-block">
-            <div className="scene-caption-inner">
+          <section className="text-section">
+            <div ref={finaleRef} className="text-card text-card-finale">
               <span className="finale-eyebrow">Next Exhibit</span>
               <span className="finale-title">{scene.finaleTitle}</span>
               <a className="finale-cta" href={nextHref}>
                 Enter {nextLabel} →
               </a>
             </div>
-          </div>
+          </section>
         )}
       </div>
     </section>
   );
 }
 
-/** Everything inside the R3F canvas: model + camera + lighting + floor. */
+/** Inside the canvas: model + lighting + env + shadows + preset camera. */
 function SceneContents({
   modelUrl,
-  keyframes,
   materialOverrides,
   doorRig,
   progressRef,
-  sideBiasRef,
+  preset,
   quality,
 }: {
   modelUrl: string;
-  keyframes: SceneConfig["keyframes"];
   materialOverrides?: MaterialOverride[];
   doorRig?: DoorRig;
   progressRef: ProgressRef;
-  sideBiasRef: ProgressRef;
+  preset: CameraPreset;
   quality: QualityProfile;
 }) {
   const { scene: gltfScene } = useGLTF(modelUrl) as unknown as {
@@ -229,7 +219,8 @@ function SceneContents({
     return cloned;
   }, [gltfScene, quality.usePhysicalPaint, quality.anisotropy]);
 
-  const { modelScale, centerOffset, baseRadius, lookAtY } = useMemo(() => {
+  // Center model on its bbox; ground tires at y = -0.5 (matches preset camera Y).
+  const { modelScale, centerOffset } = useMemo(() => {
     const box = new THREE.Box3().setFromObject(model);
     const size = new THREE.Vector3();
     const center = new THREE.Vector3();
@@ -238,32 +229,18 @@ function SceneContents({
     const longest = Math.max(size.x, size.y, size.z);
     const targetSize = 4;
     const s = targetSize / longest;
-    // Ground plane at y = -2 (see ContactShadows). Tires on the ground.
-    const GROUND_Y = -2;
+    const GROUND_Y = -0.5;
     const offs = new THREE.Vector3(
       -center.x * s,
       GROUND_Y - box.min.y * s,
       -center.z * s
     );
-    // The car's VERTICAL CENTER is NOT at world-origin. Longest dim is the
-    // car's length, so height * s < targetSize — typically ~1.6 units. With
-    // the tires sitting at y = -2, the visual center lives at y ≈ -1.2.
-    // Previously lookAt(0,0,0) pointed above the roof and pushed the whole
-    // car into the bottom half of the viewport ("cars look low"). Aim at
-    // the actual car-center instead.
-    const lookAtY = GROUND_Y + (size.y * s) / 2;
-    return {
-      modelScale: s,
-      centerOffset: offs,
-      baseRadius: (targetSize * Math.sqrt(3)) / 2,
-      lookAtY,
-    };
+    return { modelScale: s, centerOffset: offs };
   }, [model]);
 
   // Material overrides
   useMemo(() => {
     if (!materialOverrides?.length) return;
-    let hits = 0;
     model.traverse((obj) => {
       const mesh = obj as THREE.Mesh;
       if (!mesh.isMesh) return;
@@ -280,12 +257,10 @@ function SceneContents({
             if (typeof ov.metallic === "number") std.metalness = ov.metallic;
             if (typeof ov.roughness === "number") std.roughness = ov.roughness;
             std.needsUpdate = true;
-            hits++;
           }
         });
       });
     });
-    void hits;
   }, [model, materialOverrides]);
 
   // Door rigging
@@ -326,14 +301,13 @@ function SceneContents({
     doorPivotRef.current = doorPivot;
   }, [doorPivot]);
 
-  // Free cloned geometries & materials on unmount. Textures are owned by the
-  // useGLTF cache and are not disposed here.
   useEffect(() => {
     return () => {
       disposeClonedScene(model);
     };
   }, [model]);
 
+  // Door open: drives off scroll progress like before.
   useFrame(() => {
     if (doorRig && doorPivotRef.current) {
       const p = progressRef.current;
@@ -347,126 +321,89 @@ function SceneContents({
     }
   });
 
+  // The model group has its own ref so the camera controller can lerp
+  // its X position without blowing away the bbox-derived offset.
+  const modelGroupRef = useRef<THREE.Group | null>(null);
+
   return (
     <>
       <SceneLighting shadowMapSize={quality.shadowMapSize} />
-      {quality.enableEnv && <SceneEnvironment preset="studio" intensity={1.0} />}
+      {quality.enableEnv && <SceneEnvironment />}
 
-      {/* No visible floor mesh — the page's gradient background shows through
-          the transparent canvas. A ContactShadow keeps the model grounded
-          visually without the horizon line that a MeshReflectorMaterial drew. */}
       <ContactShadows
-        position={[0, -1.999, 0]}
-        opacity={0.62}
-        scale={16}
-        blur={3.0}
-        far={5}
+        position={[0, -0.499, 0]}
+        opacity={0.6}
+        scale={15}
+        blur={2.5}
+        far={4}
         resolution={quality.contactShadowResolution}
       />
 
-      <group scale={modelScale} position={centerOffset.toArray()}>
-        <primitive object={model} />
+      <group ref={modelGroupRef} position={[preset.modelOffset[0], preset.modelOffset[1], preset.modelOffset[2]]}>
+        <group scale={modelScale} position={centerOffset.toArray()}>
+          <primitive object={model} />
+        </group>
       </group>
 
-      <CameraController
-        keyframes={keyframes}
+      <PresetCameraController
         progressRef={progressRef}
-        baseRadius={baseRadius}
-        sideBiasRef={sideBiasRef}
-        lookAtY={lookAtY}
+        preset={preset}
+        modelGroupRef={modelGroupRef}
       />
     </>
   );
 }
 
-function CameraController({
-  keyframes,
+/** Two-point camera lerp + auto-rotate handoff + scroll-locked rotation
+ *  + lateral model slide. The single source of motion truth — replaces
+ *  the old 5-keyframe spherical-orbit controller. */
+function PresetCameraController({
   progressRef,
-  baseRadius,
-  sideBiasRef,
-  lookAtY,
+  preset,
+  modelGroupRef,
 }: {
-  keyframes: SceneConfig["keyframes"];
   progressRef: ProgressRef;
-  baseRadius: number;
-  sideBiasRef: ProgressRef;
-  lookAtY: number;
+  preset: CameraPreset;
+  modelGroupRef: React.RefObject<THREE.Group | null>;
 }) {
   const { camera } = useThree();
-  const kfs = useMemo(
-    () => keyframes.map((k) => ({ p: k[0], orbit: parseOrbit(k[1]) })),
-    [keyframes]
-  );
-  const current = useRef<Orbit>({ ...kfs[0].orbit });
-  const bias = useRef(0);
-
-  const sample = (p: number): Orbit => {
-    for (let i = 0; i < kfs.length - 1; i++) {
-      const a = kfs[i];
-      const b = kfs[i + 1];
-      if (p >= a.p && p <= b.p) {
-        const t = smoothstep((p - a.p) / (b.p - a.p || 1));
-        return {
-          theta: lerp(a.orbit.theta, b.orbit.theta, t),
-          phi: lerp(a.orbit.phi, b.orbit.phi, t),
-          radius: lerp(a.orbit.radius, b.orbit.radius, t),
-        };
-      }
-    }
-    return p <= kfs[0].p
-      ? { ...kfs[0].orbit }
-      : { ...kfs[kfs.length - 1].orbit };
-  };
+  const target = useRef(new THREE.Vector3());
 
   useFrame((_, delta) => {
     const p = progressRef.current;
-    const target = sample(p);
-    const k = 1 - Math.pow(0.0015, delta); // ~99% per second
+    const group = modelGroupRef.current;
+    if (!group) return;
 
-    // Idle turntable: while the user is parked at scroll-top, spin the camera
-    // around the car's vertical axis like a cinematic gallery plinth. The
-    // "idle factor" fades over the first 4% of scroll — during that handoff,
-    // the spin decelerates AND the keyframe lerp ramps up, so the motion
-    // continuously resolves into the scroll-driven sequence without a jump.
-    const idleFactor = Math.max(0, Math.min(1, 1 - p / 0.04));
-    // 6°/s ≈ one full revolution per minute — the pace of a museum turntable.
-    current.current.theta += delta * 6 * idleFactor;
+    // 1. CAMERA position — interpolate initial → final over 0.1 → 0.9.
+    const t = smoothstepRange(0.1, 0.9, p);
+    const tx = lerp(preset.initialCamera[0], preset.finalCamera[0], t);
+    const ty = lerp(preset.initialCamera[1], preset.finalCamera[1], t);
+    const tz = lerp(preset.initialCamera[2], preset.finalCamera[2], t);
+    // Per-frame ease for buttery motion (~5% catch-up per 16ms frame).
+    const k = 1 - Math.pow(0.005, delta);
+    camera.position.x += (tx - camera.position.x) * k;
+    camera.position.y += (ty - camera.position.y) * k;
+    camera.position.z += (tz - camera.position.z) * k;
 
-    // Keyframe convergence scaled by (1 - idleFactor): at rest this is zero
-    // (so the spin runs unopposed); as scroll engages it ramps to full and
-    // pulls the camera onto the authored keyframe path from wherever the
-    // spin left it.
-    current.current.theta = lerp(current.current.theta, target.theta, k * (1 - idleFactor));
-    current.current.phi = lerp(current.current.phi, target.phi, k);
-    current.current.radius = lerp(current.current.radius, target.radius, k);
+    // 2. MODEL slide — from 0 → ±2.5 over the first 15% of scroll.
+    const slideT = smoothstepRange(0, 0.15, p);
+    const targetX =
+      preset.modelOffset[0] + slideT * 2.5 * preset.slideDirection;
+    group.position.x += (targetX - group.position.x) * k;
 
-    // Side-bias retained as a ref but always 0 in the new split-column
-    // layout — text and canvas no longer share viewport space.
-    void sideBiasRef;
-    void bias;
+    // 3. MODEL rotation — auto-rotate while idle (<5%), then scroll-lock.
+    if (p < 0.05) {
+      group.rotation.y += delta * 0.3;
+    } else {
+      const targetRot = preset.rotationStart + p * Math.PI * 1.5;
+      group.rotation.y += (targetRot - group.rotation.y) * (1 - Math.pow(0.01, delta));
+    }
 
-    const theta = (current.current.theta * Math.PI) / 180;
-    const phi = (current.current.phi * Math.PI) / 180;
-    // 1.55x multiplier (was 1.15) — the canvas is now ~half viewport width,
-    // so horizontal FOV is roughly halved. Need extra pull-back to keep
-    // the car silhouette inside the canvas column on every keyframe.
-    const r = baseRadius * (current.current.radius / 100) * 1.55;
-
-    const tx = 0;
-
-    // Camera raised off the ground: lift it by lookAtY so we're always
-    // looking level-across at the car's vertical center instead of up at it.
-    camera.position.set(
-      r * Math.sin(phi) * Math.sin(theta) + tx,
-      r * Math.cos(phi) + lookAtY,
-      r * Math.sin(phi) * Math.cos(theta)
-    );
-    // Aim at the car's visual center, not world-origin. Fixes "car sits in
-    // the lower half of the viewport" — lookAt used to point above the roof.
-    camera.lookAt(tx, lookAtY, 0);
+    // 4. Look at the model's current world position so it stays framed.
+    target.current.set(group.position.x, group.position.y + 0.5, group.position.z);
+    camera.lookAt(target.current);
     camera.updateProjectionMatrix();
   });
 
   return null;
 }
-

@@ -121,310 +121,89 @@ body::before {
   .reveal { opacity: 1; transform: none; }
 }
 
-/* ========= Scroll-driven 3D scene: 2-column sticky showroom =========
-   Left column: position:sticky 100vh canvas. Right column: flowing text
-   blocks, one per caption, ~1 viewport tall each. The section's own height
-   (sum of caption block heights) is the scroll runway; ScrollTrigger reads
-   progress directly from it — no GSAP pin spacer involved. */
+/* ========= Scroll-driven 3D scene: full-bleed sticky + floating cards =========
+   Architecture:
+     .scroll-scene (relative, height = (captions+1) * 100vh)
+       ├── .scene-canvas-sticky (position:sticky, top:0, h:100vh, full-bleed)
+       └── .scene-text-overlay (relative, z:10, pointer-events:none)
+            └── one .text-section per caption (min-height:100vh)
+                 └── .text-card (pointer-events:auto, right-aligned)
+   ScrollTrigger reads progress from the section's own scroll position; no
+   GSAP pin/spacer (which previously fought lazy-image height growth). */
 .scroll-scene {
   position: relative;
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  /* Solid cream — no radial gradient. The HDRI was previously bleeding
-     onto a near-white center which read as "blown out". A flat warm
-     paper tone matches the rest of the site and lets the car carry the
-     visual weight. */
+  /* Solid cream — flat paper tone matching the rest of the site. The
+     canvas's transparent <Canvas alpha:true> renders over this; HDRI
+     never paints to background. */
   background: #f5f1ea;
   color: var(--color-ink);
   isolation: isolate;
   z-index: 0;
 }
-/* Veyron stage: cooler stone tone to complement orange bodywork. */
 .scroll-scene[data-car="veyron"] {
   background: #e7dfd0;
 }
-.scroll-scene[data-car="veyron"] .caption-eyebrow {
-  color: var(--color-brass-dark);
-}
 
-/* Veyron article sections: the primary-source imagery skews orange and washes
-   out the type. A paper-raised scrim + subtle top/bottom gradient restores
-   readable contrast without killing the warmth of the images themselves. */
-article[data-car="veyron"] .artifact-masonry figure.artifact figcaption {
-  background: linear-gradient(180deg, rgba(255,253,249,0.94) 0%, rgba(255,253,249,1) 100%);
-  padding: 0.9rem 0.9rem 1rem;
-  position: relative;
-  z-index: 1;
-}
-article[data-car="veyron"] .artifacts-intro {
-  background: linear-gradient(180deg, rgba(255,253,249,0.9) 0%, rgba(255,253,249,1) 100%);
-  padding: 1rem 1.25rem;
-  border-left: 2px solid var(--color-brass-dark);
-}
-article[data-car="veyron"] .artifact-section-header {
-  background: linear-gradient(180deg, rgba(255,253,249,0.92) 0%, rgba(255,253,249,1) 100%);
-  padding: 1rem 0.25rem;
-}
-/* Sections after the pinned scene must sit in their own stacking context
-   with an opaque background so the canvas never shows through them. */
-.exhibit-after {
-  position: relative;
-  z-index: 1;
-  isolation: isolate;
-  background: var(--color-paper);
-}
-.artifacts-block {
-  position: relative;
-  z-index: 2;
-  isolation: isolate;
-  background: var(--color-paper);
-}
-/* LEFT COLUMN — sticky 3D canvas. */
-.scene-canvas-col {
-  position: relative;
-}
+/* FULL-BLEED STICKY CANVAS WRAPPER */
 .scene-canvas-sticky {
   position: sticky;
   top: 0;
-  height: 100vh;
   width: 100%;
+  height: 100vh;
   overflow: hidden;
-  /* Always let vertical scroll pass through, even when the cursor /
-     finger is over the canvas. R3F's <Canvas> sets touch-action:none on
-     its inner div by default to capture pointer events for picking — we
-     don't pick anything in this scene, so we override here at the
-     wrapper level too. */
+  /* Always pass scroll through (R3F sets touch-action:none by default). */
   touch-action: pan-y;
   overscroll-behavior: auto;
+  z-index: 1;
 }
-/* The R3F canvas itself is purely visual — no orbit, no clicks, no drag.
-   Disabling pointer events on it guarantees wheel/touch events always
-   bubble up to the page (Lenis) and never get trapped by R3F's internal
-   pointer manager. If we ever add OrbitControls or click-to-inspect,
-   re-enable per-component. */
 .scene-canvas-sticky canvas {
   display: block;
   width: 100% !important;
   height: 100% !important;
+  /* Non-interactive — no orbit/click. Lets wheel/touch always reach Lenis. */
   pointer-events: none;
   touch-action: pan-y;
 }
 
-/* RIGHT COLUMN — flowing text blocks, ~1 viewport per caption. */
-.scene-text-col {
-  display: flex;
-  flex-direction: column;
+/* TEXT OVERLAY — layered above the canvas, transparent to events except cards. */
+.scene-text-overlay {
   position: relative;
-  z-index: 2;
+  z-index: 10;
+  pointer-events: none;
 }
-.scene-caption-block {
+.text-section {
   min-height: 100vh;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  padding: 8vh 6vw;
+  padding: 0 6vw;
 }
-.scene-caption-inner {
-  max-width: 32rem;
+.text-section-spacer {
+  /* First viewport — car centered, auto-rotating, no card. */
+  pointer-events: none;
+}
+
+/* PREMIUM TEXT CARD */
+.text-card {
+  pointer-events: auto;
+  background: rgba(245, 241, 234, 0.75);
+  backdrop-filter: blur(12px) saturate(1.1);
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+  padding: 2.5rem;
+  max-width: 28rem;
+  box-shadow: 0 30px 70px -25px rgba(40, 26, 10, 0.25);
   opacity: 0;
   transform: translateY(20px);
   transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.scene-caption-block.is-live .scene-caption-inner {
+.text-card.is-live {
   opacity: 1;
   transform: translateY(0);
 }
-.scene-hint {
-  position: absolute;
-  bottom: 1.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: var(--font-inter), sans-serif;
-  font-size: 0.6rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--color-ink-soft);
-  pointer-events: none;
-  z-index: 3;
-  transition: opacity 0.5s ease;
-}
-.scene-load {
-  position: absolute;
-  inset: 50% 0 auto 0;
-  transform: translateY(-50%);
-  text-align: center;
-  font-family: var(--font-inter), sans-serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--color-ink-soft);
-  z-index: 3;
-  padding: 0 2rem;
-  line-height: 1.8;
-  transition: opacity 0.5s ease;
-}
-.scene-load::after {
-  content: "";
-  display: block;
-  width: 40px;
-  height: 1px;
-  background: var(--color-brass-dark);
-  margin: 0.75rem auto 0;
-  animation: scene-load-pulse 1.4s ease-in-out infinite;
-}
-@keyframes scene-load-pulse {
-  0%, 100% { opacity: 0.2; transform: scaleX(0.4); }
-  50%      { opacity: 1;   transform: scaleX(1);   }
-}
-.scene-load.is-done { opacity: 0; }
-.scene-load.is-error { color: #e06c75; }
-.scene-load.is-error::after { display: none; }
 
-/* The block below targets the OLD .scene-caption class (replaced by
-   .scene-caption-block in the split-column rewrite). DOM no longer
-   produces .scene-caption nodes, so everything here is dead — left in
-   place to keep diff small; will be deleted in a follow-up cleanup. */
-.scene-caption {
-  position: absolute;
-  top: 50%;
-  transform: translateY(calc(-50% + 8px));
-  /* Wider column (was ~260px). Captions now read as a real text well on one
-     half of the stage; the camera's strengthened side-bias shifts the car
-     fully into the opposite half so the two never overlap. */
-  width: min(440px, 36vw);
-  max-width: 440px;
-  opacity: 0;
-  transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-  pointer-events: none;
-  z-index: 5;
-  padding: 1.4rem 1.6rem 1.6rem;
-  background: rgba(255, 253, 249, 0.78);
-  border: 1px solid rgba(40, 26, 10, 0.1);
-  border-radius: 2px;
-  backdrop-filter: blur(18px) saturate(1.15);
-  -webkit-backdrop-filter: blur(18px) saturate(1.15);
-  box-shadow: 0 30px 70px -25px rgba(40, 26, 10, 0.25);
-}
-/* Hard to the edge, out of the car's way. */
-.scene-caption.left   { left: 2.5vw; }
-.scene-caption.right  { right: 2.5vw; text-align: right; }
-.scene-caption.bottom {
-  top: auto; bottom: 5%;
-  right: 2.5vw; left: auto;
-  width: min(440px, 36vw);
-  max-width: 440px;
-  transform: translateY(12px);
-  text-align: right;
-}
-
-/* ===== Per-car caption choreography =====
-   Each car gets a distinct caption signature so the four exhibits don't all
-   feel identical as you scroll through them. */
-
-/* Countach — heavy left rail, brutalist accent stripe. */
-.scroll-scene[data-car="countach"] .scene-caption.left {
-  border-left: 3px solid var(--color-brass-dark);
-  border-radius: 0;
-  padding-left: 1.8rem;
-}
-.scroll-scene[data-car="countach"] .scene-caption .caption-line {
-  font-style: italic;
-}
-
-/* 959 — engineering-blueprint feel: thin border, monospace eyebrow. */
-.scroll-scene[data-car="959"] .scene-caption {
-  background: rgba(248, 245, 238, 0.86);
-  border: 1px solid rgba(40, 26, 10, 0.18);
-}
-.scroll-scene[data-car="959"] .scene-caption .caption-eyebrow {
-  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
-  letter-spacing: 0.18em;
-}
-
-/* F1 — analog/centered: borderless, larger type, tighter leading. */
-.scroll-scene[data-car="f1"] .scene-caption {
-  background: rgba(255, 253, 249, 0.7);
-  border: none;
-  box-shadow: 0 40px 80px -30px rgba(40, 26, 10, 0.28);
-}
-.scroll-scene[data-car="f1"] .scene-caption .caption-line {
-  font-size: clamp(1.4rem, 2.2vw, 2rem);
-  line-height: 1.2;
-}
-
-/* Veyron — precise/luxe: warm-stone panel that matches the cooler stage. */
-.scroll-scene[data-car="veyron"] .scene-caption {
-  background: rgba(231, 223, 208, 0.86);
-  border: 1px solid rgba(80, 60, 30, 0.18);
-}
-.scroll-scene[data-car="veyron"] .scene-caption .caption-line {
-  color: #2a2014;
-}
-
-/* When the active caption is on the LEFT, the canvas's visible "stage" is
-   the right half. Add a subtle vignette gradient on the left so text remains
-   crisp even if the car drifts slightly back toward center. Mirrored for
-   right-side and bottom-right captions. */
-.scroll-scene[data-active-caption="left"] .scene-canvas::after,
-.scroll-scene[data-active-caption="right"] .scene-canvas::after,
-.scroll-scene[data-active-caption="bottom"] .scene-canvas::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  transition: background 0.6s ease;
-}
-.scroll-scene[data-active-caption="left"] .scene-canvas::after {
-  background: linear-gradient(90deg, rgba(255,253,249,0.55) 0%, rgba(255,253,249,0) 38%);
-}
-.scroll-scene[data-active-caption="right"] .scene-canvas::after,
-.scroll-scene[data-active-caption="bottom"] .scene-canvas::after {
-  background: linear-gradient(270deg, rgba(255,253,249,0.55) 0%, rgba(255,253,249,0) 38%);
-}
-.scene-caption.is-live { opacity: 1; transform: translateY(-50%); }
-.scene-caption.bottom.is-live { transform: translateY(0); }
-@media (max-width: 900px) {
-  /* On narrow screens the side-bias trick can't push the car far enough off
-     a wide caption column — collapse all captions to a bottom-pinned panel. */
-  .scene-caption,
-  .scene-caption.left,
-  .scene-caption.right,
-  .scene-caption.bottom {
-    top: auto; bottom: 5%;
-    left: 4vw; right: 4vw;
-    width: auto; max-width: none;
-    text-align: left;
-    transform: translateY(12px);
-  }
-  .scene-caption.is-live,
-  .scene-caption.left.is-live,
-  .scene-caption.right.is-live,
-  .scene-caption.bottom.is-live { transform: translateY(0); }
-}
-
-.scene-caption {
-  z-index: 3;
-}
-.scene-caption .caption-eyebrow {
-  display: block;
-  font-family: var(--font-inter), sans-serif;
-  font-size: 0.65rem;
-  letter-spacing: 0.3em;
-  text-transform: uppercase;
-  color: var(--color-brass-dark);
-  margin-bottom: 0.75rem;
-}
-.scene-caption .caption-line {
-  display: block;
-  font-family: var(--font-fraunces), serif;
-  font-size: clamp(1.25rem, 1.9vw, 1.7rem);
-  font-weight: 300;
-  line-height: 1.25;
-  color: var(--color-ink);
-  text-shadow: 0 1px 40px rgba(255,255,255,0.7);
-}
-
-/* ===== Active caption typography (split-column layout) ===== */
 .caption-eyebrow {
   display: block;
   font-family: var(--font-inter), sans-serif;
@@ -441,13 +220,12 @@ article[data-car="veyron"] .artifact-section-header {
   font-weight: 300;
   line-height: 1.2;
   color: var(--color-ink);
+  letter-spacing: -0.01em;
 }
 
-/* Per-car typographic signatures — each exhibit reads distinct without
-   restructuring the layout. */
-.scroll-scene[data-car="countach"] .scene-caption-inner {
+/* Per-car typographic signatures */
+.scroll-scene[data-car="countach"] .text-card {
   border-left: 3px solid var(--color-brass-dark);
-  padding-left: 1.5rem;
 }
 .scroll-scene[data-car="countach"] .caption-line {
   font-style: italic;
@@ -463,9 +241,13 @@ article[data-car="veyron"] .artifact-section-header {
 .scroll-scene[data-car="veyron"] .caption-line {
   color: #2a2014;
 }
+.scroll-scene[data-car="veyron"] .text-card {
+  background: rgba(231, 223, 208, 0.78);
+  border-color: rgba(80, 60, 30, 0.2);
+}
 
-/* Finale block at the end of the right text column. */
-.scene-finale-block .scene-caption-inner {
+/* FINALE — same card chrome, with CTA */
+.text-card-finale {
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -502,71 +284,32 @@ article[data-car="veyron"] .artifact-section-header {
   color: var(--color-paper);
 }
 
-/* Mobile — stack canvas above text. */
-@media (max-width: 900px) {
-  .scroll-scene {
-    grid-template-columns: 1fr !important;
-  }
-  .scene-canvas-sticky {
-    height: 60vh;
-  }
-  .scene-caption-block {
-    min-height: 80vh;
-    padding: 6vh 6vw;
-  }
+/* SCROLL HINT — fades on first scroll */
+.scene-hint {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-ink-soft);
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.5s ease;
 }
 
-.scene-finale {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.8rem;
-  opacity: 0;
-  /* Container is non-interactive so wheel and touch pass through to the page. */
-  pointer-events: none;
-  background: radial-gradient(ellipse at 50% 50%, rgba(246,243,238,0) 25%, rgba(246,243,238,0.92) 80%);
-  transition: opacity 0.8s ease;
-  z-index: 4;
-  text-align: center;
-}
-.scene-finale.is-live { opacity: 1; }
-/* Only the CTA button should capture clicks; everything else stays scroll-through. */
-.scene-finale.is-live .finale-cta { pointer-events: auto; }
-.scene-finale .finale-eyebrow {
-  font-family: var(--font-inter), sans-serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  color: var(--color-brass-dark);
-}
-.scene-finale .finale-title {
-  font-family: var(--font-fraunces), serif;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-style: italic;
-  font-weight: 300;
-  color: var(--color-ink);
-  max-width: 720px;
-  padding: 0 2rem;
-  line-height: 1.1;
-}
-.scene-finale .finale-cta {
-  margin-top: 1.25rem;
-  padding: 0.9rem 2.2rem;
-  border: 1px solid var(--color-brass-dark);
-  color: var(--color-brass-dark);
-  text-decoration: none;
-  font-family: var(--font-inter), sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  transition: background 0.3s, color 0.3s;
-}
-.scene-finale .finale-cta:hover {
-  background: var(--color-brass-dark);
-  color: var(--color-paper);
+/* Mobile — keep architecture, just shrink card */
+@media (max-width: 720px) {
+  .text-section {
+    padding: 0 4vw;
+    justify-content: center;
+  }
+  .text-card {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
 }
 
 /* ========= Artifacts: editorial gallery ========= */
