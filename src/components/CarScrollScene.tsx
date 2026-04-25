@@ -4,11 +4,14 @@ import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   ContactShadows,
-  Environment,
   PerformanceMonitor,
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
+import { upgradeMaterial } from "@/lib/materialUpgrade";
+import { SceneLighting } from "@/components/3d/SceneLighting";
+import { SceneEnvironment } from "@/components/3d/SceneEnvironment";
+import { ScenePostFX } from "@/components/3d/ScenePostFX";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DoorRig, MaterialOverride, SceneConfig } from "@/lib/scenes";
@@ -85,6 +88,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
 
           // DOM overlays — written directly, no React state.
           let activeBias = 0;
+          let activePos: string = "";
           scene.captions.forEach((cap, i) => {
             const node = captionRefs.current[i];
             if (!node) return;
@@ -97,9 +101,13 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
               // biases the same direction as `right`.
               if (cap.pos === "left") activeBias = 1;
               else activeBias = -1;
+              activePos = cap.pos;
             }
           });
           sideBiasRef.current = activeBias;
+          if (section) {
+            section.setAttribute("data-active-caption", activePos);
+          }
           if (finaleRef.current) {
             finaleRef.current.classList.toggle("is-live", p >= 0.92);
           }
@@ -132,7 +140,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
         <div className="scene-canvas">
           <Canvas
             dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
-            shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFShadowMap } : false}
+            shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFSoftShadowMap } : false}
             gl={{
               antialias: quality.tier !== "low",
               alpha: true,
@@ -157,6 +165,7 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
                 sideBiasRef={sideBiasRef}
                 quality={quality}
               />
+              {quality.enablePost && <ScenePostFX />}
             </Suspense>
           </Canvas>
         </div>
@@ -218,45 +227,13 @@ function SceneContents({
   const model = useMemo(() => {
     const cloned = gltfScene.clone(true);
     cloned.traverse((obj) => {
-      const mesh = obj as THREE.Mesh;
-      if (!mesh.isMesh || !mesh.material) return;
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      const upgrade = (mat: THREE.Material): THREE.Material => {
-        const std = (mat as THREE.MeshStandardMaterial).clone();
-        std.envMapIntensity = 1.6;
-        const name = (std.name || mesh.name || "").toLowerCase();
-        // Paint/body panels: push metalness/roughness/envMapIntensity to read
-        // as glossy paint. We previously promoted to MeshPhysicalMaterial via
-        // `phys.copy(std)`, but std (MeshStandardMaterial) lacks fields the
-        // Physical copy requires (clearcoatNormalScale, sheenColor, etc.),
-        // which crashes with "Cannot read properties of undefined (reading
-        // 'x')" the first time a mesh name matches. Keeping std is reliable.
-        if (/paint|body|lack|carrosserie|karosserie|exterior|shell/.test(name)) {
-          std.metalness = Math.max(std.metalness ?? 0.6, 0.75);
-          std.roughness = Math.min(std.roughness ?? 0.35, 0.32);
-          std.envMapIntensity = 1.8;
-        }
-        // Glass-ish: make it slightly reflective
-        if (/glass|window|windshield|vetro/.test(name)) {
-          std.transparent = true;
-          std.opacity = Math.min(std.opacity, 0.65);
-          std.roughness = 0.05;
-          std.metalness = 0.0;
-        }
-        // Chrome / metal trim
-        if (/chrome|metal.*trim|trim.*metal/.test(name)) {
-          std.metalness = 1.0;
-          std.roughness = 0.12;
-        }
-        return std;
-      };
-      mesh.material = Array.isArray(mesh.material)
-        ? mesh.material.map(upgrade)
-        : upgrade(mesh.material);
+      upgradeMaterial(obj as THREE.Mesh, {
+        usePhysicalPaint: quality.usePhysicalPaint,
+        anisotropy: quality.anisotropy,
+      });
     });
     return cloned;
-  }, [gltfScene]);
+  }, [gltfScene, quality.usePhysicalPaint, quality.anisotropy]);
 
   const { modelScale, centerOffset, baseRadius, lookAtY } = useMemo(() => {
     const box = new THREE.Box3().setFromObject(model);
@@ -378,37 +355,8 @@ function SceneContents({
 
   return (
     <>
-      {/* Key / fill / rim lighting for a showroom feel */}
-      <ambientLight intensity={0.35} />
-      <directionalLight
-        castShadow
-        position={[6, 10, 6]}
-        intensity={2.4}
-        color={"#ffffff"}
-        shadow-mapSize={[quality.shadowMapSize, quality.shadowMapSize]}
-        shadow-camera-far={25}
-        shadow-camera-left={-8}
-        shadow-camera-right={8}
-        shadow-camera-top={8}
-        shadow-camera-bottom={-8}
-        shadow-bias={-0.0001}
-      />
-      <directionalLight
-        position={[-6, 4, -4]}
-        intensity={0.8}
-        color={"#dde6ff"}
-      />
-      <directionalLight
-        position={[0, 6, -8]}
-        intensity={1.2}
-        color={"#ffe8cc"}
-      />
-
-      {/* Studio HDRI supplies real reflections on paint + glass. Skipped on
-          the low tier — it's the single heaviest draw on integrated GPUs. */}
-      {quality.enableEnv && (
-        <Environment preset="warehouse" environmentIntensity={0.9} background={false} />
-      )}
+      <SceneLighting shadowMapSize={quality.shadowMapSize} />
+      {quality.enableEnv && <SceneEnvironment preset="studio" intensity={1.0} />}
 
       {/* No visible floor mesh — the page's gradient background shows through
           the transparent canvas. A ContactShadow keeps the model grounded
@@ -511,8 +459,10 @@ function CameraController({
     const r = baseRadius * (current.current.radius / 100) * 1.15;
 
     // Side-bias: shift camera + target laterally so the car visibly clears
-    // the active caption column. 0.7r ≈ 40% of viewport width at FOV 30°.
-    const biasStrength = 0.7 * r;
+    // the active caption column. 1.05r (was 0.7r) — captions are now wider
+    // (~38vw) text wells, so the car needs a bigger lateral push to actually
+    // get out of their way instead of sitting half-behind them.
+    const biasStrength = 1.05 * r;
     const tx = bias.current * biasStrength;
 
     // Camera raised off the ground: lift it by lookAtY so we're always

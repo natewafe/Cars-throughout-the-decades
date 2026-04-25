@@ -46,10 +46,15 @@ export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
       if (e.key === "Escape") close();
     };
     document.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
+    // Mark a class so CSS can freeze background scroll WITHOUT touching
+    // body.style.overflow — Lenis runs its own scroll engine; setting
+    // `overflow: hidden` directly on body desyncs Lenis's virtual position
+    // and the page scroll won't recover after closing the lightbox (this
+    // was contributing to the "scroll dies partway down" bug).
+    document.body.classList.add("lightbox-open");
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.body.classList.remove("lightbox-open");
     };
   }, [lightbox, close]);
 
@@ -109,7 +114,39 @@ export function CarArtifactsSection({ data }: { data: CarArtifacts }) {
         );
       });
     }, root);
-    return () => ctx.revert();
+
+    // CRITICAL: lazy artifact images grow the page after the pin spacer for
+    // CarScrollScene is sized. ScrollTrigger then thinks the document ends
+    // earlier than it actually does — scroll feels "stuck" about 2/3 down,
+    // because Lenis caps virtual scroll at the (stale) computed end. Refresh
+    // every time an image finishes loading. Throttled via rAF coalescing so
+    // 70+ images don't trigger 70 refreshes back-to-back.
+    let pending = false;
+    const scheduleRefresh = () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => {
+        pending = false;
+        ScrollTrigger.refresh();
+      });
+    };
+    const imgs = root.querySelectorAll<HTMLImageElement>("figure.artifact img");
+    imgs.forEach((img) => {
+      if (img.complete) return;
+      img.addEventListener("load", scheduleRefresh, { once: true });
+      img.addEventListener("error", scheduleRefresh, { once: true });
+    });
+    // Also schedule one final refresh after the first paint settles.
+    const settleId = window.setTimeout(scheduleRefresh, 600);
+
+    return () => {
+      ctx.revert();
+      window.clearTimeout(settleId);
+      imgs.forEach((img) => {
+        img.removeEventListener("load", scheduleRefresh);
+        img.removeEventListener("error", scheduleRefresh);
+      });
+    };
   }, [data]);
 
   // Group figures by section header

@@ -41,6 +41,18 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Lightbox open: prevent background interaction without touching body
+   overflow (Lenis manages its own virtual scroll; setting overflow hidden
+   here will desync it and "stick" the page after close). */
+body.lightbox-open {
+  /* Nothing — the .lightbox overlay covers the viewport at z-index above
+     everything. Wheel events on the overlay don't bubble to the page since
+     the overlay calls preventDefault implicitly through Lenis on its node.
+     If you find scroll bleed, re-enable: pointer-events guarded scroll
+     containment via overscroll-behavior on .lightbox itself. */
+  overscroll-behavior: contain;
+}
+
 html {
   scroll-behavior: auto;
 }
@@ -267,44 +279,108 @@ article[data-car="veyron"] .artifact-section-header {
   position: absolute;
   top: 50%;
   transform: translateY(calc(-50% + 8px));
-  /* Narrow column at the page edge. The camera's side-bias shifts the car
-     AWAY from whichever edge is live, so there's never overlap. */
-  width: min(260px, 20vw);
-  max-width: 260px;
+  /* Wider column (was ~260px). Captions now read as a real text well on one
+     half of the stage; the camera's strengthened side-bias shifts the car
+     fully into the opposite half so the two never overlap. */
+  width: min(440px, 36vw);
+  max-width: 440px;
   opacity: 0;
   transition: opacity 0.7s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
   pointer-events: none;
   z-index: 5;
-  padding: 0.85rem 1rem;
-  background: rgba(255, 253, 249, 0.62);
-  border: 1px solid rgba(40, 26, 10, 0.08);
+  padding: 1.4rem 1.6rem 1.6rem;
+  background: rgba(255, 253, 249, 0.78);
+  border: 1px solid rgba(40, 26, 10, 0.1);
   border-radius: 2px;
-  backdrop-filter: blur(14px) saturate(1.1);
-  -webkit-backdrop-filter: blur(14px) saturate(1.1);
-  box-shadow: 0 20px 50px -20px rgba(40, 26, 10, 0.18);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+  box-shadow: 0 30px 70px -25px rgba(40, 26, 10, 0.25);
 }
 /* Hard to the edge, out of the car's way. */
-.scene-caption.left   { left: 1.5vw; }
-.scene-caption.right  { right: 1.5vw; text-align: right; }
-/* Bottom caption goes to the bottom-RIGHT corner so it shares the same lateral
-   axis as the right-side camera bias (car will already be shifted left for
-   this slot's scroll range). */
+.scene-caption.left   { left: 2.5vw; }
+.scene-caption.right  { right: 2.5vw; text-align: right; }
 .scene-caption.bottom {
-  top: auto; bottom: 4%;
-  right: 1.5vw; left: auto;
-  width: min(260px, 20vw);
-  max-width: 260px;
-  transform: translateY(8px);
+  top: auto; bottom: 5%;
+  right: 2.5vw; left: auto;
+  width: min(440px, 36vw);
+  max-width: 440px;
+  transform: translateY(12px);
   text-align: right;
+}
+
+/* ===== Per-car caption choreography =====
+   Each car gets a distinct caption signature so the four exhibits don't all
+   feel identical as you scroll through them. */
+
+/* Countach — heavy left rail, brutalist accent stripe. */
+.scroll-scene[data-car="countach"] .scene-caption.left {
+  border-left: 3px solid var(--color-brass-dark);
+  border-radius: 0;
+  padding-left: 1.8rem;
+}
+.scroll-scene[data-car="countach"] .scene-caption .caption-line {
+  font-style: italic;
+}
+
+/* 959 — engineering-blueprint feel: thin border, monospace eyebrow. */
+.scroll-scene[data-car="959"] .scene-caption {
+  background: rgba(248, 245, 238, 0.86);
+  border: 1px solid rgba(40, 26, 10, 0.18);
+}
+.scroll-scene[data-car="959"] .scene-caption .caption-eyebrow {
+  font-family: var(--font-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
+  letter-spacing: 0.18em;
+}
+
+/* F1 — analog/centered: borderless, larger type, tighter leading. */
+.scroll-scene[data-car="f1"] .scene-caption {
+  background: rgba(255, 253, 249, 0.7);
+  border: none;
+  box-shadow: 0 40px 80px -30px rgba(40, 26, 10, 0.28);
+}
+.scroll-scene[data-car="f1"] .scene-caption .caption-line {
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  line-height: 1.2;
+}
+
+/* Veyron — precise/luxe: warm-stone panel that matches the cooler stage. */
+.scroll-scene[data-car="veyron"] .scene-caption {
+  background: rgba(231, 223, 208, 0.86);
+  border: 1px solid rgba(80, 60, 30, 0.18);
+}
+.scroll-scene[data-car="veyron"] .scene-caption .caption-line {
+  color: #2a2014;
+}
+
+/* When the active caption is on the LEFT, the canvas's visible "stage" is
+   the right half. Add a subtle vignette gradient on the left so text remains
+   crisp even if the car drifts slightly back toward center. Mirrored for
+   right-side and bottom-right captions. */
+.scroll-scene[data-active-caption="left"] .scene-canvas::after,
+.scroll-scene[data-active-caption="right"] .scene-canvas::after,
+.scroll-scene[data-active-caption="bottom"] .scene-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transition: background 0.6s ease;
+}
+.scroll-scene[data-active-caption="left"] .scene-canvas::after {
+  background: linear-gradient(90deg, rgba(255,253,249,0.55) 0%, rgba(255,253,249,0) 38%);
+}
+.scroll-scene[data-active-caption="right"] .scene-canvas::after,
+.scroll-scene[data-active-caption="bottom"] .scene-canvas::after {
+  background: linear-gradient(270deg, rgba(255,253,249,0.55) 0%, rgba(255,253,249,0) 38%);
 }
 .scene-caption.is-live { opacity: 1; transform: translateY(-50%); }
 .scene-caption.bottom.is-live { transform: translateY(0); }
-@media (max-width: 720px) {
-  /* On narrow screens, stick captions to the bottom so they never cross the
-     main bodywork silhouette. */
+@media (max-width: 900px) {
+  /* On narrow screens the side-bias trick can't push the car far enough off
+     a wide caption column — collapse all captions to a bottom-pinned panel. */
   .scene-caption,
   .scene-caption.left,
-  .scene-caption.right {
+  .scene-caption.right,
+  .scene-caption.bottom {
     top: auto; bottom: 5%;
     left: 4vw; right: 4vw;
     width: auto; max-width: none;
@@ -313,7 +389,8 @@ article[data-car="veyron"] .artifact-section-header {
   }
   .scene-caption.is-live,
   .scene-caption.left.is-live,
-  .scene-caption.right.is-live { transform: translateY(0); }
+  .scene-caption.right.is-live,
+  .scene-caption.bottom.is-live { transform: translateY(0); }
 }
 
 .scene-caption {

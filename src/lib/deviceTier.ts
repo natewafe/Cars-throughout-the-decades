@@ -18,12 +18,21 @@ export type QualityProfile = {
   enableEnv: boolean;
   /** ContactShadows render target resolution. */
   contactShadowResolution: number;
+  /** Run the post-processing pipeline (SSAO + bloom + anti-alias). Off on
+   *  low-tier — SSAO is a 2-3ms hit on integrated GPUs. */
+  enablePost: boolean;
+  /** Use MeshPhysicalMaterial with clearcoat for paint panels. Slightly
+   *  more expensive shader; visibly closer to real lacquer. */
+  usePhysicalPaint: boolean;
+  /** Texture anisotropy. 8 is the sweet spot for sharp metal/paint at
+   *  glancing angles without burning fillrate. */
+  anisotropy: number;
 };
 
 const PROFILES: Record<DeviceTier, QualityProfile> = {
-  low:  { tier: "low",  dpr: [1, 1],   shadowMapSize: 512,  enableEnv: false, contactShadowResolution: 256 },
-  mid:  { tier: "mid",  dpr: [1, 1.5], shadowMapSize: 1024, enableEnv: true,  contactShadowResolution: 512 },
-  high: { tier: "high", dpr: [1, 2],   shadowMapSize: 2048, enableEnv: true,  contactShadowResolution: 1024 },
+  low:  { tier: "low",  dpr: [1, 1],   shadowMapSize: 512,  enableEnv: false, contactShadowResolution: 256,  enablePost: false, usePhysicalPaint: false, anisotropy: 1 },
+  mid:  { tier: "mid",  dpr: [1, 1.5], shadowMapSize: 1024, enableEnv: true,  contactShadowResolution: 512,  enablePost: true,  usePhysicalPaint: true,  anisotropy: 4 },
+  high: { tier: "high", dpr: [1, 2],   shadowMapSize: 4096, enableEnv: true,  contactShadowResolution: 1024, enablePost: true,  usePhysicalPaint: true,  anisotropy: 16 },
 };
 
 function detect(): DeviceTier {

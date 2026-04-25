@@ -2,10 +2,14 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, PerformanceMonitor, useGLTF } from "@react-three/drei";
+import { ContactShadows, PerformanceMonitor, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { disposeClonedScene } from "@/lib/disposeScene";
+import { upgradeMaterial } from "@/lib/materialUpgrade";
 import { useQualityProfile } from "@/lib/deviceTier";
+import { SceneLighting } from "@/components/3d/SceneLighting";
+import { SceneEnvironment } from "@/components/3d/SceneEnvironment";
+import { ScenePostFX } from "@/components/3d/ScenePostFX";
 
 /** Carousel of hero cars with distinct close-up framings per car, plus a
  * "Coming Soon" fifth slot rendered as a typographic plate (no model).
@@ -133,7 +137,7 @@ export function HomeHero3D() {
       <div className="home-hero-3d">
         <Canvas
           dpr={[quality.dpr[0], Math.min(quality.dpr[1], dprCap ?? quality.dpr[1])]}
-          shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFShadowMap } : false}
+          shadows={quality.shadowMapSize > 0 ? { type: THREE.PCFSoftShadowMap } : false}
           gl={{
             // antialias off on low-end — MSAA is a 2-4x fragment cost and the
             // DPR downscale alone is usually enough smoothing there.
@@ -156,7 +160,9 @@ export function HomeHero3D() {
           />
           <Suspense fallback={null}>
             {car.url ? <HeroCarModel key={car.slug} car={car} quality={quality} /> : null}
-            <HeroLights enableEnv={quality.enableEnv} shadowMapSize={quality.shadowMapSize} />
+            <SceneLighting shadowMapSize={quality.shadowMapSize} />
+            {quality.enableEnv && <SceneEnvironment preset="studio" intensity={1.0} />}
+            {quality.enablePost && <ScenePostFX />}
           </Suspense>
         </Canvas>
 
@@ -204,31 +210,10 @@ function HeroCarModel({
   const { model, scale, offset } = useMemo(() => {
     const cloned = gltf.clone(true);
     cloned.traverse((obj) => {
-      const mesh = obj as THREE.Mesh;
-      if (!mesh.isMesh || !mesh.material) return;
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-      const upgrade = (mat: THREE.Material): THREE.Material => {
-        const std = (mat as THREE.MeshStandardMaterial).clone();
-        std.envMapIntensity = 1.6;
-        const name = (std.name || mesh.name || "").toLowerCase();
-        // Paint/body panels: keep MeshStandardMaterial and push metalness/
-        // roughness/envMapIntensity so it reads as shiny paint. We used to
-        // promote to MeshPhysicalMaterial via `phys.copy(std)`, but that
-        // requires source.clearcoatNormalScale / sheenColor / specularColor
-        // to exist — MeshStandardMaterial doesn't have those fields, so the
-        // copy crashes with "Cannot read properties of undefined (reading 'x')"
-        // whenever a mesh name matches this regex.
-        if (/paint|body|lack|carrosserie|karosserie|exterior|shell/.test(name)) {
-          std.metalness = Math.max(std.metalness ?? 0.6, 0.8);
-          std.roughness = Math.min(std.roughness ?? 0.35, 0.3);
-          std.envMapIntensity = 1.8;
-        }
-        return std;
-      };
-      mesh.material = Array.isArray(mesh.material)
-        ? mesh.material.map(upgrade)
-        : upgrade(mesh.material);
+      upgradeMaterial(obj as THREE.Mesh, {
+        usePhysicalPaint: quality.usePhysicalPaint,
+        anisotropy: quality.anisotropy,
+      });
     });
     const box = new THREE.Box3().setFromObject(cloned);
     const size = new THREE.Vector3();
@@ -240,7 +225,7 @@ function HeroCarModel({
     // Ground the model: translate XZ to center, translate Y so bbox.min.y == 0.
     const offs = new THREE.Vector3(-center.x * s, -box.min.y * s, -center.z * s);
     return { model: cloned, scale: s, offset: offs };
-  }, [gltf]);
+  }, [gltf, quality.usePhysicalPaint, quality.anisotropy]);
 
   // On unmount (next carousel tick), dispose the cloned geometries &
   // materials we created in the useMemo above — these are NOT reclaimed by
@@ -281,32 +266,6 @@ function HeroCarModel({
   );
 }
 
-function HeroLights({
-  enableEnv,
-  shadowMapSize,
-}: {
-  enableEnv: boolean;
-  shadowMapSize: number;
-}) {
-  return (
-    <>
-      <ambientLight intensity={enableEnv ? 0.35 : 0.65} />
-      <directionalLight
-        castShadow
-        position={[6, 10, 6]}
-        intensity={2.4}
-        color={"#ffffff"}
-        shadow-mapSize={[shadowMapSize, shadowMapSize]}
-      />
-      <directionalLight position={[-6, 4, -4]} intensity={0.8} color={"#dde6ff"} />
-      <directionalLight position={[0, 6, -8]} intensity={1.1} color={"#ffe8cc"} />
-      {/* HDRI env probe is the single heaviest thing on integrated GPUs.
-          Low tier falls back to 3-point lighting only. */}
-      {enableEnv && <Environment preset="warehouse" environmentIntensity={0.9} />}
-    </>
-  );
-}
-
 function HeroCamera({ framing }: { framing: [number, number, number] }) {
   const { camera } = useThree();
   const current = useRef({ theta: framing[0], phi: framing[1], r: framing[2] });
@@ -319,7 +278,10 @@ function HeroCamera({ framing }: { framing: [number, number, number] }) {
     current.current.r += (radius - current.current.r) * k;
     const theta = (current.current.theta * Math.PI) / 180;
     const phi = (current.current.phi * Math.PI) / 180;
-    const r = 6 * current.current.r;
+    // 7.6 (was 6) gives extra headroom so the silhouette never crops at the
+    // viewport edges during the idle spin — at 6 the longer cars (Veyron, F1)
+    // would clip on wide screens at certain azimuths.
+    const r = 7.6 * current.current.r;
     camera.position.set(
       r * Math.sin(phi) * Math.sin(theta),
       Math.max(0.4, r * Math.cos(phi) + 1.0),
