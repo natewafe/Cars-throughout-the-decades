@@ -3,8 +3,8 @@
 import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
-  ContactShadows,
   PerformanceMonitor,
+  Shadow,
   useGLTF,
 } from "@react-three/drei";
 import * as THREE from "three";
@@ -17,7 +17,6 @@ import { upgradeMaterial, resetUnriggedDoors } from "@/lib/materialUpgrade";
 import { SceneLighting } from "@/components/3d/SceneLighting";
 import { SceneEnvironment } from "@/components/3d/SceneEnvironment";
 import { ScenePostFX } from "@/components/3d/ScenePostFX";
-import { SceneCyclorama } from "@/components/3d/SceneCyclorama";
 import { getCameraPreset, type CameraPreset } from "@/lib/cameraPresets";
 import { motion, useScroll, useTransform } from "motion/react";
 
@@ -127,12 +126,15 @@ export function CarScrollScene({ modelUrl, scene, nextHref, nextLabel }: Props) 
             alpha: true,
             powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 0.75,
+            toneMappingExposure: 1.05,
           }}
           camera={{ fov: 32, near: 0.1, far: 500, position: preset.initialCamera }}
         >
           <PerformanceMonitor
-            bounds={() => [45, 60]}
+            // 30→55 (was 45→60). Holds full DPR unless the device is
+            // genuinely struggling — capable machines now render at the
+            // tier ceiling instead of getting silently downscaled to ~80%.
+            bounds={() => [30, 55]}
             onIncline={() => setDprCap((c) => (c && c < quality.dpr[1] ? c + 0.25 : null))}
             onDecline={() => setDprCap((c) => Math.max(1, (c ?? quality.dpr[1]) - 0.25))}
           />
@@ -315,21 +317,7 @@ function SceneContents({
     };
   }, [model]);
 
-  // Atmospheric fog — color matches the .scroll-scene page background so
-  // the cyclorama's back wall fades into the page seamlessly at the
-  // horizon. Near/far tuned so the car sits in front of the fog (stays
-  // crisp) while the cyc's top edge dissolves before it ever gets to
-  // the camera.
-  const { scene: r3fScene } = useThree();
-  useEffect(() => {
-    const isVeyron = modelUrl.includes("veyron");
-    const fogColor = new THREE.Color(isVeyron ? "#e7dfd0" : "#f5f1ea");
-    const prevFog = r3fScene.fog;
-    r3fScene.fog = new THREE.Fog(fogColor, 9, 18);
-    return () => {
-      r3fScene.fog = prevFog;
-    };
-  }, [r3fScene, modelUrl]);
+  // (Fog removed — configurator look is fog-free.)
 
   // Door open: drives off scroll progress like before.
   useFrame(() => {
@@ -351,26 +339,25 @@ function SceneContents({
 
   return (
     <>
-      <SceneLighting
-        shadowMapSize={quality.shadowMapSize}
-        enableSoftbox={quality.tier !== "low"}
-      />
+      <SceneLighting shadowMapSize={quality.shadowMapSize} />
       {quality.enableEnv && <SceneEnvironment />}
 
-      {/* Curved cyclorama — seamless floor → back wall sweep. Replaces
-          the old "two flat planes meeting at a seam" look. */}
-      <SceneCyclorama floorY={-0.5} />
+      {/* Pure white void — no cyclorama, no floor mesh. The Canvas is
+          alpha:true and the .scroll-scene CSS bg is #ffffff, so behind
+          the car is pure white. The cyclorama was producing the visible
+          horizon line and a faint blue tint from the cool fill light
+          bouncing off its surface. */}
 
-      {/* ContactShadows still rendered ON TOP of the cyc to ground the
-          car with a faint wheel-arch shadow that the cyc material
-          (rough 0.6) can't produce on its own. */}
-      <ContactShadows
-        position={[0, -0.498, 0]}
-        opacity={0.5}
-        scale={15}
-        blur={2.5}
-        far={4}
-        resolution={quality.contactShadowResolution}
+      {/* Subtle circular radial-gradient shadow — restored to the
+          earlier clean values (was the look the user approved before
+          the brief "blob" overcorrection). */}
+      <Shadow
+        position={[0, -0.499, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={5}
+        color="#1a1a1a"
+        colorStop={0}
+        opacity={0.35}
       />
 
       <group

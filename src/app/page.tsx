@@ -172,11 +172,11 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ============ CURATOR'S NOTE ============ */}
+      {/* ============ INTRODUCTION ============ */}
       <section className="curator-section">
         <div className="curator-grid">
           <Reveal>
-            <div className="eyebrow">Curator&apos;s Note</div>
+            <div className="eyebrow">Introduction</div>
           </Reveal>
 
           <div>
@@ -185,23 +185,75 @@ export default function HomePage() {
                 className="serif-display curator-pull"
                 style={{ fontSize: "var(--text-hero)" }}
               >
-                Four automobiles.
-                <br />
-                Four decades.
-                <br />
-                <span className="curator-pull-accent">
-                  One long argument about what a car could be.
-                </span>
+                The first car with an electronically controlled all-wheel-drive
+                system, automatic tire pressure monitoring, and a 0 to 60 time of
+                under 3.5 seconds. You are probably thinking this was created in
+                the 2000s, or that it is a Lamborghini you see on the streets
+                today. <span className="curator-pull-accent">But no. This was the early 1980s, and Porsche came out with the 959.</span>
               </p>
             </Reveal>
-            <Reveal delay={220}>
+            <Reveal delay={180}>
               <p className="curator-body">
-                We began with the <em>Countach</em>, because everything that followed was
-                in conversation with it. Then the <em>959</em>, which ended the argument
-                about whether computers belonged in sports cars. Then the{" "}
-                <em>McLaren F1</em>, which answered the argument by ignoring it. Finally
-                the <em>Veyron</em>, which insisted the argument was never really about
-                speed.
+                The McLaren F1, a car with the first carbon fiber cockpit, and the
+                same reflective gold lining they used to get us to the moon. You
+                would think it was a race car, but this is a road legal supercar
+                that broke the record of every car that came before it.
+              </p>
+            </Reveal>
+            <Reveal delay={240}>
+              <p className="curator-body">
+                The McLaren F1, the Porsche 959, the Lamborghini Countach, and the
+                Bugatti Veyron. They all represent a decade. From the 1970s to the
+                2000s, they show what defined the modern supercar. They exemplify
+                the design elements and technology that we still strive for today,
+                the records that were set, the ambitions that were met. They each
+                had their own definition of what a supercar was supposed to be,
+                and they met it and exceeded it, and that is why we are talking
+                about them.
+              </p>
+            </Reveal>
+            <Reveal delay={300}>
+              <p className="curator-body">
+                The 1970s with the Countach, talking about the drama and the
+                presence this car has, redefining the shape that everybody thinks
+                of when they picture a modern supercar. The 1980s with the extreme
+                technology and pure ambition that the Porsche 959 brought to the
+                table. Then the 1990s with the McLaren F1, a car built and
+                inspired by racing and design with unlimited budget and ambition,
+                a car that met and exceeded every expectation and held its record
+                for a decade. Then came the successor, the Bugatti Veyron, a feat
+                of engineering, pure adrenaline, and excellence. It beat the
+                McLaren F1&apos;s record, but only after 18 months and many failed
+                attempts, proving that this was a car that truly showed what
+                happens when ambition outlasts doubt. With every car came a peak
+                expression of the time period it came from.
+              </p>
+            </Reveal>
+            <Reveal delay={360}>
+              <p className="curator-body">
+                Every car we are talking about here had a specific person behind
+                it with an obsession for creating something so great and so
+                powerful that they could not be stopped. Gandini with the
+                Lamborghini Countach, the Porsche engineering team, Gordon Murray,
+                and Ferdinand Piech. They were all told at some point that it was
+                impossible and that it would not be done. But they overcame that,
+                whether it was proving to Lamborghini that the prototype could
+                survive a drive to Sicily and back, or rebuilding an entire
+                engineering team with 95 percent new people in 18 months on the
+                Veyron. They specifically proved that throughout each era, a
+                supercar could be pushed even further when it seemed like there
+                was nowhere left to go, and they all left behind something that
+                is still looked at and built upon today.
+              </p>
+            </Reveal>
+            <Reveal delay={420}>
+              <p className="curator-body">
+                This exhibit explores how each of these cars really did shape
+                their decades, not just as a landmark moment in car history, but
+                as history itself. A vehicle that tells you about the era it came
+                from, the technology it introduced, the design it inspired, the
+                status it carried, and the people who dedicated everything to
+                bringing it to life.
               </p>
             </Reveal>
           </div>

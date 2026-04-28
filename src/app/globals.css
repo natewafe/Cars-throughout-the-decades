@@ -133,19 +133,20 @@ body::before {
 .scroll-scene {
   position: relative;
   width: 100%;
-  /* Solid cream — flat paper tone matching the rest of the site. */
-  background: #f5f1ea;
+  /* Pure white void — configurator-style product shot. The Canvas is
+     transparent (alpha:true), so this CSS color is what shows behind
+     the car. HDRI is only used for reflections, not as background. */
+  background: #ffffff;
   color: var(--color-ink);
   isolation: isolate;
   z-index: 0;
-  /* Make absolutely sure scroll continues past this section into the
-     artifacts / footer below. No overflow constraints, no overscroll
-     contain. */
   overflow: visible;
   overscroll-behavior: auto;
 }
+/* Veyron used to use a warmer stone bg — overridden to white for
+   consistent product-shot framing across all four cars. */
 .scroll-scene[data-car="veyron"] {
-  background: #e7dfd0;
+  background: #ffffff;
 }
 
 /* FULL-BLEED STICKY CANVAS WRAPPER */
@@ -606,6 +607,63 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   border-color: #e8c97a;
 }
 
+/* Carousel inside the lightbox: one image at a time + prev/next nav. */
+.lightbox-carousel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-height: 80vh;
+}
+.lightbox-carousel-img {
+  display: block;
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(20, 14, 8, 0.55);
+  color: #f5f1ea;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 300;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s ease, transform 0.2s ease;
+  z-index: 2;
+}
+.lightbox-nav:hover {
+  background: rgba(20, 14, 8, 0.85);
+  transform: translateY(-50%) scale(1.08);
+}
+.lightbox-nav-prev { left: 1rem; }
+.lightbox-nav-next { right: 1rem; }
+.lightbox-pageindicator {
+  position: absolute;
+  bottom: -2.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-inter), sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(245, 241, 234, 0.75);
+}
+@media (max-width: 720px) {
+  .lightbox-nav { width: 44px; height: 44px; font-size: 1.6rem; }
+  .lightbox-nav-prev { left: 0.5rem; }
+  .lightbox-nav-next { right: 0.5rem; }
+}
+
 /* ================================================================
    HOMEPAGE, hero, marquee, curator, exhibits, wordmark
    ================================================================ */
@@ -756,18 +814,12 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
   aspect-ratio: 4/5;
   max-height: 72vh;
   border: 1px solid var(--color-rule);
-  background:
-    radial-gradient(ellipse 80% 50% at 50% 55%, #ffffff 0%, rgba(255,255,255,0) 70%),
-    linear-gradient(180deg, #f6f3ee 0%, #e8e1d4 50%, #d4c9b4 100%);
+  /* Pure white void — was a 3-stop gradient (cream → tan) that read as
+     atmospheric haze behind the car. Configurator shots are flat white. */
+  background: #ffffff;
   overflow: hidden;
 }
-.home-hero-stage::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(to top, rgba(160,140,100,0.22) 0%, rgba(0,0,0,0) 30%);
-}
+/* Removed the ::after gold-tint overlay — same haze problem. */
 .home-hero-3d-wrap { position: absolute; inset: 0; }
 .home-hero-3d { position: absolute; inset: 0; z-index: 1; }
 
@@ -1421,3 +1473,18 @@ figure.artifact .caption a:hover { border-bottom-style: solid; }
 
 /* Parallax will-change */
 [data-parallax] { will-change: transform; }
+
+/* Bibliography URL links on /about — subtle, become brass on hover. */
+.bib-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(40, 26, 10, 0.25);
+  text-underline-offset: 0.18em;
+  word-break: break-word;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+.bib-link:hover {
+  color: var(--color-brass-dark);
+  text-decoration-color: var(--color-brass-dark);
+}
+

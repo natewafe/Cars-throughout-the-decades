@@ -19,9 +19,10 @@ function transferStdFields(
   phys.metalnessMap = std.metalnessMap;
   phys.aoMap = std.aoMap;
   phys.aoMapIntensity = std.aoMapIntensity ?? 1;
-  phys.emissive.copy(std.emissive);
-  phys.emissiveMap = std.emissiveMap;
-  phys.emissiveIntensity = std.emissiveIntensity ?? 1;
+  // Emissive deliberately NOT copied — for a clean configurator look we
+  // never want self-illuminated panels (the new countach GLB ships with
+  // bright baked interior gauges and brake-light glows that read as a
+  // hot cabin). emissive defaults to (0,0,0); leave it alone.
   [phys.map, phys.normalMap, phys.roughnessMap, phys.metalnessMap].forEach((t) => {
     if (t) t.anisotropy = anisotropy;
   });
@@ -31,15 +32,20 @@ export function makePhysicalPaint(
   std: THREE.MeshStandardMaterial,
   anisotropy: number
 ): THREE.MeshPhysicalMaterial {
+  // Configurator-clean paint: tight roughness + full clearcoat for a
+  // crisp showroom lacquer look. Color/maps from the GLB are preserved.
   const phys = new THREE.MeshPhysicalMaterial();
   transferStdFields(std, phys, anisotropy);
-  // Real automotive paint: roughness 0.42 keeps it from reading as wet
-  // plastic; clearcoat layer carries the lacquer sheen separately.
-  phys.metalness = 0.85;
-  phys.roughness = 0.42;
-  phys.envMapIntensity = 0.55;
-  phys.clearcoat = 0.6;
-  phys.clearcoatRoughness = 0.18;
+  phys.metalness = 0.9;
+  // If the GLB has a baked roughnessMap, multiplying against a fixed
+  // 0.1 here flattens all the surface variation the artist authored.
+  // When a roughness map is present, use 1.0 so the map drives the
+  // value at full strength; only force-clamp when there's no map.
+  phys.roughness = std.roughnessMap ? 1.0 : 0.1;
+  phys.envMapIntensity = 0.85;
+  phys.clearcoat = 1.0;
+  phys.clearcoatRoughness = 0.04;
+  phys.reflectivity = 1.0;
   phys.needsUpdate = true;
   return phys;
 }
@@ -63,15 +69,13 @@ export function makePhysicalGlass(
   phys.aoMap = null;
   phys.metalness = 0;
   phys.roughness = 0;
+  phys.transmission = 1.0;
+  phys.thickness = 0.5;
+  phys.ior = 1.5;
   phys.transparent = true;
-  phys.opacity = 0.12;
-  // depthWrite:false stops stacked glass faces (windshield outer+inner,
-  // double-pane side windows) from compounding to ~70% opacity. Each
-  // pane now contributes its own 0.12 instead of fogging the whole car.
+  phys.opacity = 0.15;
   phys.depthWrite = false;
-  // Drop env reflections to a hint — high envMapIntensity on glass
-  // throws a reflection of the HDRI back at the camera and reads as haze.
-  phys.envMapIntensity = 0.4;
+  phys.envMapIntensity = 0.5;
   phys.needsUpdate = true;
   return phys;
 }
@@ -105,13 +109,21 @@ export function upgradeMaterial(
   const upgrade = (mat: THREE.Material): THREE.Material => {
     const std = (mat as THREE.MeshStandardMaterial).clone();
     const name = (std.name || mesh.name || "").toLowerCase();
+    const parentName = (mesh.name || "").toLowerCase();
+    const combined = `${name} ${parentName}`;
 
     [std.map, std.normalMap, std.roughnessMap, std.metalnessMap].forEach((t) => {
       if (t) t.anisotropy = opts.anisotropy;
     });
 
-    // 1. Body paint
-    if (/body|paint|exterior|shell|lack|carrosserie|karosserie/.test(name)) {
+    // Force emissive off on EVERY upgraded material — clean configurator
+    // shot, no glowing dashboards, gauges, or brake lights.
+    std.emissive.setHex(0x000000);
+    std.emissiveMap = null;
+    std.emissiveIntensity = 0;
+
+    // 1. Body paint — broad regex catches common naming variants.
+    if (/body|paint|exterior|shell|lack|carrosserie|karosserie|lambo|ferrari|porsche|bugatti|mclaren|coachwork/.test(combined)) {
       if (opts.usePhysicalPaint) return makePhysicalPaint(std, opts.anisotropy);
       // Low-tier fallback: still glossy, but no clearcoat shader cost.
       std.metalness = 0.85;
@@ -120,8 +132,9 @@ export function upgradeMaterial(
       return std;
     }
 
-    // 2. Glass
-    if (/glass|window|windshield|vetro/.test(name)) {
+    // 2. Glass — broad: english + italian/german/french/spanish/portuguese
+    //    + common variants (windscreen, headlamp lens, tail-light glass).
+    if (/glass|window|windshield|windscreen|vetro|scheibe|verre|vidrio|vidro|cristal|lens/.test(combined)) {
       if (opts.usePhysicalPaint) return makePhysicalGlass(std, opts.anisotropy);
       // Low-tier: cheap transparent glass. Same map-clearing + depthWrite
       // logic as the Physical path so stacked panes don't fog up.
@@ -140,11 +153,17 @@ export function upgradeMaterial(
       return std;
     }
 
-    // 3. Carbon / matte interior surfaces
-    if (/carbon|matte|interior|dash/.test(name)) {
-      std.roughness = 0.65;
-      std.metalness = 0.2;
-      std.envMapIntensity = 0.3;
+    // 3. Carbon / matte interior surfaces — broadened to catch common
+    //    cabin material names (leather, seat, plastic, fabric, cockpit,
+    //    cabin, console, gauge, steering, panel, trim_inner, headliner).
+    //    Interior is also color-darkened: GLBs often ship interiors
+    //    pre-lit (baked-in highlights) which read as too bright under
+    //    studio lighting that's already adding more.
+    if (/carbon|matte|interior|dash|leather|seat|plastic|fabric|cloth|vinyl|cockpit|cabin|console|gauge|dial|steering|headliner|alcantara|suede/.test(combined)) {
+      std.color.multiplyScalar(0.45);
+      std.roughness = 0.7;
+      std.metalness = 0.1;
+      std.envMapIntensity = 0.2;
       return std;
     }
 
@@ -164,8 +183,35 @@ export function upgradeMaterial(
       return std;
     }
 
-    // 6. Fallback — leave roughness/metalness from the GLB; only normalize env.
-    std.envMapIntensity = 0.5;
+    // 6. Property-based glass fallback — catches generic-named glass
+    //    (e.g., "Material.001" with the transparent flag set in the
+    //    GLB). Runs AFTER explicit name buckets so the McLaren's
+    //    windshield (parented under a body node) doesn't get hijacked.
+    const isGlassByProperty =
+      (mat as THREE.MeshStandardMaterial).transparent === true ||
+      ((mat as THREE.MeshStandardMaterial).opacity ?? 1) < 0.99;
+    if (isGlassByProperty) {
+      if (opts.usePhysicalPaint) return makePhysicalGlass(std, opts.anisotropy);
+      std.color.setHex(0xffffff);
+      std.map = null;
+      std.roughnessMap = null;
+      std.metalnessMap = null;
+      std.normalMap = null;
+      std.aoMap = null;
+      std.transparent = true;
+      std.opacity = 0.12;
+      std.depthWrite = false;
+      std.metalness = 0;
+      std.roughness = 0;
+      std.envMapIntensity = 0.4;
+      return std;
+    }
+
+    // 7. Final fallback — small trim, badges, interior bits the regex
+    //    missed. Modest darkening + low env so unidentified parts read
+    //    as the same gallery "neutral" tone as the rest of the cabin.
+    std.color.multiplyScalar(0.7);
+    std.envMapIntensity = 0.3;
     return std;
   };
 

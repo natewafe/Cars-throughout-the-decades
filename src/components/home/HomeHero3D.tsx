@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, PerformanceMonitor, useGLTF } from "@react-three/drei";
+import { PerformanceMonitor, Shadow, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { disposeClonedScene } from "@/lib/disposeScene";
 import { upgradeMaterial } from "@/lib/materialUpgrade";
@@ -147,7 +147,7 @@ export function HomeHero3D() {
             alpha: true,
             powerPreference: "high-performance",
             toneMapping: THREE.ACESFilmicToneMapping,
-            toneMappingExposure: 0.75,
+            toneMappingExposure: 1.05,
           }}
           camera={{ fov: 28, near: 0.1, far: 500, position: [5, 1.8, 5] }}
         >
@@ -156,7 +156,7 @@ export function HomeHero3D() {
               The static tier still sets the CEILING; PerformanceMonitor only
               drops below it, never above. */}
           <PerformanceMonitor
-            bounds={(_refreshrate) => [45, 60]}
+            bounds={(_refreshrate) => [30, 55]}
             onIncline={() => setDprCap((c) => (c && c < quality.dpr[1] ? c + 0.25 : null))}
             onDecline={() => setDprCap((c) => Math.max(1, (c ?? quality.dpr[1]) - 0.25))}
           />
@@ -253,13 +253,13 @@ function HeroCarModel({
   return (
     <>
       <HeroCamera framing={car.framing} />
-      <ContactShadows
+      <Shadow
         position={[0, 0.001, 0]}
-        opacity={0.58}
-        scale={14}
-        blur={2.6}
-        far={4}
-        resolution={quality.contactShadowResolution}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={5}
+        color="#1a1a1a"
+        colorStop={0}
+        opacity={0.35}
       />
       <group ref={groupRef} scale={scale} position={[offset.x, offset.y + car.yBias, offset.z]}>
         <primitive object={model} />

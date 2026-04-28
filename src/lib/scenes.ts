@@ -51,15 +51,16 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       [1.0, "340deg 74deg 40%"],
     ],
     captions: [
-      { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery I, 1970s", line: "Marcello Gandini drew a wedge and the genre rewrote itself." },
-      { from: 0.22, to: 0.45, pos: "right", eyebrow: "Side profile", line: "No curve without intention. No surface without a reason." },
-      { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "Road and Track, Feb 1976", line: "“The fastest car we have ever tested.”" },
-      { from: 0.68, to: 0.78, pos: "right", eyebrow: "Scissor door", line: "An idea so strange that every supercar since has tried to inherit it." },
+      { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery I, 1970s", line: "Designed in 1971. Still the shape people draw when they imagine a supercar." },
+      { from: 0.22, to: 0.45, pos: "right", eyebrow: "The rear wing", line: "That rear wing? Bolted on in a parking lot. With a hand drill." },
+      { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "No wind tunnel", line: "Never saw the inside of a wind tunnel. Engineers used fabric strips and a camera." },
+      { from: 0.68, to: 0.78, pos: "right", eyebrow: "16 years in production", line: "Every revision added wings. Every one moved further from the original." },
     ],
     finaleTitle: "The scissor door opens onto the 1980s.",
     // Door rig removed — the GLB's pivot for SK_Door_FL rotates the
     // scissor door DOWNWARD instead of up, which reads as broken.
     // Re-enable once the GLB hinge axis is fixed in Blender.
+    // White materialOverride removed — kept the GLB's baked red paint.
   },
   "959": {
     keyframes: [
@@ -71,10 +72,10 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       [1.0, "335deg 78deg 32%"],
     ],
     captions: [
-      { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery II, 1980s", line: "Porsche built the 959 for a rally championship that was cancelled before it raced." },
-      { from: 0.22, to: 0.45, pos: "bottom", eyebrow: "Magnesium wheel", line: "Every spoke hollowed. Every gram accounted for." },
-      { from: 0.45, to: 0.68, pos: "right", eyebrow: "Twin-turbo flat-six", line: "All-wheel drive before the world was ready to ask for it." },
-      { from: 0.68, to: 0.78, pos: "left", eyebrow: "Car and Driver, 1987", line: "“The word perfect was difficult to avoid.”" },
+      { from: 0.03, to: 0.22, pos: "left", eyebrow: "PSK all-wheel drive", line: "All-wheel drive with four modes. In 1986. Before anyone else asked for it." },
+      { from: 0.22, to: 0.45, pos: "bottom", eyebrow: "Sequential turbocharging", line: "Two turbos, working in sequence. No lag. No compromise." },
+      { from: 0.45, to: 0.68, pos: "right", eyebrow: "Two dampers per corner", line: "One for stiffness. One for height. Both automatic." },
+      { from: 0.68, to: 0.78, pos: "left", eyebrow: "292 built", line: "Every one lost Porsche money. Every one rewrote the rulebook." },
     ],
     finaleTitle: "From Weissach to Woking. The 1990s are waiting.",
     materialOverrides: [
@@ -91,10 +92,10 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       [1.0, "25deg 60deg 28%"],
     ],
     captions: [
-      { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery III, 1990s", line: "Gordon Murray asked what a perfect driver’s car would be. Then refused to compromise." },
-      { from: 0.22, to: 0.45, pos: "right", eyebrow: "Carbon monocoque", line: "The first road car built like a Formula 1 chassis." },
-      { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "Autocar, 1994", line: "“You slide in. The driver sits dead center. Everything else is geometry.”" },
-      { from: 0.68, to: 0.78, pos: "left", eyebrow: "240.1 mph", line: "A production car record that stood for over a decade." },
+      { from: 0.03, to: 0.22, pos: "left", eyebrow: "Central driving position", line: "The driver sits in the center. Not left, not right. The center." },
+      { from: 0.22, to: 0.45, pos: "right", eyebrow: "Carbon monocoque", line: "Carbon fiber body, gold-lined engine bay. Every gram was argued over." },
+      { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "627 horsepower", line: "No traction control. Murray said you didn't need it." },
+      { from: 0.68, to: 0.78, pos: "left", eyebrow: "391 km/h", line: "1998. No production car touched it for twelve years." },
     ],
     finaleTitle: "Analog perfection hands off to the digital thousand.",
     materialOverrides: [
@@ -111,10 +112,10 @@ export const scenesBySlug: Record<string, SceneConfig> = {
       [1.0, "335deg 74deg 30%"],
     ],
     captions: [
-      { from: 0.03, to: 0.22, pos: "left", eyebrow: "Gallery IV, 2000s", line: "Volkswagen Group handed Bugatti a specification that physics had to catch up to." },
-      { from: 0.22, to: 0.45, pos: "right", eyebrow: "Eight liters, sixteen cylinders", line: "Quad-turbo. Ten radiators. A drivetrain designed to survive itself." },
-      { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "Michelin and Brembo", line: "Tires rated for fifteen minutes at full speed. Then replace." },
-      { from: 0.68, to: 0.78, pos: "left", eyebrow: "Autocar, 2005", line: "“A car that, in motion, felt almost calm despite its statistics.”" },
+      { from: 0.03, to: 0.22, pos: "left", eyebrow: "W16 engine", line: "Two V8s on one crankshaft. 16 cylinders. Four turbochargers. One road car." },
+      { from: 0.22, to: 0.45, pos: "right", eyebrow: "1,000 horsepower", line: "The engineers said it was impossible. Piech disagreed." },
+      { from: 0.45, to: 0.68, pos: "bottom", eyebrow: "Autocar, 2014", line: "220 mph in 30 seconds. The only car Autocar ever measured to that speed." },
+      { from: 0.68, to: 0.78, pos: "left", eyebrow: "1,900 kg", line: "It handles like a normal car. That is the most impressive part." },
     ],
     finaleTitle: "1,001 horsepower. The decade closes at 253 mph.",
     doorRig: {

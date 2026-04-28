@@ -30,9 +30,12 @@ export type QualityProfile = {
 };
 
 const PROFILES: Record<DeviceTier, QualityProfile> = {
-  low:  { tier: "low",  dpr: [1, 1],   shadowMapSize: 512,  enableEnv: false, contactShadowResolution: 256,  enablePost: false, usePhysicalPaint: false, anisotropy: 1 },
-  mid:  { tier: "mid",  dpr: [1, 1.5], shadowMapSize: 1024, enableEnv: true,  contactShadowResolution: 512,  enablePost: true,  usePhysicalPaint: true,  anisotropy: 4 },
-  high: { tier: "high", dpr: [1, 2],   shadowMapSize: 4096, enableEnv: true,  contactShadowResolution: 1024, enablePost: true,  usePhysicalPaint: true,  anisotropy: 16 },
+  low:  { tier: "low",  dpr: [1, 1.25], shadowMapSize: 512,  enableEnv: false, contactShadowResolution: 256,  enablePost: false, usePhysicalPaint: false, anisotropy: 2 },
+  mid:  { tier: "mid",  dpr: [1, 1.75], shadowMapSize: 1024, enableEnv: true,  contactShadowResolution: 512,  enablePost: true,  usePhysicalPaint: true,  anisotropy: 8 },
+  // high tier now lets DPR climb to 2.5 on retina displays and uses 16x
+  // anisotropy. The cars have native 4K textures inside the GLBs — at
+  // dpr=2 those textures were being undersampled at glancing angles.
+  high: { tier: "high", dpr: [1, 2.5], shadowMapSize: 4096, enableEnv: true,  contactShadowResolution: 2048, enablePost: true,  usePhysicalPaint: true,  anisotropy: 16 },
 };
 
 function detect(): DeviceTier {

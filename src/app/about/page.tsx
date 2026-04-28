@@ -7,7 +7,23 @@ export const metadata = {
 };
 
 function fmtBib(s: string) {
-  return s.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  // Escape HTML first so user-supplied entries can't inject markup.
+  const escaped = s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  return (
+    escaped
+      // *italic* → <em>italic</em>
+      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+      // Promote bare URLs to clickable links. Trailing punctuation
+      // (period, comma, semi) is kept outside the anchor so sentences
+      // still terminate cleanly.
+      .replace(
+        /(https?:\/\/[^\s<>"]+?)(?=[)\].,;]?(?:\s|$))/g,
+        '<a href="$1" target="_blank" rel="noopener" class="bib-link">$1</a>'
+      )
+  );
 }
 
 export default function AboutPage() {
@@ -26,13 +42,21 @@ export default function AboutPage() {
         </h1>
       </Reveal>
 
-      <div className="mt-20 grid gap-20 md:grid-cols-[2fr_3fr]">
+      <Reveal delay={200}>
+        <p className="mt-8 max-w-3xl text-[length:var(--text-lede)] leading-relaxed text-[color:var(--color-ink-muted)]">
+          Four machines, one per decade, chosen because each one forced the rest of
+          the industry to answer a new question. The full introduction lives on the
+          home page; what follows is the closing argument.
+        </p>
+      </Reveal>
+
+      {/* CONCLUSION */}
+      <div className="mt-24 grid gap-20 md:grid-cols-[1fr_2fr] border-t border-[color:var(--color-rule)] pt-20">
         <Reveal>
           <div className="sticky top-32">
-            <div className="eyebrow">Curation</div>
+            <div className="eyebrow">Conclusion</div>
             <p className="mt-4 text-[color:var(--color-ink-muted)] leading-relaxed">
-              Four machines, one per decade, chosen because each one forced the rest of
-              the industry to answer a new question.
+              Forty years, four cars, one word.
             </p>
           </div>
         </Reveal>
@@ -40,29 +64,54 @@ export default function AboutPage() {
         <div className="space-y-8 text-[length:var(--text-lede)] leading-relaxed text-[color:var(--color-ink-muted)]">
           <Reveal>
             <p className="serif-display text-[color:var(--color-ink)]" style={{ fontSize: "var(--text-h2)" }}>
-              The automobile is the twentieth century&apos;s most looked-at sculpture.
+              Across 40 years, these four cars share one word: impossible. Before
+              each of them existed, someone said it could not be done. They all came
+              from nothing, pushed by one person or one team who refused to accept
+              that answer, the way all great ideas do.
             </p>
           </Reveal>
           <Reveal delay={80}>
             <p>
-              We treat it that way. Each exhibit presents a single car in the way a
-              museum would present a single canvas: a long look, a few careful words,
-              the room quiet enough to hear the engineering.
+              And now look at what they left behind. The wedge shape of the modern
+              supercar started with the Countach. The doors that go up. The tire
+              pressure monitoring system in your Subaru Outback traces back to the
+              Porsche 959. The power and performance race happening today between
+              Rimac, Koenigsegg, and Bugatti is a direct continuation of what these
+              four cars started. The McLaren F1 competed at Le Mans and won from an
+              idea Gordon Murray had on a flight home. The hypercar category itself
+              was defined by these cars, and it started, really, with the Countach.
             </p>
           </Reveal>
           <Reveal delay={160}>
             <p>
-              The collection is deliberately small. A larger survey would obscure the
-              argument. Four cars over four decades, the Countach, the 959, the
-              McLaren F1, the Veyron, tell the whole story of what the supercar
-              became, and why.
+              They are not just cars. They might be to some people, but they are
+              documents of human ambition at specific points in time, a record of
+              what we believed could be achieved on the road. All four of them were
+              significant financial losses for the companies that built them. But
+              the Countach still pulled Lamborghini out of a hole, because it
+              brought a presence to their brand that money alone could not buy. The
+              world did not ask for any of these cars, but they gave them to us
+              anyway, and that is exactly why they matter.
             </p>
           </Reveal>
           <Reveal delay={240}>
             <p>
-              Photography, essays, and three-dimensional studies are produced in-house.
-              Technical data is drawn from contemporary press kits and manufacturer
-              homologation documents. When a detail is disputed, we say so.
+              You might not be a car person, but you can respect the human
+              engineering and pure ambition that went into trying to break 400
+              kilometers an hour, into building a car with sequential turbos and a
+              computer controlled all-wheel-drive system in 1986, into lining an
+              engine bay with gold and putting the driver in the center because that
+              is what the physics demanded. These cars were not built for the
+              market. They were built because someone believed the next version of
+              impossible was worth chasing.
+            </p>
+          </Reveal>
+          <Reveal delay={300}>
+            <p
+              className="serif-display text-[color:var(--color-ink)] italic"
+              style={{ fontSize: "var(--text-h2)" }}
+            >
+              The inevitable future was defined inside these cars.
             </p>
           </Reveal>
         </div>

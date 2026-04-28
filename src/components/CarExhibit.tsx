@@ -33,6 +33,14 @@ export function CarExhibit({ car, next }: { car: Car; next?: Car }) {
             >
               {car.maker} {car.name}
             </div>
+            {car.heroHeadline && (
+              <div
+                className="mt-4 serif-display text-[color:var(--color-ink)] max-w-3xl leading-[1.2]"
+                style={{ fontSize: "var(--text-h2)" }}
+              >
+                {car.heroHeadline}
+              </div>
+            )}
             <div className="mt-3 text-[color:var(--color-ink-muted)] text-[length:var(--text-lede)] max-w-xl">
               {car.tagline}
             </div>
@@ -88,6 +96,13 @@ export function CarExhibit({ car, next }: { car: Car; next?: Car }) {
                 </p>
               </Reveal>
             ))}
+            {car.source && (
+              <Reveal delay={car.essay.length * 60}>
+                <p className="mt-12 pt-6 border-t border-[color:var(--color-rule)] italic text-[color:var(--color-ink-soft)] text-[0.875rem] leading-relaxed">
+                  {car.source}
+                </p>
+              </Reveal>
+            )}
           </div>
         </div>
       </section>

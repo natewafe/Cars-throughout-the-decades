@@ -1,43 +1,77 @@
 "use client";
 
-/** Three-point showroom rig. The earlier rect-area "softbox" additions
- *  were stacking on top of these directional lights AND the HDRI, which
- *  blew out the bodywork and read as a cloudy haze across the car.
- *  Reverted to a clean three-point setup tuned to the warehouse HDRI. */
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
+import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
+
+let rectAreaInited = false;
+function initRectAreaOnce() {
+  if (rectAreaInited) return;
+  try {
+    RectAreaLightUniformsLib.init();
+    rectAreaInited = true;
+  } catch {
+    // Some build paths can't resolve the examples module — fail silent
+    // rather than break the whole scene.
+  }
+}
+
+/** Configurator-style 4-light studio rig:
+ *    - Key softbox      (RectAreaLight, warm, dominant)
+ *    - Fill softbox     (RectAreaLight, cool, opposite side)
+ *    - Rim directional  (separates car from background)
+ *    - Ambient          (very low, only fills absolute black)
+ *
+ *  Note: RectAreaLights cannot cast shadows in three.js — grounding is
+ *  handled by <ContactShadows /> in the scene. The rim DirectionalLight
+ *  also doesn't castShadow per the spec (we want a single, clean
+ *  contact shadow under the car, not stacked light shadows). */
 export function SceneLighting({
-  shadowMapSize,
+  shadowMapSize: _shadowMapSize,
 }: {
   shadowMapSize: number;
-  // Kept for backwards compat — silently ignored (softboxes are gone).
-  enableSoftbox?: boolean;
 }) {
+  // Aim each rect-area light at the car's vertical center.
+  const keyRef = useRef<THREE.RectAreaLight | null>(null);
+  const fillRef = useRef<THREE.RectAreaLight | null>(null);
+
+  useEffect(() => {
+    initRectAreaOnce();
+    if (keyRef.current) keyRef.current.lookAt(0, 0.5, 0);
+    if (fillRef.current) fillRef.current.lookAt(0, 0.5, 0);
+  }, []);
+
   return (
     <>
-      {/* Ambient: low because the HDRI carries the diffuse fill. */}
-      <ambientLight intensity={0.25} />
+      {/* Ambient — barely there. Just lifts pure-black crevices. */}
+      <ambientLight intensity={0.12} />
 
-      {/* Key — warm white, the only shadow caster. Bias prevents acne on
-          glossy paint at glancing angles. */}
-      <directionalLight
-        castShadow
-        position={[6, 10, 6]}
-        intensity={1.4}
-        color="#ffffff"
-        shadow-mapSize={[shadowMapSize, shadowMapSize]}
-        shadow-bias={-0.0001}
-        shadow-camera-far={25}
-        shadow-camera-left={-8}
-        shadow-camera-right={8}
-        shadow-camera-top={8}
-        shadow-camera-bottom={-8}
+      {/* KEY softbox: warm, dominant, upper-left. */}
+      <rectAreaLight
+        ref={keyRef}
+        color="#fff8ee"
+        intensity={5}
+        width={8}
+        height={5}
+        position={[-4, 5, 3]}
       />
 
-      {/* Fill — opposite side, cool tint, lifts shadow side without
-          competing with the key. */}
-      <directionalLight position={[-6, 4, -4]} intensity={0.45} color="#dde6ff" />
+      {/* FILL softbox: cool blue-white, opposite side, low energy. */}
+      <rectAreaLight
+        ref={fillRef}
+        color="#cce0ff"
+        intensity={1.5}
+        width={6}
+        height={4}
+        position={[4, 3, -2]}
+      />
 
-      {/* Rim — from behind, warm, separates silhouette from cyc. */}
-      <directionalLight position={[0, 6, -8]} intensity={0.8} color="#ffe8cc" />
+      {/* RIM / separation: keeps the rear of the car off the white void. */}
+      <directionalLight
+        color="#ffffff"
+        intensity={0.4}
+        position={[0, 5, -6]}
+      />
     </>
   );
 }

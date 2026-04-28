@@ -37,7 +37,10 @@
     "draco3d": "^1.5.7",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
+    "exceljs": "^4.4.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
